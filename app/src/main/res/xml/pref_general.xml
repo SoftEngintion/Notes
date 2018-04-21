@@ -1,0 +1,8 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="switch_preference_is_debug"
+        android:title="开启开发者Debug模式" />
+
+</PreferenceScreen>

@@ -1,0 +1,31 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/pref_header_font_summary">
+        <EditTextPreference
+            android:defaultValue="18"
+            android:inputType="number"
+            android:key="font_title_size"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_font_title_size"
+            android:visibility="visible" />
+        <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="16"
+            android:inputType="number"
+            android:key="font_time_size"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_font_time_size"
+            android:visibility="visible" />
+        <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="18"
+            android:inputType="number"
+            android:key="font_content_size"
+            android:selectAllOnFocus="true"
+            android:title="@string/pref_font_content_size"
+            android:visibility="visible" />
+    </PreferenceCategory>
+</PreferenceScreen>

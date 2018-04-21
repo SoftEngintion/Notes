@@ -1,0 +1,54 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_note_shape"
+    android:orientation="vertical"
+    android:padding="@dimen/widget_margin">
+
+    <TextView
+        android:id="@+id/widget_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp"
+        android:textAlignment="center"
+        android:textColor="#4214f7"
+        android:textSize="24sp"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/widget_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/widget_title"
+        android:visibility="gone"
+        android:layout_margin="6dp"/>
+
+    <TextView
+        android:id="@+id/widget_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/widget_time"
+        android:layout_margin="6dp"
+        android:duplicateParentState="true"
+        android:ellipsize="end"
+        android:fadingEdge="horizontal"
+        android:fadingEdgeLength="10dip"
+        android:singleLine="true"
+        android:visibility="gone"
+        android:text="@string/app_name"/>
+
+    <TextView
+        android:id="@+id/widget_dis"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/widget_content"
+        android:layout_gravity="bottom"
+        android:textSize="30sp"
+        android:gravity="bottom"
+        android:layout_marginBottom="6dp"
+        android:textAlignment="center"
+        android:visibility="gone" />
+
+</RelativeLayout>
