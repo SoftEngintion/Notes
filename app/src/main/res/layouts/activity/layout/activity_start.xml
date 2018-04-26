@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".StartActivity">
+    <AdapterViewFlipper
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="false"
+        android:autoStart="true"
+        android:loopViews="true"
+        android:animateFirstView="true"
+        android:flipInterval="1000"
+        android:id="@+id/mAdapterViewFlipper"/>
+</RelativeLayout>

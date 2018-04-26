@@ -1,5 +1,6 @@
 package com.ws.notes.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.util.Log;
 import com.github.paolorotolo.appintro.AppIntro;
 import com.github.paolorotolo.appintro.AppIntroFragment;
 
+import com.ws.notes.MainActivity;
 import com.ws.notes.R;
 
 /**
@@ -49,6 +51,7 @@ public class IntroActivity extends AppIntro {
     public void onSkipPressed(Fragment currentFragment) {
         super.onSkipPressed(currentFragment);
         // Do something when users tap on Skip button.
+        startActivity(new Intent(IntroActivity.this, MainActivity.class));
         finish();
     }
 

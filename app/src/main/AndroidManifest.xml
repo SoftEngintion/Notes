@@ -14,40 +14,37 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.ws.notes.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
-            android:name="com.ws.notes.EditActivity"
+            android:name=".EditActivity"
             android:label="@string/edit_name"
-            android:parentActivityName="com.ws.notes.MainActivity"
+            android:parentActivityName=".MainActivity"
             tools:targetApi="jelly_bean">
             <intent-filter>
                 <action android:name="com.ws.notes.EditActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.ws.notes.SettingsActivity"
+            android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName="com.ws.notes.MainActivity"
+            android:parentActivityName=".MainActivity"
             tools:targetApi="jelly_bean" />
         <activity
-            android:name="com.ws.notes.ui.IntroActivity"
+            android:name=".ui.IntroActivity"
             android:label="@string/intro"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ws.notes.AppAboutActivity"
-            android:parentActivityName="com.ws.notes.MainActivity"
+            android:name=".AppAboutActivity"
+            android:parentActivityName=".MainActivity"
             tools:targetApi="jelly_bean" />
         <activity
-            android:name="com.ws.notes.RecycleBinActivity"
+            android:name=".RecycleBinActivity"
             android:label="@string/recycle_bin"
-            android:parentActivityName="com.ws.notes.MainActivity"
+            android:parentActivityName=".MainActivity"
             tools:targetApi="jelly_bean" />
 
         <provider
@@ -60,7 +57,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <receiver android:name="com.ws.notes.widget.NoteAppWidget">
+        <receiver android:name=".widget.NoteAppWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -69,17 +66,28 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/note_app_widget_info" />
         </receiver>
-        <receiver android:name="com.ws.notes.receiver.AlarmReceiver"
+        <receiver
+            android:name=".receiver.AlarmReceiver"
             android:enabled="true"
             android:exported="true"
             android:permission="" />
 
-        <service android:name="com.ws.notes.widget.UpdateWidgetService"
+        <service
+            android:name=".widget.UpdateWidgetService"
             android:enabled="true"
             android:exported="true"
+            android:permission=""
             android:persistent="true"
-            android:priority = "1000"
-            android:permission="" />
+            android:priority="1000" />
+
+        <activity android:name=".StartActivity"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
