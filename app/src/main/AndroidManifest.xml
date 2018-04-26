@@ -71,13 +71,15 @@
         </receiver>
         <receiver android:name="com.ws.notes.receiver.AlarmReceiver"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true"
+            android:permission="" />
 
         <service android:name="com.ws.notes.widget.UpdateWidgetService"
             android:enabled="true"
             android:exported="true"
             android:persistent="true"
-            android:priority = "1000"/>
+            android:priority = "1000"
+            android:permission="" />
     </application>
 
 </manifest>

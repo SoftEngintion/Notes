@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">时间便笺</string>
-    <!--<string name="app_name">N便签</string>-->
+    <string name="app_name">随心记</string>
     <string name="edit_name">便签编辑</string>
     <string name="main_menu_add">添加</string>
     <string name="main_menu_delete">数据库清空</string>
@@ -10,14 +9,14 @@
 
     <string name="pref_header_font">字体</string>
 
-    <string name="pref_title_new_message_notifications">New message notifications</string>
+    <string name="pref_title_new_message_notifications">新消息通知</string>
 
-    <string name="pref_title_ringtone">Ringtone</string>
-    <string name="pref_ringtone_silent">Silent</string>
+    <string name="pref_title_ringtone">铃声</string>
+    <string name="pref_ringtone_silent">静音</string>
 
-    <string name="pref_title_vibrate">Vibrate</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
+    <string name="pref_title_vibrate">震动</string>
+    <string name="appwidget_text">例子</string>
+    <string name="add_widget">添加组件</string>
     <string name="pref_header_general_summary">程序总体设置</string>
     <string name="pref_header_font_summary">字体大小设置</string>
     <string name="pref_font_time_size">时间字体大小</string>
@@ -29,11 +28,11 @@
     <string name="main_menu_about">关于应用</string>
     <string name="intro_done">立即进入</string>
     <string name="intro_skip">跳过…</string>
-    <string name="intro1_title">欢迎来到时间便笺</string>
+    <string name="intro1_title">欢迎来到随心记</string>
     <string name="intro1_desc">在这里你可以记录你的心情</string>
     <string name="intro2_title">在这里你可以随性记录，并且可以设置提醒的时间，本应用将会直观的显示出剩余的时间，当然您也可以将选中的便签放置于桌面上提醒您</string>
-    <string name="intro3_title">开启你的时间之旅吧</string>
-    <string name="intro3_desc">享受生活，享受时间便笺带来的便捷</string>
+    <string name="intro3_title">开启你的随心记之旅吧</string>
+    <string name="intro3_desc">享受生活，享受随心记带来的便捷</string>
     <string name="intro">欢迎使用</string>
     <string name="fa_star_half_o" translatable="false">&#xf123;</string>
     <string name="fa_recycle" translatable="false">&#xf014;</string>

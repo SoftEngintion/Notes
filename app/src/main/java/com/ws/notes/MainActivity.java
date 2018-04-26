@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                     Note note = NoteAdapter.getNotes().get(position);
                     Log.d(TAG, "onClick: Content:" + note.getContent() + "\nTitle:" +
                             note.getTitle() + "\nTime:" + note.getLogTime() + "\nPos:" + position);
-                    Intent intent = new Intent("EditActivity");
+                    Intent intent = new Intent(MainActivity.this,EditActivity.class);
                     intent.putExtra("pos", position);
                     intent.putExtra("title", note.getTitle());
                     intent.putExtra("content", note.getContent());

@@ -70,8 +70,7 @@ public abstract class FileUtils {
 
     public static void showSendFileScreen(@NonNull String archiveFilename, SettingsActivity activity) {
         File file = new File(archiveFilename);
-        Uri fileUri = getUriForFile(activity, "nov.me.kanmodel.com.ws.notes", file);
-
+        Uri fileUri = getUriForFile(activity, "com.ws.notes", file);
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
         intent.setType("application/zip");
