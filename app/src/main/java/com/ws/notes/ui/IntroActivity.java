@@ -30,7 +30,7 @@ public class IntroActivity extends AppIntro {
         Log.d(TAG, "onCreate: 开始");
 //        com.github.paolorotolo.appintro.AppIntro2Fragment.newInstance();
         addSlide(AppIntroFragment.newInstance(getString(R.string.intro1_title), getString(R.string.intro1_desc),
-                R.drawable.logo_appwidget_preview, getResources().getColor(R.color.colorPrimaryDark)));
+                R.drawable.appwidget_preview, getResources().getColor(R.color.colorPrimaryDark)));
         CustomSlideBigText cs1 = CustomSlideBigText.newInstance(R.layout.custom_slide_big_text);
         cs1.setTitle(getString(R.string.intro2_title));
         addSlide(cs1);
@@ -40,7 +40,7 @@ public class IntroActivity extends AppIntro {
 //        addSlide(cs2);
 
         addSlide(AppIntroFragment.newInstance(getString(R.string.intro3_title), getString(R.string.intro3_desc),
-                R.drawable.logo_appwidget_preview, getResources().getColor(R.color.colorPrimaryDark)));
+                R.drawable.appwidget_preview, getResources().getColor(R.color.colorPrimaryDark)));
 
         setDoneText(getString(R.string.intro_done));
         setSkipText(getString(R.string.intro_skip));
@@ -51,7 +51,7 @@ public class IntroActivity extends AppIntro {
     public void onSkipPressed(Fragment currentFragment) {
         super.onSkipPressed(currentFragment);
         // Do something when users tap on Skip button.
-        startActivity(new Intent(IntroActivity.this, MainActivity.class));
+        //startActivity(new Intent(IntroActivity.this, MainActivity.class));
         finish();
     }
 
@@ -59,8 +59,8 @@ public class IntroActivity extends AppIntro {
     public void onDonePressed(Fragment currentFragment) {
         super.onDonePressed(currentFragment);
         // Do something when users tap on Done button.
-
         setResult(RESULT_OK);
+//        startActivity(new Intent(IntroActivity.this, MainActivity.class));
         finish();
     }
 

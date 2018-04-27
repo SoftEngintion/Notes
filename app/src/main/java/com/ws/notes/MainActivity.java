@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
     private static Context context;
 
     static boolean isDebug = false;
-    int REQUEST_CODE_INTRO = 1001;
 
     public android.app.ActionBar actionBar;
 
@@ -126,12 +125,12 @@ public class MainActivity extends AppCompatActivity {
             setTitle(getResources().getString(R.string.app_name) + "[Debug模式]");
             Log.d(TAG, "onCreate: DatabaseDir: " + getDatabasePath("Note.db").getAbsolutePath());
         }
-//        if (preferences.isFirstLaunch()) {
-        if (isDebug || preferences.isFirstLaunch()) {
-            startActivityForResult(new Intent(this, IntroActivity.class), REQUEST_CODE_INTRO);
-            Log.d(TAG, "initComponent: IntroActivity");
-//            startActivity(new Intent(MainActivity.this, IntroActivity.class));
-        }
+////        if (preferences.isFirstLaunch()) {
+//        if (isDebug || preferences.isFirstLaunch()) {
+//            startActivityForResult(new Intent(this, IntroActivity.class), REQUEST_CODE_INTRO);
+//            Log.d(TAG, "initComponent: IntroActivity");
+////            startActivity(new Intent(MainActivity.this, IntroActivity.class));
+//        }
     }
 
     /**
@@ -207,9 +206,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_INTRO) {
-            preferences.setFirstLaunch(false);
-        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
