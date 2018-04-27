@@ -46,7 +46,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             Intent intent2 = new Intent(context, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent2, 0);
             Notification notify = new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.logo_appwidget_preview)
+                    .setSmallIcon(R.drawable.appwidget_preview)
                     .setContentTitle("时间便笺提醒")
 //                    .setSound(Uri.fromFile(new File("/system/media/audio/alarms/wr.ogg")))
                     .setSound(Uri.parse("android.resource://" + NoteAppWidget.getmContext().getPackageName() + "/" + R.raw.wr))

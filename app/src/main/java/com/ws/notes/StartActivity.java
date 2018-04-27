@@ -15,14 +15,14 @@ import static com.ws.notes.MainActivity.isDebug;
 public class StartActivity extends AppCompatActivity {
 
     private PreferenceManager preferences;
-    int REQUEST_CODE_INTRO = 1001;
+    private static int REQUEST_CODE_INTRO = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         final AdapterViewFlipper mAdapterViewFlipper=findViewById(R.id.mAdapterViewFlipper);
-        int[] mData=new int[]{R.drawable.start1,R.drawable.start2,R.drawable.start3};
+        int[] mData=new int[]{R.drawable.start0,R.drawable.start1,R.drawable.start2,R.drawable.start3};
         mAdapterViewFlipper.setAdapter(new ViewFilipperAdapter(this,mData));
         mAdapterViewFlipper.startFlipping();
         preferences = new PreferenceManager(this.getApplicationContext());
@@ -37,7 +37,7 @@ public class StartActivity extends AppCompatActivity {
                 startActivity(new Intent(StartActivity.this,MainActivity.class));
                 finish();
                 }
-                }, 3000);
+                }, 5000);
         }
     }
 

@@ -6,7 +6,7 @@
     android:initialLayout="@layout/note_app_widget"
     android:minHeight="40dp"
     android:minWidth="110dp"
-    android:previewImage="@drawable/logo_appwidget_preview"
+    android:previewImage="@drawable/appwidget_preview"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="1000"
     android:widgetCategory="home_screen"

@@ -9,7 +9,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/logo_appwidget_preview" />
+        app:srcCompat="@drawable/appwidget_preview" />
 
     <TextView
         android:id="@+id/about_tv"
