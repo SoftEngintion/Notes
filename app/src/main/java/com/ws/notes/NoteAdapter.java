@@ -1,5 +1,6 @@
 package com.ws.notes;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -13,11 +14,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.ws.notes.utils.TimeAid;
 import com.ws.notes.utils.dbAid;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 重写RecyclerView类
@@ -78,6 +79,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         return holder;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Note note = notes.get(position);

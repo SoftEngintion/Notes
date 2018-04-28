@@ -13,20 +13,20 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.SwitchPreference;
-import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.preference.SwitchPreference;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.ws.notes.utils.FileUtils;
+
 import java.io.IOException;
 import java.util.List;
-
-import com.ws.notes.utils.FileUtils;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -132,11 +132,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             Log.d(TAG, "onHeaderClick id headerBackup: " + header.id);
             try {
                 String dbCopy = FileUtils.saveDatabaseCopy(getApplicationContext(),getFilesDir());//获取备份数据库文件路径
-//                Intent intent = new Intent(Intent.ACTION_SEND);
-//                Intent chooser = Intent.createChooser(intent, getResources().getString(R.string.save_backup));
-//                startActivity(chooser);
-                FileUtils.showSendFileScreen(dbCopy,this);
                 Log.d(TAG, "onHeaderClick: file_path :" + dbCopy);
+                FileUtils.showSendFileScreen(dbCopy,this);
                 Log.d(TAG, "onHeaderClick: Success");
             } catch (IOException e) {
                 e.printStackTrace();

@@ -7,13 +7,16 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,7 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ws.notes.ui.IntroActivity;
+import com.ws.notes.ui.EditTextWithDel;
 import com.ws.notes.utils.DatabaseHelper;
 import com.ws.notes.utils.PreferenceManager;
 import com.ws.notes.utils.RecyclerViewClickListener;
@@ -41,6 +44,7 @@ import com.yanzhenjie.recyclerview.swipe.touch.OnItemMoveListener;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 /**
  * 主要Activity
@@ -61,6 +65,16 @@ public class MainActivity extends AppCompatActivity {
     static boolean isDebug = false;
 
     public android.app.ActionBar actionBar;
+    private static boolean isExit = false;
+    @SuppressLint("HandlerLeak")
+    private static final Handler mHandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            isExit = false;
+        }
+    };
+
 
     public static Context getContext() {
         return context;
@@ -150,7 +164,17 @@ public class MainActivity extends AppCompatActivity {
 //        recyclerView.setSwipeMenuCreator(swipeMenuCreator);
 //        recyclerView.setSwipeMenuItemClickListener(mMenuItemClickListener);
         recyclerView.setOnItemMoveListener(mItemMoveListener);
-        recyclerView.setItemViewSwipeEnabled(true);
+        recyclerView.setLongPressDragEnabled(true); // 拖拽排序，默认关闭。
+        recyclerView.setItemViewSwipeEnabled(true); // 策划删除，默认关闭。
+        View view=getLayoutInflater().inflate(R.layout.activity_main_header,null);
+        EditTextWithDel mEditTextWithDel=view.findViewById(R.id.mEditTextWithDel);
+        mEditTextWithDel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        //recyclerView.addHeaderView(view);
         noteAdapter = new NoteAdapter(noteList);
         recyclerView.setAdapter(noteAdapter);//设置Note集合
 
@@ -158,8 +182,25 @@ public class MainActivity extends AppCompatActivity {
         NoteAdapter.setTitleFontSize(preferences.getFontTitleSize());
         NoteAdapter.setTimeFontSize(preferences.getFontTimeSize());
         NoteAdapter.setContentFontSize(preferences.getFontContextSize());
+        recyclerView.setOnItemMoveListener(new OnItemMoveListener() {
+            @Override
+            public boolean onItemMove(RecyclerView.ViewHolder srcHolder, RecyclerView.ViewHolder targetHolder) {
+                int fromPosition = srcHolder.getAdapterPosition();
+                int toPosition = targetHolder.getAdapterPosition();
+                Collections.swap(noteList, fromPosition, toPosition);
+                noteAdapter.notifyItemMoved(fromPosition, toPosition);
+                return true;
+            }
 
-        Log.d(TAG, "initRecyclerView: length : " + noteAdapter.getItemCount());
+            @Override
+            public void onItemDismiss(RecyclerView.ViewHolder srcHolder) {
+                int position = srcHolder.getAdapterPosition();
+                // Item被侧滑删除时，删除数据，并更新adapter。
+                noteList.remove(position);
+                noteAdapter.notifyItemRemoved(position);
+            }
+        });
+//        Log.d(TAG, "initRecyclerView: length : " + noteAdapter.getItemCount());
 //        recyclerView.addItemDecoration(new NoteDecoration(this, NoteDecoration.VERTICAL_LIST));//todo 分割线与动画联动不美观
 //        recyclerView.addItemDecoration(new DefaultItemDecoration(Color.BLUE, 5, 5));
         recyclerView.addOnItemTouchListener(new RecyclerViewClickListener(this, new RecyclerViewClickListener.OnItemClickListener() {
@@ -260,7 +301,23 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onMenuOpened(featureId, menu);
     }
-
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (!isExit) {
+                isExit = true;
+                Toast.makeText(this,R.string.NoExitTip,Toast.LENGTH_SHORT).show();
+                // 利用handler延迟发送更改状态信息
+                mHandler.sendEmptyMessageDelayed(0, 2000);
+            } else {
+                Toast.makeText(this,R.string.ExitTip,Toast.LENGTH_SHORT).show();
+                finish();
+                System.exit(0);
+            }
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -377,14 +434,13 @@ public class MainActivity extends AppCompatActivity {
             case R.id.main_menu_setting:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 return true;
+            case R.id.main_menu_exit:finish();return true;
             case R.id.main_menu_about:
                 /*启动关于应用*/
                 startActivity(new Intent(MainActivity.this,AppAboutActivity.class));
                 return true;
-            default:
+            default:if(db.isOpen())db.close();return super.onOptionsItemSelected(item);
         }
-        db.close();
-        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -466,7 +522,6 @@ public class MainActivity extends AppCompatActivity {
         public void onItemClick(SwipeMenuBridge menuBridge) {
             // 任何操作必须先关闭菜单，否则可能出现Item菜单打开状态错乱。
             menuBridge.closeMenu();
-
             int direction = menuBridge.getDirection(); // 左侧还是右侧菜单。
             int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
             int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。

@@ -1,5 +1,6 @@
 package com.ws.notes;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,14 +14,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Locale;
-
 import com.ws.notes.receiver.AlarmReceiver;
 import com.ws.notes.ui.TimeAndDatePickerDialog;
 import com.ws.notes.utils.TimeAid;
 import com.ws.notes.utils.Utils;
 import com.ws.notes.utils.dbAid;
 import com.ws.notes.widget.NoteAppWidget;
+
+import java.util.Locale;
 
 /**
  * 编辑便签的Activity
@@ -136,12 +137,10 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
                         if (MainActivity.getIsDebug()) {
                             Toast.makeText(this, "未改变便签不保存", Toast.LENGTH_SHORT).show();
                         }
-//                        MainActivity.getNoteAdapter().refreshData(pos);
+                        MainActivity.getNoteAdapter().refreshData(pos);
                     } else {
                         saveOriginalNote(title, content);
                     }
-//                    AppWidgetManager.getInstance(this).updateAppWidget(dbAid.querySQLWidget(this, time).getAppWidgetID()
-//                            , NoteAppWidget.getRemoteView(this, time, title, content));
                     MainActivity.getNoteAdapter().refreshAllDataForce();
                     NoteAppWidget.updateWidget(this, time, title, content);
                 }
@@ -169,49 +168,49 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         lastChangedTime = TimeAid.getNowTime();
         MainActivity.getNoteAdapter().addData(dbAid.addSQLNote(MainActivity.getDbHelper(), content, title, lastChangedTime, lastChangedTime));
         MainActivity.getRecyclerView().scrollToPosition(0);
-//        ProgressDialog progressDialog = new ProgressDialog(EditActivity.this);
-//        progressDialog.setTitle("保存您的更改");
-//        progressDialog.setMessage("正在保存...");
-//        progressDialog.setCancelable(false);
-//        progressDialog.show();
+        ProgressDialog progressDialog = new ProgressDialog(EditActivity.this);
+        progressDialog.setTitle("保存您的更改");
+        progressDialog.setMessage("正在保存...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
     }
 
     private void saveOriginalNote(String title, String content) {
         lastChangedTime = TimeAid.getNowTime();
         int pos = parentIntent.getIntExtra("pos", 0);
         dbAid.updateSQLNote(title, content, time, pos, lastChangedTime);
-//        ProgressDialog progressDialog = new ProgressDialog(EditActivity.this);
-//        progressDialog.setTitle("保存您的更改");
-//        progressDialog.setMessage("正在保存...");
-//        progressDialog.setCancelable(false);
-//        progressDialog.show();
+        ProgressDialog progressDialog = new ProgressDialog(EditActivity.this);
+        progressDialog.setTitle("保存您的更改");
+        progressDialog.setMessage("正在保存...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void positiveListener() {
-//        mTv_getOffWork.setText(hour+":"+minute);
-        Log.d(TAG, "positiveListener: year  :" + dialog.getYear());
-        Log.d(TAG, "positiveListener: month :" + dialog.getMonth());
-        Log.d(TAG, "positiveListener: day   :" + dialog.getDay());
-        Log.d(TAG, "positiveListener: hour  :" + dialog.getHour());
-        Log.d(TAG, "positiveListener: minute:" + dialog.getMinute());
+//        positiveListenermTv_getOffWork.setText(hour+":"+minute);
+//        Log.d(TAG, "positiveListener: year  :" + dialog.getYear());
+//        Log.d(TAG, "positiveListener: month :" + dialog.getMonth());
+//        Log.d(TAG, "positiveListener: day   :" + dialog.getDay());
+//        Log.d(TAG, "positiveListener: hour  :" + dialog.getHour());
+//        Log.d(TAG, "positiveListener: minute:" + dialog.getMinute());
         String dstStr = String.format(Locale.CHINA, "%d-%d-%d %d:%d:00", dialog.getYear(), dialog.getMonth(), dialog.getDay(), dialog.getHour(), dialog.getMinute());
 //        long dstTime = dbAid.getTimeStamp(dialog.getYear(),
 //                dialog.getMonth(), dialog.getDay(), dialog.getHour(), dialog.getMinute());
         long dstTime = TimeAid.dateToStamp(dstStr);
         long nowTime = TimeAid.getNowTime();
-        Log.d(TAG, "positiveListener: dstTime:" + dstTime);
-        Log.d(TAG, "positiveListener: nowTime:" + nowTime);
-        Log.d(TAG, "positiveListener: time   :" + time);
-        Log.d(TAG, "positiveListener: STAMP :" + dstTime);
-        Log.d(TAG, "positiveListener: diff  :" + TimeAid.getDiff(dstTime, nowTime));
+//        Log.d(TAG, "positiveListener: dstTime:" + dstTime);
+//        Log.d(TAG, "positiveListener: nowTime:" + nowTime);
+//        Log.d(TAG, "positiveListener: time   :" + time);
+//        Log.d(TAG, "positiveListener: STAMP :" + dstTime);
+//        Log.d(TAG, "positiveListener: diff  :" + TimeAid.getDiff(dstTime, nowTime));
         long dDay = TimeAid.getDiffDay(dstTime, nowTime);
         long dHour = TimeAid.getDiffHour(dstTime, nowTime);
         long dMinute = TimeAid.getDiffMinutes(dstTime, nowTime);
-        Log.d(TAG, "positiveListener: diff DAY    : " + dDay);
-        Log.d(TAG, "positiveListener: diff Hour   : " + dHour);
-        Log.d(TAG, "positiveListener: diff Minutes: " + dMinute);
+//        Log.d(TAG, "positiveListener: diff DAY    : " + dDay);
+//        Log.d(TAG, "positiveListener: diff Hour   : " + dHour);
+//        Log.d(TAG, "positiveListener: diff Minutes: " + dMinute);
 //        dbAid.addSQLNotice(this, time, dstTime);
 //        dbAid.updateSQLNotice(this, time, dstTime);
         title = titleET.getText().toString();

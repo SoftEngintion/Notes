@@ -22,7 +22,7 @@ public class Utils {
     public static Typeface getFontAwesome(Context context) {
         if (fontAwesome == null) {
             Log.d(TAG, "getFontAwesome: 不存在并添加");
-            fontAwesome = Typeface.createFromAsset(context.getAssets(), "fontawesome-webfont.ttf");
+            fontAwesome = Typeface.createFromAsset(context.getAssets(), "fonts/fontawesome-webfont.ttf");
         }
         Log.d(TAG, "getFontAwesome: 存在");
         return fontAwesome;
