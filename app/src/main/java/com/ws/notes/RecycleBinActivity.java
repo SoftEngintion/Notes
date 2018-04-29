@@ -16,6 +16,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ws.notes.utils.DatabaseHelper;
+import com.ws.notes.utils.PreferenceManager;
+import com.ws.notes.utils.Utils;
+import com.ws.notes.utils.WrapContentLinearLayoutManager;
+import com.ws.notes.utils.dbAid;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
@@ -26,12 +31,6 @@ import com.yanzhenjie.recyclerview.swipe.touch.OnItemMoveListener;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.ws.notes.utils.DatabaseHelper;
-import com.ws.notes.utils.PreferenceManager;
-import com.ws.notes.utils.Utils;
-import com.ws.notes.utils.WrapContentLinearLayoutManager;
-import com.ws.notes.utils.dbAid;
 
 /**
  * 便签回收站
@@ -55,7 +54,7 @@ public class RecycleBinActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.content_main);
 
         initComponent();
 

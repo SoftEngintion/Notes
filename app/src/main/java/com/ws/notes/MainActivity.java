@@ -1,5 +1,7 @@
 package com.ws.notes;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +12,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -26,7 +29,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ws.notes.ui.EditTextWithDel;
 import com.ws.notes.utils.DatabaseHelper;
 import com.ws.notes.utils.PreferenceManager;
 import com.ws.notes.utils.RecyclerViewClickListener;
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private static LinearLayout emptyView;
     private static TextView emptyTV;
     private static Context context;
-
+    private FloatingActionButton mFloatingActionButton;
     static boolean isDebug = false;
 
     public android.app.ActionBar actionBar;
@@ -129,7 +131,21 @@ public class MainActivity extends AppCompatActivity {
         emptyView = findViewById(R.id.empty_view);
         emptyTV = findViewById(R.id.empty_view_text);
         emptyTV.setTypeface(Utils.getFontAwesome(getApplicationContext()));
-
+        mFloatingActionButton=findViewById(R.id.fab);
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,EditActivity.class);
+                intent.putExtra("title", "");
+                intent.putExtra("content", "");
+                long timeStamp = TimeAid.getNowTime();
+                intent.putExtra("time", TimeAid.stampToDate(timeStamp));
+                intent.putExtra("timeLong", timeStamp);
+                intent.putExtra("isNew", true);
+                intent.putExtra("lastChangedTime", timeStamp);
+                startActivity(intent);
+            }
+        });
         /*判断是否是debug模式*/
         isDebug = preferences.getDebug();
         Log.d(TAG, "onCreate: isDebug " + isDebug);
@@ -161,19 +177,19 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new WrapContentLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 //        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));//瀑布流
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-//        recyclerView.setSwipeMenuCreator(swipeMenuCreator);
-//        recyclerView.setSwipeMenuItemClickListener(mMenuItemClickListener);
+        recyclerView.setSwipeMenuCreator(swipeMenuCreator);
+        recyclerView.setSwipeMenuItemClickListener(mMenuItemClickListener);
         recyclerView.setOnItemMoveListener(mItemMoveListener);
         recyclerView.setLongPressDragEnabled(true); // 拖拽排序，默认关闭。
         recyclerView.setItemViewSwipeEnabled(true); // 策划删除，默认关闭。
-        View view=getLayoutInflater().inflate(R.layout.activity_main_header,null);
-        EditTextWithDel mEditTextWithDel=view.findViewById(R.id.mEditTextWithDel);
-        mEditTextWithDel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+//        View view=getLayoutInflater().inflate(R.layout.activity_main_header,null);
+//        EditTextWithDel mEditTextWithDel=view.findViewById(R.id.mEditTextWithDel);
+//        mEditTextWithDel.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
         //recyclerView.addHeaderView(view);
         noteAdapter = new NoteAdapter(noteList);
         recyclerView.setAdapter(noteAdapter);//设置Note集合
@@ -198,6 +214,69 @@ public class MainActivity extends AppCompatActivity {
                 // Item被侧滑删除时，删除数据，并更新adapter。
                 noteList.remove(position);
                 noteAdapter.notifyItemRemoved(position);
+            }
+        });
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            private boolean isFabAnimg;
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0 ){
+                    if (!isFabAnimg && mFloatingActionButton != null && mFloatingActionButton.getVisibility() == View.VISIBLE) {
+                        Animator animator = ObjectAnimator.ofFloat(mFloatingActionButton, "translationY", 0f, 100f);
+                        animator.setDuration(500);
+                        animator.addListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+                                isFabAnimg = true;
+                            }
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                isFabAnimg = false;
+                                mFloatingActionButton.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animation) {
+                                isFabAnimg = false;
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
+
+                            }
+                        });
+                        animator.start();
+                    }
+                }else{
+                    if (mFloatingActionButton != null && !isFabAnimg && mFloatingActionButton.getVisibility() == View.GONE) {
+                        Animator animator =  ObjectAnimator.ofFloat(mFloatingActionButton,"translationY",100f,0f);
+                        animator.setDuration(500);
+                        animator.addListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+                                isFabAnimg = true;
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                isFabAnimg = false;
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animation) {
+                                isFabAnimg = false;
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
+
+                            }
+                        });
+                        mFloatingActionButton.setVisibility(View.VISIBLE);
+                        animator.start();
+                    }
+                }
+                super.onScrolled(recyclerView, dx, dy);
             }
         });
 //        Log.d(TAG, "initRecyclerView: length : " + noteAdapter.getItemCount());
@@ -324,21 +403,6 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.recycle_bin:
                 startActivity(new Intent(MainActivity.this, RecycleBinActivity.class));
-                return true;
-            case R.id.add_note:
-                /*添加新便签*/
-                Intent intent = new Intent(MainActivity.this,EditActivity.class);
-//                intent.putExtra("pos", position);
-                intent.putExtra("title", "");
-                intent.putExtra("content", "");
-                long timeStamp = TimeAid.getNowTime();
-                intent.putExtra("time", TimeAid.stampToDate(timeStamp));
-                intent.putExtra("timeLong", timeStamp);
-                intent.putExtra("isNew", true);
-                intent.putExtra("lastChangedTime", timeStamp);
-                startActivity(intent);
-//                noteAdapter.addData(dbAid.addSQLNote(dbHelper, "", "新建便签"));
-//                recyclerView.scrollToPosition(0);//移动到顶端
                 return true;
             case R.id.main_menu_add:
 //                final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);

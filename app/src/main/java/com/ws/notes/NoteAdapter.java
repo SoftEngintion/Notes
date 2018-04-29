@@ -146,22 +146,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         } else {
             dstTV.setVisibility(View.GONE);
         }
-//        holder.noteView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                int position = holder.getAdapterPosition();
-////                Note note = com.ws.notes.get(position);
-////                Log.d(TAG, "onClick: Content:" + note.getContent() + "\nTitle:" +
-////                        note.getTitle() + "\nTime:" + note.getLogTime() + "\nPos:" + position);
-////                Intent intent = new Intent("EditActivity");
-////                intent.putExtra("pos", position);
-////                intent.putExtra("title", note.getTitle());
-////                intent.putExtra("content", note.getContent());
-////                intent.putExtra("time", dbAid.stampToDate(note.getTime()));
-////                intent.putExtra("timeLong", note.getTime());
-////                view.getContext().startActivity(intent);
-//            }
-//        });
     }
 
 
