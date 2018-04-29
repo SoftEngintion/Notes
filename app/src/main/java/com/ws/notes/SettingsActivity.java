@@ -25,7 +25,6 @@ import android.widget.Toast;
 
 import com.ws.notes.utils.FileUtils;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -130,14 +129,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         Log.d(TAG, "onHeaderClick id: " + header.id);
         if (header.id == R.id.header_backup) {
             Log.d(TAG, "onHeaderClick id headerBackup: " + header.id);
-            try {
-                String dbCopy = FileUtils.saveDatabaseCopy(getApplicationContext(),getFilesDir());//获取备份数据库文件路径
-                Log.d(TAG, "onHeaderClick: file_path :" + dbCopy);
-                FileUtils.showSendFileScreen(dbCopy,this);
-                Log.d(TAG, "onHeaderClick: Success");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            //                String dbCopy = FileUtils.saveDatabaseCopy(getApplicationContext(),getFilesDir());//获取备份数据库文件路径
+//                Log.d(TAG, "onHeaderClick: file_path :" + dbCopy);
+            FileUtils.showSendFileScreen(this);
+            Log.d(TAG, "onHeaderClick: Success");
         }
         super.onHeaderClick(header, position);
     }
