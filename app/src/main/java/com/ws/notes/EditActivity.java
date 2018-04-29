@@ -1,7 +1,9 @@
 package com.ws.notes;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -164,26 +166,61 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         return super.onOptionsItemSelected(item);
     }
 
-    private void saveNewNote(String title, String content) {
-        lastChangedTime = TimeAid.getNowTime();
-        MainActivity.getNoteAdapter().addData(dbAid.addSQLNote(MainActivity.getDbHelper(), content, title, lastChangedTime, lastChangedTime));
-        MainActivity.getRecyclerView().scrollToPosition(0);
-        ProgressDialog progressDialog = new ProgressDialog(EditActivity.this);
-        progressDialog.setTitle("保存您的更改");
+    @SuppressLint("StaticFieldLeak")
+    private void saveNewNote(final String title, final String content) {
+        final ProgressDialog progressDialog = new ProgressDialog(EditActivity.this);
+        progressDialog.setTitle("保存您的便笺");
         progressDialog.setMessage("正在保存...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected void onPreExecute() {
+                progressDialog.show();
+                super.onPreExecute();
+            }
+            @Override
+            protected Void doInBackground(Void... voids) {
+                lastChangedTime = TimeAid.getNowTime();
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                progressDialog.cancel();
+                progressDialog.dismiss();
+                MainActivity.getNoteAdapter().addData(dbAid.addSQLNote(MainActivity.getDbHelper(), content, title, lastChangedTime, lastChangedTime));
+                MainActivity.getRecyclerView().scrollToPosition(0);
+                super.onPostExecute(aVoid);
+            }
+        }.execute();
     }
 
-    private void saveOriginalNote(String title, String content) {
-        lastChangedTime = TimeAid.getNowTime();
-        int pos = parentIntent.getIntExtra("pos", 0);
-        dbAid.updateSQLNote(title, content, time, pos, lastChangedTime);
-        ProgressDialog progressDialog = new ProgressDialog(EditActivity.this);
+    @SuppressLint("StaticFieldLeak")
+    private void saveOriginalNote(final String title, final String content) {
+        final ProgressDialog progressDialog = new ProgressDialog(EditActivity.this);
         progressDialog.setTitle("保存您的更改");
         progressDialog.setMessage("正在保存...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                progressDialog.show();
+                super.onPreExecute();
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                lastChangedTime = TimeAid.getNowTime();
+                int pos = parentIntent.getIntExtra("pos", 0);
+                dbAid.updateSQLNote(title, content, time, pos, lastChangedTime);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                progressDialog.cancel();
+                progressDialog.dismiss();
+                super.onPostExecute(aVoid);
+            }
+        }.execute();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

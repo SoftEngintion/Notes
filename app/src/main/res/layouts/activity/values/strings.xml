@@ -2,4 +2,6 @@
     <string name="export_success">恭喜你！已成功导出！</string>
     <string name="find_content">请请输入需要查找的内容！</string>
     <string name="main_menu_exit">退出应用</string>
+    <string name="saving_backup">正在保存.........</string>
+    <string name="NullPointerException">对象不存在！</string>
 </resources>

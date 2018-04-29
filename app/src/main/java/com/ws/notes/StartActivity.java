@@ -1,16 +1,13 @@
 package com.ws.notes;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.widget.AdapterViewFlipper;
 
 import com.ws.notes.ui.IntroActivity;
 import com.ws.notes.utils.PreferenceManager;
-
-import static com.ws.notes.MainActivity.isDebug;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -37,7 +34,7 @@ public class StartActivity extends AppCompatActivity {
                 startActivity(new Intent(StartActivity.this,MainActivity.class));
                 finish();
                 }
-                }, 6000);
+                }, 4000);
         }
     }
 

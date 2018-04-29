@@ -179,9 +179,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setSwipeMenuCreator(swipeMenuCreator);
         recyclerView.setSwipeMenuItemClickListener(mMenuItemClickListener);
-        recyclerView.setOnItemMoveListener(mItemMoveListener);
         recyclerView.setLongPressDragEnabled(true); // 拖拽排序，默认关闭。
-        recyclerView.setItemViewSwipeEnabled(true); // 策划删除，默认关闭。
+        recyclerView.setItemViewSwipeEnabled(true); // 侧划删除，默认关闭。
 //        View view=getLayoutInflater().inflate(R.layout.activity_main_header,null);
 //        EditTextWithDel mEditTextWithDel=view.findViewById(R.id.mEditTextWithDel);
 //        mEditTextWithDel.setOnClickListener(new View.OnClickListener() {
@@ -198,24 +197,7 @@ public class MainActivity extends AppCompatActivity {
         NoteAdapter.setTitleFontSize(preferences.getFontTitleSize());
         NoteAdapter.setTimeFontSize(preferences.getFontTimeSize());
         NoteAdapter.setContentFontSize(preferences.getFontContextSize());
-        recyclerView.setOnItemMoveListener(new OnItemMoveListener() {
-            @Override
-            public boolean onItemMove(RecyclerView.ViewHolder srcHolder, RecyclerView.ViewHolder targetHolder) {
-                int fromPosition = srcHolder.getAdapterPosition();
-                int toPosition = targetHolder.getAdapterPosition();
-                Collections.swap(noteList, fromPosition, toPosition);
-                noteAdapter.notifyItemMoved(fromPosition, toPosition);
-                return true;
-            }
-
-            @Override
-            public void onItemDismiss(RecyclerView.ViewHolder srcHolder) {
-                int position = srcHolder.getAdapterPosition();
-                // Item被侧滑删除时，删除数据，并更新adapter。
-                noteList.remove(position);
-                noteAdapter.notifyItemRemoved(position);
-            }
-        });
+        recyclerView.setOnItemMoveListener(mItemMoveListener);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             private boolean isFabAnimg;
             @Override
@@ -565,7 +547,13 @@ public class MainActivity extends AppCompatActivity {
     OnItemMoveListener mItemMoveListener = new OnItemMoveListener() {
         @Override
         public boolean onItemMove(RecyclerView.ViewHolder srcHolder, RecyclerView.ViewHolder targetHolder) {
-            return false;
+            int fromPosition = srcHolder.getAdapterPosition();
+            int toPosition = targetHolder.getAdapterPosition();
+            if(fromPosition>=0&&toPosition>=0) {
+                Collections.swap(noteList, fromPosition, toPosition);
+                noteAdapter.notifyItemMoved(fromPosition, toPosition);
+            }
+            return true;
         }
 
         @Override

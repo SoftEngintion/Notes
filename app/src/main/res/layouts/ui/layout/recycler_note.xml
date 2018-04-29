@@ -13,7 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@null"
+        android:cursorVisible="false"
         android:focusable="false"
+        android:clickable="false"
         android:inputType="none"
         android:textSize="30sp" />
 
@@ -29,7 +31,9 @@
         android:layout_height="wrap_content"
         android:background="@null"
         android:ellipsize="end"
+        android:cursorVisible="false"
         android:focusable="false"
+        android:clickable="false"
         android:inputType="none"
         android:scrollHorizontally="false"
         android:singleLine="true"
