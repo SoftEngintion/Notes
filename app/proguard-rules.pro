@@ -61,3 +61,6 @@
 -dontwarn android.test.**
 -dontwarn android.support.test.**
 -dontwarn org.junit.**
+-keepclasseswithmembers class * {
+    public <init>(android.content.Context);
+}

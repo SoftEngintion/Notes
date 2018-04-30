@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <include layout="@layout/content_main"
+    <com.haibin.calendarview.CalendarLayout
+        android:id="@+id/calendarLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#ffffff"
+        app:default_status="shrink"
+        app:calendar_content_view_id="@+id/ListView">
+        <com.haibin.calendarview.CalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/background_light"
+            app:month_view="com.ws.notes.ui.MeiZuMonthView"
+            app:week_view="com.ws.notes.ui.MeizuWeekView"
+            app:calendar_height="50dp"
+            app:current_month_text_color="#333333"
+            app:month_view_scrollable="true"
+            app:week_view_scrollable="true"
+            app:scheme_lunar_text_color="@color/rippleColor"
+            app:current_day_lunar_text_color="@android:color/holo_orange_dark"
+            app:current_month_lunar_text_color="@color/colorPrimary"
+            app:min_year="2004"
+            app:other_month_text_color="#e1e1e1"
+            app:other_month_lunar_text_color="@color/colorAccent"
+            app:scheme_text="假"
+            app:scheme_text_color="#333"
+            app:scheme_theme_color="#128c4b"
+            app:selected_lunar_text_color="#CFCFCF"
+            app:selected_text_color="#fff"
+            app:selected_theme_color="#108cd4"
+            app:week_start_with="mon"
+            app:week_background="#fff"
+            app:month_view_show_mode="mode_only_current"
+            app:week_text_color="#f17706"
+            app:year_view_scheme_color="#f17706"/>
+        <include layout="@layout/content_main"
+            android:id="@id/ListView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.haibin.calendarview.CalendarLayout>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"

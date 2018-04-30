@@ -3,6 +3,7 @@ package com.ws.notes;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,8 +28,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.haibin.calendarview.Calendar;
+import com.haibin.calendarview.CalendarLayout;
+import com.haibin.calendarview.CalendarView;
 import com.ws.notes.utils.DatabaseHelper;
 import com.ws.notes.utils.PreferenceManager;
 import com.ws.notes.utils.RecyclerViewClickListener;
@@ -47,6 +52,7 @@ import com.yanzhenjie.recyclerview.swipe.touch.OnItemMoveListener;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.List;
 /**
  * 主要Activity
@@ -64,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     private static TextView emptyTV;
     private static Context context;
     private FloatingActionButton mFloatingActionButton;
+    private CalendarLayout calendarLayout;
     static boolean isDebug = false;
 
     public android.app.ActionBar actionBar;
@@ -146,6 +153,58 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        calendarLayout=findViewById(R.id.calendarLayout);
+        calendarLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(calendarLayout.isExpand())
+                    calendarLayout.shrink();
+                else calendarLayout.expand();
+            }
+        });
+        CalendarView calendarView=findViewById(R.id.calendarView);
+        calendarView.setOnDateSelectedListener(new CalendarView.OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(final Calendar calendar, boolean isClick) {
+                if(isClick) {
+                    java.util.Calendar calendar1= GregorianCalendar.getInstance();
+                    final int[] HourOfDay = new int[]{calendar1.get(GregorianCalendar.HOUR_OF_DAY)};
+                    final int[] Minute = new int[]{calendar1.get(GregorianCalendar.MINUTE)};
+                    TimePickerDialog timePickerDialog=new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                            HourOfDay[0] =hourOfDay;
+                            Minute[0] =minute;
+                        }
+                    }, calendar1.get(GregorianCalendar.HOUR_OF_DAY),calendar1.get(GregorianCalendar.MINUTE),true);
+                    timePickerDialog.setCancelable(true);
+                    DialogInterface.OnClickListener onClickListener= new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which){
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    Intent intent = new Intent(MainActivity.this,EditActivity.class);
+                                    intent.putExtra("title", "");
+                                    intent.putExtra("content", "");
+                                    long timeStamp =TimeAid.getTimeStamp(calendar.getYear(),calendar.getMonth(),calendar.getDay(),HourOfDay[0],Minute[0]);
+                                    intent.putExtra("time", TimeAid.stampToDate(timeStamp));
+                                    intent.putExtra("timeLong", timeStamp);
+                                    intent.putExtra("isNew", true);
+                                    intent.putExtra("lastChangedTime", timeStamp);
+                                    startActivity(intent);
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                default:
+                                    dialog.cancel();
+                                    dialog.dismiss();
+                            }
+                        }
+                    };
+                    timePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getString(R.string.mButton_yes),onClickListener);
+                    timePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getString(R.string.mButton_no),onClickListener);
+                    timePickerDialog.show();
+                }
+            }
+        });
         /*判断是否是debug模式*/
         isDebug = preferences.getDebug();
         Log.d(TAG, "onCreate: isDebug " + isDebug);
@@ -155,12 +214,6 @@ public class MainActivity extends AppCompatActivity {
             setTitle(getResources().getString(R.string.app_name) + "[Debug模式]");
             Log.d(TAG, "onCreate: DatabaseDir: " + getDatabasePath("Note.db").getAbsolutePath());
         }
-////        if (preferences.isFirstLaunch()) {
-//        if (isDebug || preferences.isFirstLaunch()) {
-//            startActivityForResult(new Intent(this, IntroActivity.class), REQUEST_CODE_INTRO);
-//            Log.d(TAG, "initComponent: IntroActivity");
-////            startActivity(new Intent(MainActivity.this, IntroActivity.class));
-//        }
     }
 
     /**

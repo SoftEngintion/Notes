@@ -66,7 +66,7 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         if (time == lastChangedTime) {
             timeTV.setText(parentIntent.getStringExtra("time"));
         } else {
-            timeTV.setText(TimeAid.stampToDate(time) + " - 最后更改于" + TimeAid.stampToDate(lastChangedTime));
+            timeTV.setText(TimeAid.stampToDate(time) + getResources().getString(R.string.lastUpdate)+ TimeAid.stampToDate(lastChangedTime));
         }
 
         isNew = parentIntent.getBooleanExtra("isNew", false);
@@ -117,6 +117,14 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
             menu.setGroupVisible(R.id.edit_new_group, false);
         }
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        if(titleET.getText().toString().isEmpty()&&contentET.getText().toString().isEmpty())
+            Toast.makeText(this,R.string.edit_title_hint,Toast.LENGTH_SHORT).show();
+        else if(menu!=null)menu.setGroupVisible(R.id.edit_new_group,true);
+        return super.onMenuOpened(featureId, menu);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
