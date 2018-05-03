@@ -6,39 +6,47 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.ws.notes.EditActivity">
-
-    <EditText
-        android:id="@+id/editor_title"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/edit_title_hint"
-        android:inputType="text"/>
+        android:clickable="false">
+        <EditText
+            android:id="@+id/editor_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/edit_title_hint"
+            android:inputType="text"/>
+    </android.support.design.widget.TextInputLayout>
 
     <TextView
         android:id="@+id/editor_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView" />
-
-    <EditText
-        android:id="@+id/editor_content"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@null"
-        android:ems="10"
-        android:gravity="top"
-        android:hint="@string/edit_content_hint"
-        android:inputType="textMultiLine"
-        android:scrollbars="vertical"
-        android:text="Name" />
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/editor_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@null"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="@string/edit_content_hint"
+            android:inputType="textMultiLine"
+            android:scrollbars="vertical"/>
+    </android.support.design.widget.TextInputLayout>
+
 
     <TextView
         android:id="@+id/editor_dis"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"/>
+
 </LinearLayout>

@@ -36,11 +36,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (Objects.equals(intent.getAction(), "NOTE.NOTIFICATION")) {
-//            long minute = intent.getLongExtra("min", 0);
-//            if (minute > 0) {
-//                Log.d(TAG, "onReceive: 剩余分钟 :" + --minute + " " + intent.getStringExtra("title"));
-//                setAlarm(context, minute, intent.getStringExtra("title"));
-//            } else {
             Log.d(TAG, "onReceive: title :" + intent.getStringExtra("title"));
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             Intent intent2 = new Intent(context, MainActivity.class);
@@ -71,13 +66,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         int type = AlarmManager.RTC_WAKEUP;
-        //new Date()：表示当前日期，可以根据项目需求替换成所求日期
-        //getTime()：日期的该方法同样可以表示从1970年1月1日0点至今所经历的毫秒数
-//        long triggerAtMillis = new Date().getTime() + time;
-//        long triggerAtMillis = TimeAid.getNowTime() + time;
-//        long intervalMillis = 1000 * 60;
-//        manager.setInexactRepeating(type, triggerAtMillis, intervalMillis, pi);
-//        long triggerAtMillis = TimeAid.getNowTime() + 1000 * 60;
         long triggerAtMillis = TimeAid.getNowTime() + 1000 * 60 * minute;
         if (manager != null) {
             if (Build.VERSION.SDK_INT >= 19) {

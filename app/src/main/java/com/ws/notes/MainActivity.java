@@ -178,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }, calendar1.get(GregorianCalendar.HOUR_OF_DAY),calendar1.get(GregorianCalendar.MINUTE),true);
                     timePickerDialog.setCancelable(true);
+                    timePickerDialog.setTitle(R.string.edit_time_time);
                     DialogInterface.OnClickListener onClickListener= new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

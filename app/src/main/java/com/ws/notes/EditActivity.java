@@ -35,7 +35,6 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
     private TimeAndDatePickerDialog dialog;
 
     private EditText titleET;
-    private TextView timeTV;
     private EditText contentET;
     private long time;
     private long lastChangedTime;
@@ -45,6 +44,7 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
     private String content;
     private int pos;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +52,7 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
 
         Log.d(TAG, "onCreate: start " + Utils.getVersionName(this));
         titleET = findViewById(R.id.editor_title);
-        timeTV = findViewById(R.id.editor_time);
+        TextView timeTV = findViewById(R.id.editor_time);
         contentET = findViewById(R.id.editor_content);
         parentIntent = getIntent();
         title = parentIntent.getStringExtra("title");
@@ -234,49 +234,34 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void positiveListener() {
-//        positiveListenermTv_getOffWork.setText(hour+":"+minute);
-//        Log.d(TAG, "positiveListener: year  :" + dialog.getYear());
-//        Log.d(TAG, "positiveListener: month :" + dialog.getMonth());
-//        Log.d(TAG, "positiveListener: day   :" + dialog.getDay());
-//        Log.d(TAG, "positiveListener: hour  :" + dialog.getHour());
-//        Log.d(TAG, "positiveListener: minute:" + dialog.getMinute());
         String dstStr = String.format(Locale.CHINA, "%d-%d-%d %d:%d:00", dialog.getYear(), dialog.getMonth(), dialog.getDay(), dialog.getHour(), dialog.getMinute());
-//        long dstTime = dbAid.getTimeStamp(dialog.getYear(),
-//                dialog.getMonth(), dialog.getDay(), dialog.getHour(), dialog.getMinute());
         long dstTime = TimeAid.dateToStamp(dstStr);
         long nowTime = TimeAid.getNowTime();
-//        Log.d(TAG, "positiveListener: dstTime:" + dstTime);
-//        Log.d(TAG, "positiveListener: nowTime:" + nowTime);
-//        Log.d(TAG, "positiveListener: time   :" + time);
-//        Log.d(TAG, "positiveListener: STAMP :" + dstTime);
-//        Log.d(TAG, "positiveListener: diff  :" + TimeAid.getDiff(dstTime, nowTime));
         long dDay = TimeAid.getDiffDay(dstTime, nowTime);
         long dHour = TimeAid.getDiffHour(dstTime, nowTime);
         long dMinute = TimeAid.getDiffMinutes(dstTime, nowTime);
-//        Log.d(TAG, "positiveListener: diff DAY    : " + dDay);
-//        Log.d(TAG, "positiveListener: diff Hour   : " + dHour);
-//        Log.d(TAG, "positiveListener: diff Minutes: " + dMinute);
-//        dbAid.addSQLNotice(this, time, dstTime);
-//        dbAid.updateSQLNotice(this, time, dstTime);
         title = titleET.getText().toString();
         if (dDay > 0) {
             Toast.makeText(this, "你设定了提醒时间 :" + dstStr
                     + "\n将于" + dDay + "天后提醒你", Toast.LENGTH_SHORT).show();
+            AlarmReceiver.setAlarm(this, dDay * 60 * 24 + dHour * 60 + dMinute, title);
+            dbAid.newSQLNotice(this, time, dstTime);
         } else if (dHour > 0) {
             Toast.makeText(this, "你设定了提醒时间 :" + dstStr
                     + "\n将于" + dHour + "小时后提醒你", Toast.LENGTH_SHORT).show();
+            AlarmReceiver.setAlarm(this, dDay * 60 * 24 + dHour * 60 + dMinute, title);
+            dbAid.newSQLNotice(this, time, dstTime);
         } else if (dMinute > 0) {
             Toast.makeText(this, "你设定了提醒时间 :" + dstStr
                     + "\n将于" + dMinute + "分钟后提醒你", Toast.LENGTH_SHORT).show();
+            AlarmReceiver.setAlarm(this, dDay * 60 * 24 + dHour * 60 + dMinute, title);
+            dbAid.newSQLNotice(this, time, dstTime);
+        }else {
+            Toast.makeText(this,R.string.setAlarm_error,Toast.LENGTH_SHORT).show();
         }
-//        AlarmReceiver.setAlarm(this, dDay * 1000 * 60 * 60 * 24 + dHour * 1000 * 60 * 60 + dMinute * 1000 * 60, title);
-        AlarmReceiver.setAlarm(this, dDay * 60 * 24 + dHour * 60 + dMinute, title);
-        Log.d(TAG, "positiveListener: title" + title);
-        dbAid.newSQLNotice(this, time, dstTime);
     }
 
     @Override
     public void negativeListener() {
-
     }
 }

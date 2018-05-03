@@ -7,4 +7,6 @@
     <string name="lastUpdate">- 最后更改于</string>
     <string name="mButton_yes">确定</string>
     <string name="mButton_no">取消</string>
+    <string name="edit_time_time">添加定制提醒</string>
+    <string name="setAlarm_error">您的操作有误，请重试！</string>
 </resources>
