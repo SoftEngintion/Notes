@@ -22,7 +22,7 @@
         android:id="@+id/editor_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="@string/textview" />
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -41,12 +41,21 @@
             android:inputType="textMultiLine"
             android:scrollbars="vertical"/>
     </android.support.design.widget.TextInputLayout>
-
-
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/switchCompat_add_to_desktop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="@string/add_to_desktop" />
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/switchCompat_add_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="@string/add_time"/>
     <TextView
         android:id="@+id/editor_dis"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"/>
-
 </LinearLayout>

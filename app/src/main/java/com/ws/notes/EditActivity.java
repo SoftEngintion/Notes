@@ -6,12 +6,15 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +55,8 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
 
         Log.d(TAG, "onCreate: start " + Utils.getVersionName(this));
         titleET = findViewById(R.id.editor_title);
+        final SwitchCompat switchCompat_add_to_desktop=findViewById(R.id.switchCompat_add_to_desktop);
+        SwitchCompat switchCompat_add_time=findViewById(R.id.switchCompat_add_time);
         TextView timeTV = findViewById(R.id.editor_time);
         contentET = findViewById(R.id.editor_content);
         parentIntent = getIntent();
@@ -60,7 +65,31 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         pos = parentIntent.getIntExtra("pos", 0);
         titleET.setText(title);
         contentET.setText(content);
+        switchCompat_add_time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(switchCompat_add_to_desktop.getKeepScreenOn()) {
+                    dbAid.pos = pos;
+                    Toast.makeText(EditActivity.this, "添加本便签到桌面\n长按桌面选择本应用挂件拖出即可", Toast.LENGTH_SHORT).show();
+                    Intent home = new Intent(Intent.ACTION_MAIN);
+                    home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    home.addCategory(Intent.CATEGORY_HOME);
+                    startActivity(home);
+                }
+            }
+        });
+        switchCompat_add_time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TextToSpeech textToSpeech=new TextToSpeech(EditActivity.this, new TextToSpeech.OnInitListener() {
+                    @Override
+                    public void onInit(int status) {
 
+                    }
+                });
+                textToSpeech.setLanguage(new Locale(Locale.CHINA.getLanguage()));
+            }
+        });
         time = parentIntent.getLongExtra("timeLong", 0);
         lastChangedTime = parentIntent.getLongExtra("lastChangedTime", 0);
         if (time == lastChangedTime) {

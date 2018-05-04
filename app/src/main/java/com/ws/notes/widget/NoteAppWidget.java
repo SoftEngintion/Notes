@@ -23,16 +23,16 @@ import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.ws.notes.utils.dbAid;
-import com.ws.notes.utils.DatabaseHelper;
 import com.ws.notes.MainActivity;
 import com.ws.notes.Note;
 import com.ws.notes.NoteAdapter;
 import com.ws.notes.R;
+import com.ws.notes.utils.DatabaseHelper;
 import com.ws.notes.utils.TimeAid;
+import com.ws.notes.utils.dbAid;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of App Widget functionality.
@@ -202,6 +202,7 @@ public class NoteAppWidget extends AppWidgetProvider {
                     , NoteAppWidget.getRemoteView(context, time, title, content));
         } catch (NullPointerException e) {
             e.printStackTrace();
+            //Toast.makeText(context,R.string.NullPointerException,Toast.LENGTH_SHORT).show();
         }
     }
 

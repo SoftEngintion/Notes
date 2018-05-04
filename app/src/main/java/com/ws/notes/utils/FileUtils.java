@@ -79,12 +79,12 @@ public abstract class FileUtils {
     }
 
     public static void showSendFileScreen(final SettingsActivity activity) {
-        final File file =new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "backup_Notes.pdf");
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
             File foder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/***");//声明存储位置
             if (!foder.exists()) {//判断文件夹是否存在，如不存在就重新创建
                 foder.mkdirs();
             }
+            final File file =new File(activity.getApplication().getDatabasePath("Note.d"), "backup_Notes.pdf");
             final ProgressDialog progressDialog = new ProgressDialog(activity);
             progressDialog.setMessage(activity.getResources().getString(R.string.saving_backup));
             new AsyncTask<Context, Integer, Void>() {
