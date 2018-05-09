@@ -6,19 +6,22 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SwitchCompat;
+import android.support.v7.widget.AppCompatButton;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.suke.widget.SwitchButton;
 import com.ws.notes.receiver.AlarmReceiver;
 import com.ws.notes.ui.TimeAndDatePickerDialog;
 import com.ws.notes.utils.TimeAid;
@@ -52,11 +55,12 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
-
         Log.d(TAG, "onCreate: start " + Utils.getVersionName(this));
         titleET = findViewById(R.id.editor_title);
-        final SwitchCompat switchCompat_add_to_desktop=findViewById(R.id.switchCompat_add_to_desktop);
-        SwitchCompat switchCompat_add_time=findViewById(R.id.switchCompat_add_time);
+        final LinearLayout mLinearLayout_add_desktop=findViewById(R.id.mLinearLayout_add_desktop);
+        final LinearLayout mLinearLayout_add_time=findViewById(R.id.mLinearLayout_add_time);
+        final SwitchButton switch_add_to_desktop=findViewById(R.id.SwitchButton_add_to_desktop);
+        final SwitchButton switch_add_time=findViewById(R.id.SwitchButton_add_time);
         TextView timeTV = findViewById(R.id.editor_time);
         contentET = findViewById(R.id.editor_content);
         parentIntent = getIntent();
@@ -65,10 +69,88 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         pos = parentIntent.getIntExtra("pos", 0);
         titleET.setText(title);
         contentET.setText(content);
-        switchCompat_add_time.setOnClickListener(new View.OnClickListener() {
+        final AppCompatButton appCompatButton=findViewById(R.id.mButton_yes);
+        appCompatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(switchCompat_add_to_desktop.getKeepScreenOn()) {
+                if(isNew) {
+                    if(title.isEmpty())title=titleET.getText().toString();
+                    if(content.isEmpty())content=contentET.getText().toString();
+                    saveNewNote(title, content);
+                    Toast.makeText(EditActivity.this,R.string.save_success,Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }
+        });
+        titleET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if(!contentET.getText().toString().isEmpty()&&!titleET.getText().toString().isEmpty()
+                        &&mLinearLayout_add_desktop.getVisibility()==View.INVISIBLE
+                        &&mLinearLayout_add_time.getVisibility()==View.INVISIBLE){
+                    mLinearLayout_add_desktop.setVisibility(View.VISIBLE);
+                    mLinearLayout_add_time.setVisibility(View.VISIBLE);
+                    if(isNew&&appCompatButton.getVisibility()==View.INVISIBLE)appCompatButton.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!contentET.getText().toString().isEmpty()&&!titleET.getText().toString().isEmpty()
+                        &&mLinearLayout_add_desktop.getVisibility()==View.INVISIBLE
+                        &&mLinearLayout_add_time.getVisibility()==View.INVISIBLE){
+                    mLinearLayout_add_desktop.setVisibility(View.VISIBLE);
+                    mLinearLayout_add_time.setVisibility(View.VISIBLE);
+                    if(isNew&&appCompatButton.getVisibility()==View.INVISIBLE)appCompatButton.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        contentET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if(!contentET.getText().toString().isEmpty()&&!titleET.getText().toString().isEmpty()
+                        &&mLinearLayout_add_desktop.getVisibility()==View.INVISIBLE
+                        &&mLinearLayout_add_time.getVisibility()==View.INVISIBLE){
+                    mLinearLayout_add_desktop.setVisibility(View.VISIBLE);
+                    mLinearLayout_add_time.setVisibility(View.VISIBLE);
+                    if(isNew&&appCompatButton.getVisibility()==View.INVISIBLE)appCompatButton.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!contentET.getText().toString().isEmpty()&&!titleET.getText().toString().isEmpty()
+                        &&mLinearLayout_add_desktop.getVisibility()==View.INVISIBLE
+                        &&mLinearLayout_add_time.getVisibility()==View.INVISIBLE){
+                    mLinearLayout_add_desktop.setVisibility(View.VISIBLE);
+                    mLinearLayout_add_time.setVisibility(View.VISIBLE);
+                    if(isNew&&appCompatButton.getVisibility()==View.INVISIBLE)appCompatButton.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        switch_add_time.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(SwitchButton view, boolean isChecked) {
+                if(isChecked){
+                    dialog = new TimeAndDatePickerDialog(EditActivity.this);
+                    dialog.showDateAndTimePickerDialog();
+                }
+            }
+        });
+        switch_add_to_desktop.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(SwitchButton view, boolean isChecked) {
+                if(isChecked){
                     dbAid.pos = pos;
                     Toast.makeText(EditActivity.this, "添加本便签到桌面\n长按桌面选择本应用挂件拖出即可", Toast.LENGTH_SHORT).show();
                     Intent home = new Intent(Intent.ACTION_MAIN);
@@ -76,18 +158,6 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
                     home.addCategory(Intent.CATEGORY_HOME);
                     startActivity(home);
                 }
-            }
-        });
-        switchCompat_add_time.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TextToSpeech textToSpeech=new TextToSpeech(EditActivity.this, new TextToSpeech.OnInitListener() {
-                    @Override
-                    public void onInit(int status) {
-
-                    }
-                });
-                textToSpeech.setLanguage(new Locale(Locale.CHINA.getLanguage()));
             }
         });
         time = parentIntent.getLongExtra("timeLong", 0);

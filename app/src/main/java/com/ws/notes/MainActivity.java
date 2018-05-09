@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -54,6 +55,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
+
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+
 /**
  * 主要Activity
  */
@@ -75,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
     public android.app.ActionBar actionBar;
     private static boolean isExit = false;
+    private WaveSwipeRefreshLayout mWaveSwipeRefreshLayout;
     @SuppressLint("HandlerLeak")
     private static final Handler mHandler=new Handler(){
         @Override
@@ -206,6 +211,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        mWaveSwipeRefreshLayout = findViewById(R.id.main_swipe);
+        mWaveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
+            @Override public void onRefresh() {
+                // Do work to refresh the list here.
+                noteAdapter.refreshAllData();
+                new Task().execute();
+            }
+        });
         /*判断是否是debug模式*/
         isDebug = preferences.getDebug();
         Log.d(TAG, "onCreate: isDebug " + isDebug);
@@ -235,18 +248,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setSwipeMenuItemClickListener(mMenuItemClickListener);
         recyclerView.setLongPressDragEnabled(true); // 拖拽排序，默认关闭。
         recyclerView.setItemViewSwipeEnabled(true); // 侧划删除，默认关闭。
-//        View view=getLayoutInflater().inflate(R.layout.activity_main_header,null);
-//        EditTextWithDel mEditTextWithDel=view.findViewById(R.id.mEditTextWithDel);
-//        mEditTextWithDel.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
-        //recyclerView.addHeaderView(view);
         noteAdapter = new NoteAdapter(noteList);
         recyclerView.setAdapter(noteAdapter);//设置Note集合
-
         /*设置RecyclerView内容字体大小*/
         NoteAdapter.setTitleFontSize(preferences.getFontTitleSize());
         NoteAdapter.setTimeFontSize(preferences.getFontTimeSize());
@@ -315,9 +318,6 @@ public class MainActivity extends AppCompatActivity {
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
-//        Log.d(TAG, "initRecyclerView: length : " + noteAdapter.getItemCount());
-//        recyclerView.addItemDecoration(new NoteDecoration(this, NoteDecoration.VERTICAL_LIST));//todo 分割线与动画联动不美观
-//        recyclerView.addItemDecoration(new DefaultItemDecoration(Color.BLUE, 5, 5));
         recyclerView.addOnItemTouchListener(new RecyclerViewClickListener(this, new RecyclerViewClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -349,6 +349,21 @@ public class MainActivity extends AppCompatActivity {
         }));
         checkEmpty();
     }
+    @SuppressLint("StaticFieldLeak")
+    private class Task extends AsyncTask<Void, Void, String[]> {
+
+        @Override
+        protected String[] doInBackground(Void... voids) {
+            return new String[0];
+        }
+
+        @Override protected void onPostExecute(String[] result) {
+            // Call setRefreshing(false) when the list has been refreshed.
+            mWaveSwipeRefreshLayout.setRefreshing(false);
+            Toast.makeText(MainActivity.this,R.string.Refresh,Toast.LENGTH_SHORT).show();
+            super.onPostExecute(result);
+        }
+    }
 
     public static void checkEmpty(){
         if (noteAdapter.getItemCount() == 0) {
@@ -362,7 +377,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode){
+            case 1:break;
+            default:super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override

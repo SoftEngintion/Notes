@@ -1,15 +1,12 @@
 package com.ws.notes.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 
 import com.github.paolorotolo.appintro.AppIntro;
 import com.github.paolorotolo.appintro.AppIntroFragment;
-
-import com.ws.notes.MainActivity;
+import com.github.paolorotolo.appintro.model.SliderPage;
 import com.ws.notes.R;
 
 /**
@@ -23,25 +20,22 @@ public class IntroActivity extends AppIntro {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setFadeAnimation();
         setFlowAnimation();
         setBarColor(getResources().getColor(R.color.colorPrimaryDark));
         setSeparatorColor(getResources().getColor(R.color.colorPrimaryDark));
-        Log.d(TAG, "onCreate: 开始");
-//        com.github.paolorotolo.appintro.AppIntro2Fragment.newInstance();
         addSlide(AppIntroFragment.newInstance(getString(R.string.intro1_title), getString(R.string.intro1_desc),
-                R.drawable.appwidget_preview, getResources().getColor(R.color.colorPrimaryDark)));
-        CustomSlideBigText cs1 = CustomSlideBigText.newInstance(R.layout.custom_slide_big_text);
-        cs1.setTitle(getString(R.string.intro2_title));
-        addSlide(cs1);
-
-//        CustomSlideBigText cs2 = CustomSlideBigText.newInstance(R.layout.custom_slide_big_text);
-//        cs2.setTitle(getString(R.string.intro3_desc));
-//        addSlide(cs2);
-
+                R.drawable.start1, getResources().getColor(R.color.colorPrimaryDark)));
+//        CustomSlideBigText cs1 = CustomSlideBigText.newInstance(R.layout.custom_slide_big_text);
+//        cs1.setTitle(getString(R.string.intro2_title));
+//        addSlide(cs1);
+        SliderPage sliderPage=new SliderPage();
+        sliderPage.setImageDrawable(R.drawable.start1);
+        sliderPage.setBgColor(getResources().getColor(R.color.colorPrimaryDark));
+        addSlide(AppIntroFragment.newInstance(sliderPage));
         addSlide(AppIntroFragment.newInstance(getString(R.string.intro3_title), getString(R.string.intro3_desc),
-                R.drawable.appwidget_preview, getResources().getColor(R.color.colorPrimaryDark)));
-
+                R.drawable.start2, getResources().getColor(R.color.colorPrimaryDark)));
+        addSlide(AppIntroFragment.newInstance(getString(R.string.intro3_title), getString(R.string.intro3_desc),
+                R.drawable.start3, getResources().getColor(R.color.colorPrimaryDark)));
         setDoneText(getString(R.string.intro_done));
         setSkipText(getString(R.string.intro_skip));
         showSkipButton(true);
