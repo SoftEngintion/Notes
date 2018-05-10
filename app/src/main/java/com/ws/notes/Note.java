@@ -6,6 +6,7 @@ package com.ws.notes;
  */
 
 public class Note {
+    private int id;
     private String title;
     private String content;
     private String logTime;
@@ -28,6 +29,15 @@ public class Note {
         this.lastChangedTime = lastChangedTime;
     }
 
+    public Note(int id, String title, String content, String logTime, long time, long lastChangedTime) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.logTime = logTime;
+        this.time = time;
+        this.lastChangedTime = lastChangedTime;
+    }
+
     public Note(String title, String content, String logTime, long time, long lastChangedTime, long dstTime) {
         this(title, content, logTime, time, lastChangedTime);
         this.dstTime = dstTime;
@@ -35,6 +45,14 @@ public class Note {
 
     public Note(String title, String content, long time) {
         this(title, content, "", time, 0);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {

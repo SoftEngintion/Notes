@@ -11,7 +11,7 @@
         android:orientation="vertical"
         android:background="#ffffff"
         app:default_status="shrink"
-        app:calendar_content_view_id="@+id/ListView">
+        app:calendar_content_view_id="@+id/main_swipe">
         <com.haibin.calendarview.CalendarView
             android:id="@+id/calendarView"
             android:layout_width="match_parent"
@@ -26,26 +26,30 @@
             app:scheme_lunar_text_color="@color/rippleColor"
             app:current_day_lunar_text_color="@android:color/holo_orange_dark"
             app:current_month_lunar_text_color="@color/colorPrimary"
-            app:min_year="2004"
+            app:min_year="1900"
             app:other_month_text_color="#e1e1e1"
             app:other_month_lunar_text_color="@color/colorAccent"
             app:scheme_text="假"
             app:scheme_text_color="#333"
-            app:scheme_theme_color="#128c4b"
-            app:selected_lunar_text_color="#CFCFCF"
-            app:selected_text_color="#fff"
+            app:scheme_theme_color="#55e3ff"
+            app:selected_lunar_text_color="#f70d86"
+            app:selected_text_color="#03ff07"
             app:selected_theme_color="#108cd4"
             app:week_start_with="mon"
-            app:week_background="#fff"
+            app:week_background="#ffffff"
             app:month_view_show_mode="mode_only_current"
             app:week_text_color="#f17706"
             app:year_view_scheme_color="#f17706"/>
-        <include layout="@layout/content_main"
-            android:id="@id/ListView"
+        <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/calendarView"
+            android:id="@id/main_swipe">
+        <include layout="@layout/content_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+    </jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
     </com.haibin.calendarview.CalendarLayout>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

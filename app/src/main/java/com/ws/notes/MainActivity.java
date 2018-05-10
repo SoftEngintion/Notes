@@ -32,6 +32,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.flyco.dialog.listener.OnBtnClickL;
+import com.flyco.dialog.widget.NormalDialog;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
@@ -215,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
         mWaveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
             @Override public void onRefresh() {
                 // Do work to refresh the list here.
-                noteAdapter.refreshAllData();
+                noteAdapter.refreshAllDataForce();
                 new Task().execute();
             }
         });
@@ -343,8 +345,28 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onItemLongClick(View view, int position) {
-                Toast.makeText(MainActivity.this, "Long Click " + NoteAdapter.getNotes().get(position), Toast.LENGTH_SHORT).show();
+            public void onItemLongClick(View view, final int position) {
+                final NormalDialog normalDialog=new NormalDialog(MainActivity.this);
+                normalDialog.style(NormalDialog.STYLE_TWO);
+                normalDialog.title(getString(R.string.Notes_delete_tip));
+                normalDialog.content(getString(R.string.Notes_delete));
+                normalDialog.setOnBtnClickL(new OnBtnClickL() {
+                    @Override
+                    public void onBtnClick() {
+                        normalDialog.cancel();
+                        normalDialog.dismiss();
+                    }
+                }, new OnBtnClickL() {
+                    @Override
+                    public void onBtnClick() {
+                        long time = NoteAdapter.getNotes().get(position).getTime();
+                        dbAid.deleteSQLNote(time);
+                        noteAdapter.removeData(position);
+                        normalDialog.cancel();
+                        normalDialog.dismiss();
+                    }
+                });
+                normalDialog.show();
             }
         }));
         checkEmpty();
@@ -459,32 +481,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, RecycleBinActivity.class));
                 return true;
             case R.id.main_menu_add:
-//                final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
-//                progressDialog.setTitle("保存您的更改");
-//                progressDialog.setMessage("正在保存...");
-//                progressDialog.setCancelable(false);
-//                progressDialog.show();
-//                Thread t = new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//                            Thread.sleep(1000);//让他显示10秒后，取消ProgressDialog
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
-//                        progressDialog.dismiss();
-//                    }
-//                });
-//                t.start();
-                /*测试用添加三个便签数据*/
-                noteAdapter.addData(dbAid.addSQLNote(dbHelper, "近日，日本汽车巨头尼桑（国内称为日产）宣布将在北美地区的展厅演示增强现实（AR）体验，旨在向客户介绍旗下汽车的安全性以及驾驶辅助系统的相关技术。\n" +
-                        "这个AR体验被命名为“见所未见（See the Unseen）”，将在即将上映的电影《星球大战8：最后的绝地武士》之前，也就是12月初发布。该体验将包含来自《星球大战》宇宙中的多个角色，比如风暴突击队和克隆人军团等。", "汽车巨头尼桑推出全新《星球大战》AR体验"));
-                noteAdapter.addData(dbAid.addSQLNote(dbHelper, "做父母的，辛辛苦苦一辈子，最大的心愿是子女幸福健康有出息。所以，只要是给子女未来铺路的事，尤其是教育方面的投入，绝大多数父母都愿意砸钱。", "\"女儿\"要到哈佛大学当交换生 父亲看完短信汇23万"));
-                noteAdapter.addData(dbAid.addSQLNote(dbHelper, "这个网络流行的meme也有了成真的一天。据福克斯新闻报道，美国俄亥俄州辛辛那提，一名13岁的熊孩子看到家里有只虫子，于是掏出打火机想要放火灭虫。不想不慎将整栋公寓都引燃，造成8人流离失所，造成至少30万美元的经济损失。\n" +
-                        "周二晚上11点，辛辛那提市一公寓突然发生火花爆炸，在消防员赶到之前，火焰已经蔓延了6间屋子。\n" +
-                        "消防员紧急撤离了楼内住户，并开始灭火。火势很快扑灭，万幸没有人员伤亡，但房屋已被烧毁，三名成年人和五名儿童流离失所。", "13岁熊孩子为了灭虫把整栋楼都烧了 网友：值了"));
-                recyclerView.scrollToPosition(0);//移动到顶端
-                checkEmpty();
                 return true;
             case R.id.remove_note:
                 /*清空数据库*/
@@ -532,19 +528,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.note_clear:
                 /*删除所有便签，清空列表*/
                 int size = NoteAdapter.getNotes().size();
-//                Cursor cursor1 = db.query("Note", null, null, null, null, null, null);
-//                if (cursor1.moveToFirst()) {
-//                    do {
-//                        long time = cursor1.getLong(cursor1.getColumnIndex("time"));
-//                        dbAid.deleteSQLNote(time);
-//                    } while (cursor1.moveToNext());
-//                }
-//                cursor1.close();
                 for (Note note: NoteAdapter.getNotes()){
                     dbAid.deleteSQLNote(note.getTime());
                 }
-//                noteList.clear();
-//                initNodes();
                 NoteAdapter.getNotes().clear();
                 noteAdapter.refreshAllData(size);
                 checkEmpty();
@@ -621,7 +607,7 @@ public class MainActivity extends AppCompatActivity {
         public boolean onItemMove(RecyclerView.ViewHolder srcHolder, RecyclerView.ViewHolder targetHolder) {
             int fromPosition = srcHolder.getAdapterPosition();
             int toPosition = targetHolder.getAdapterPosition();
-            if(fromPosition>=0&&toPosition>=0) {
+            if(fromPosition>=0&&toPosition>=0&&fromPosition<noteList.size()&&toPosition<noteList.size()) {
                 Collections.swap(noteList, fromPosition, toPosition);
                 noteAdapter.notifyItemMoved(fromPosition, toPosition);
             }

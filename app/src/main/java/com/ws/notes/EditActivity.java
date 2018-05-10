@@ -249,9 +249,9 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
                         MainActivity.getNoteAdapter().refreshData(pos);
                     } else {
                         saveOriginalNote(title, content);
+                        MainActivity.getNoteAdapter().refreshAllDataForce();
+                        NoteAppWidget.updateWidget(this, time, title, content);
                     }
-                    MainActivity.getNoteAdapter().refreshAllDataForce();
-                    NoteAppWidget.updateWidget(this, time, title, content);
                 }
                 finish();
                 return true;
@@ -343,18 +343,18 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         if (dDay > 0) {
             Toast.makeText(this, "你设定了提醒时间 :" + dstStr
                     + "\n将于" + dDay + "天后提醒你", Toast.LENGTH_SHORT).show();
-            AlarmReceiver.setAlarm(this, dDay * 60 * 24 + dHour * 60 + dMinute, title);
+            AlarmReceiver.setAlarm(this,dbAid.querySQLNote(MainActivity.getDbHelper(),dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
             dbAid.newSQLNotice(this, time, dstTime);
         } else if (dHour > 0) {
             Toast.makeText(this, "你设定了提醒时间 :" + dstStr
                     + "\n将于" + dHour + "小时后提醒你", Toast.LENGTH_SHORT).show();
-            AlarmReceiver.setAlarm(this, dDay * 60 * 24 + dHour * 60 + dMinute, title);
+            AlarmReceiver.setAlarm(this,dbAid.querySQLNote(MainActivity.getDbHelper(),dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
             dbAid.newSQLNotice(this, time, dstTime);
         } else if (dMinute > 0) {
             Toast.makeText(this, "你设定了提醒时间 :" + dstStr
                     + "\n将于" + dMinute + "分钟后提醒你", Toast.LENGTH_SHORT).show();
-            AlarmReceiver.setAlarm(this, dDay * 60 * 24 + dHour * 60 + dMinute, title);
             dbAid.newSQLNotice(this, time, dstTime);
+            AlarmReceiver.setAlarm(this, dbAid.querySQLNote(MainActivity.getDbHelper(),dstTime).getId(),dDay * 60 * 24 + dHour * 60 + dMinute, title);
         }else {
             Toast.makeText(this,R.string.setAlarm_error,Toast.LENGTH_SHORT).show();
         }
