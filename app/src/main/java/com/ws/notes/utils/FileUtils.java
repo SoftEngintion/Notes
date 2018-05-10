@@ -1,9 +1,11 @@
 package com.ws.notes.utils;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -14,6 +16,9 @@ import android.os.Environment;
 import android.print.PrintAttributes;
 import android.print.pdf.PrintedPdfDocument;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.ws.notes.R;
@@ -27,6 +32,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+
+import static android.support.constraint.Constraints.TAG;
 
 /**
  * 文件操作相关函数集
@@ -80,33 +87,40 @@ public abstract class FileUtils {
 
     public static void showSendFileScreen(final SettingsActivity activity) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            File foder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/***");//声明存储位置
-            if (!foder.exists()) {//判断文件夹是否存在，如不存在就重新创建
-                foder.mkdirs();
-            }
-            final File file =new File(activity.getApplication().getDatabasePath("Note.d"), "backup_Notes.pdf");
-            final ProgressDialog progressDialog = new ProgressDialog(activity);
-            progressDialog.setMessage(activity.getResources().getString(R.string.saving_backup));
-            new AsyncTask<Context, Integer, Void>() {
-                @Override
-                protected void onPreExecute() {
-                    progressDialog.setTitle(R.string.save_backup);
-                    progressDialog.show();
-                    super.onPreExecute();
+            if(ContextCompat.checkSelfPermission(activity.getApplication(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                final File foder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/backup");//声明存储位置
+                if (!foder.exists()) {//判断文件夹是否存在，如不存在就重新创建
+                    foder.mkdirs();
                 }
-                @Override
-                protected Void doInBackground(Context... contexts) {
-                    backup_tables(activity,file);
-                    return null;
-                }
+                Log.i(TAG, "showSendFileScreen: " + foder.getAbsolutePath());
+                final File file = new File(foder, "backup_Notes.pdf");
+                final ProgressDialog progressDialog = new ProgressDialog(activity);
+                progressDialog.setMessage(activity.getResources().getString(R.string.saving_backup));
+                new AsyncTask<Context, Integer, Void>() {
+                    @Override
+                    protected void onPreExecute() {
+                        progressDialog.setTitle(R.string.save_backup);
+                        progressDialog.show();
+                        super.onPreExecute();
+                    }
 
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    progressDialog.dismiss();
-                    Toast.makeText(activity,R.string.export_success,Toast.LENGTH_SHORT).show();
-                    super.onPostExecute(aVoid);
-                }
-            }.execute(activity);
+                    @Override
+                    protected Void doInBackground(Context... contexts) {
+                        backup_tables(activity, file);
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        progressDialog.dismiss();
+                        Toast.makeText(activity, activity.getResources().getString(R.string.export_success) + "请在" + foder.getAbsolutePath() + "文件夹下查看", Toast.LENGTH_LONG).show();
+                        super.onPostExecute(aVoid);
+                    }
+                }.execute(activity);
+            }else {
+                ActivityCompat.requestPermissions(activity,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1 );
+            }
         }else {
             Intent intent = new Intent(Intent.ACTION_SEND);
             Intent chooser = Intent.createChooser(intent, activity.getResources().getString(R.string.save_backup));
@@ -126,15 +140,20 @@ public abstract class FileUtils {
         int LeftMargin=54;
         Paint paint=new Paint();
         paint.setColor(Color.BLACK);
-        paint.setTextSize(36);
+        paint.setTextSize(12);
+        paint.setAntiAlias(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            paint.setLetterSpacing(2);
+        }
+        paint.setTextAlign(Paint.Align.LEFT);
         Cursor cursor = dbAid.getDbHelper(context).getReadableDatabase().
                     query("Note", null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             /*
             * 打印表头*/
-            for(int i=0,size=cursor.getColumnCount(),x=LeftMargin,y=titleBaseLine;i<size;++i) {
-                canvas.drawText(cursor.getColumnName(i)+"   |",x,y,paint);
-                y+=cursor.getColumnName(i).length()+5;
+            for(int i = 0, size = cursor.getColumnCount(), x = titleBaseLine; i<size; ++i) {
+                canvas.drawText(cursor.getColumnName(i)+"   |", x,LeftMargin,paint);
+                x+=cursor.getColumnName(i).length()+paint.getFontMetrics().ascent;
             }
             /*
             * 打印表信息*/
@@ -142,22 +161,28 @@ public abstract class FileUtils {
             do {
                 for(int i=0,size=cursor.getColumnCount();i<size;++i){
                     canvas.drawText(cursor.getString(i),x,y,paint);
-                    y+=cursor.getString(i).length()+5;
+                    x+=cursor.getString(i).length()*(paint.getFontMetrics().descent-paint.getFontMetrics().ascent);
                 }
-                x+=5;
+                y+=paint.getFontMetrics().bottom-paint.getFontMetrics().top;
             } while (cursor.moveToNext());
         }
-        if(cursor.isClosed())cursor.close();
-        paint.setColor(Color.BLUE);
-        canvas.drawRect(100,100,172,172,paint);
+        if(!cursor.isClosed())cursor.close();
         pdfDocument.finishPage(page);//结束页
+        FileOutputStream outputStream=null;
         try {
-            FileOutputStream outputStream=new FileOutputStream(file);
+            outputStream=new FileOutputStream(file);
             pdfDocument.writeTo(outputStream);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            pdfDocument.close();
+            try {
+                if(outputStream!=null)outputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

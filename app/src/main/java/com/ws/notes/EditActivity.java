@@ -70,18 +70,6 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         titleET.setText(title);
         contentET.setText(content);
         final AppCompatButton appCompatButton=findViewById(R.id.mButton_yes);
-        appCompatButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isNew) {
-                    if(title.isEmpty())title=titleET.getText().toString();
-                    if(content.isEmpty())content=contentET.getText().toString();
-                    saveNewNote(title, content);
-                    Toast.makeText(EditActivity.this,R.string.save_success,Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            }
-        });
         titleET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -157,6 +145,18 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
                     home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     home.addCategory(Intent.CATEGORY_HOME);
                     startActivity(home);
+                }
+            }
+        });
+        appCompatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isNew) {
+                    if(title.isEmpty())title=titleET.getText().toString();
+                    if(content.isEmpty())content=contentET.getText().toString();
+                    saveNewNote(title, content);
+                    Toast.makeText(EditActivity.this,R.string.save_success,Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             }
         });

@@ -30,13 +30,10 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private static final String TAG = "AlarmReceiver";
 
-    private static final int NOTIFICATION_ID = 1000;
-
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onReceive(Context context, Intent intent) {
         if (Objects.equals(intent.getAction(), "NOTE.NOTIFICATION")) {
-            Log.d(TAG, "onReceive: title :" + intent.getStringExtra("title"));
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             Intent intent2 = new Intent(context, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent2, 0);
@@ -44,23 +41,29 @@ public class AlarmReceiver extends BroadcastReceiver {
                     .setSmallIcon(R.drawable.appwidget_preview)
                     .setContentTitle(context.getString(R.string.app_name)+"提醒")
                     .setSound(Uri.fromFile(new File("/system/media/audio/alarms/wr.ogg")))
-//                    .setSound(Uri.parse("android.resource://" + NoteAppWidget.getmContext().getPackageName() + "/" + R.raw.wr))
                     .setVibrate(new long[]{0, 1000, 1000, 1000})
                     .setLights(Color.GREEN, 1000, 1000)
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(intent.getStringExtra("title")))
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true)
                     .setNumber(1).build();
-            manager.notify(NOTIFICATION_ID, notify);
+            manager.notify(intent.getIntExtra("id",0), notify);
         }
 //        }
     }
-
+    public static Boolean CancelAlarm(Context context,int notificationID){
+        NotificationManager manager=(NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (manager != null) {
+            manager.cancel(notificationID);
+        }
+        return true;
+    }
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static void setAlarm(Context context, long minute, String title) {
+    public static void setAlarm(Context context,int id, long minute, String title) {
         Log.d(TAG, "setAlarm: minute: " + minute);
         Intent intent = new Intent(context, AlarmReceiver.class);
         intent.setAction("NOTE.NOTIFICATION");
+        intent.putExtra("id",id);
         intent.putExtra("title", title);
         intent.putExtra("min", minute);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);

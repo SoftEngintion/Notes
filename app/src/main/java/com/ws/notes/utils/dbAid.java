@@ -9,11 +9,10 @@ import android.util.Log;
 import com.ws.notes.MainActivity;
 import com.ws.notes.Note;
 import com.ws.notes.NoteAdapter;
+import com.ws.notes.widget.WidgetInfo;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.ws.notes.widget.WidgetInfo;
 
 /**
  * 存放各种操作方法的助手类
@@ -154,7 +153,7 @@ public abstract class dbAid {
                 long time = cursor.getLong(cursor.getColumnIndex("time"));
                 long lastChangedTime = cursor.getLong(cursor.getColumnIndex("lastChangedTime"));
                 if (isDeleted == 0) {
-                    noteList.add(0, new Note(title, content, logtime, time, lastChangedTime));//数据库按ID顺序倒序排列
+                    noteList.add(0, new Note(id,title, content, logtime, time, lastChangedTime));//数据库按ID顺序倒序排列
                 }
             } while (cursor.moveToNext());
         }
@@ -178,7 +177,7 @@ public abstract class dbAid {
                 long time = cursor.getLong(cursor.getColumnIndex("time"));
                 long lastChangedTime = cursor.getLong(cursor.getColumnIndex("lastChangedTime"));
                 if (isDeleted == 0) {
-                    noteList.add(0, new Note(title, content, logtime, time, lastChangedTime));//数据库按ID顺序倒序排列
+                    noteList.add(0, new Note(id,title, content, logtime, time, lastChangedTime));//数据库按ID顺序倒序排列
                 }
             } while (cursor.moveToNext());
         }

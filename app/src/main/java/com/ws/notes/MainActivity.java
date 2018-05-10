@@ -218,6 +218,12 @@ public class MainActivity extends AppCompatActivity {
             @Override public void onRefresh() {
                 // Do work to refresh the list here.
                 noteAdapter.refreshAllDataForce();
+                if (mFloatingActionButton != null  && mFloatingActionButton.getVisibility() == View.GONE) {
+                    Animator animator =  ObjectAnimator.ofFloat(mFloatingActionButton,"translationY",100f,0f);
+                    animator.setDuration(500);
+                    mFloatingActionButton.setVisibility(View.VISIBLE);
+                    animator.start();
+                }
                 new Task().execute();
             }
         });
@@ -244,7 +250,6 @@ public class MainActivity extends AppCompatActivity {
         /*RecyclerView初始化*/
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new WrapContentLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-//        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));//瀑布流
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setSwipeMenuCreator(swipeMenuCreator);
         recyclerView.setSwipeMenuItemClickListener(mMenuItemClickListener);

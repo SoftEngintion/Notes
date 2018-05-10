@@ -202,7 +202,6 @@ public class NoteAppWidget extends AppWidgetProvider {
                     , NoteAppWidget.getRemoteView(context, time, title, content));
         } catch (NullPointerException e) {
             e.printStackTrace();
-            //Toast.makeText(context,R.string.NullPointerException,Toast.LENGTH_SHORT).show();
         }
     }
 
