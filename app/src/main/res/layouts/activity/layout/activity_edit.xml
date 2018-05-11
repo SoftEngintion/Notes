@@ -3,17 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="com.ws.notes.EditActivity">
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:clickable="false">
         <EditText
             android:id="@+id/editor_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:hint="@string/edit_title_hint"
             android:inputType="text"/>
     </android.support.design.widget.TextInputLayout>
@@ -22,10 +28,27 @@
         android:id="@+id/editor_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
         android:text="@string/textview" />
+    <TextView
+        android:id="@+id/editor_dis"
+        android:layout_weight="1"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_time"
+        android:visibility="invisible"/>
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_weight="15">
         <EditText
             android:id="@+id/editor_content"
             android:layout_width="match_parent"
@@ -44,6 +67,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:id="@+id/mLinearLayout_add_desktop"
         android:orientation="horizontal"
         android:visibility="invisible">
@@ -51,11 +75,15 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:clickable="false"
-            android:gravity="center_vertical|left"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:typeface="monospace"
-            android:layout_weight="3"
+            android:layout_weight="6"
             android:text="@string/add_to_desktop"/>
         <com.suke.widget.SwitchButton
+            android:layout_weight="1"
             android:id="@+id/SwitchButton_add_to_desktop"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"/>
@@ -65,29 +93,34 @@
         android:layout_height="wrap_content"
         android:id="@+id/mLinearLayout_add_time"
         android:orientation="horizontal"
+        android:layout_weight="1"
         android:visibility="invisible">
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:clickable="false"
-            android:gravity="center_vertical|left"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
             android:typeface="monospace"
-            android:layout_weight="3"
+            android:layout_weight="6"
             android:text="@string/add_time"/>
         <com.suke.widget.SwitchButton
+            android:layout_weight="1"
             android:id="@+id/SwitchButton_add_time"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"/>
     </LinearLayout>
-    <TextView
-        android:id="@+id/editor_dis"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"/>
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/mButton_yes"
         android:text="@string/mButton_yes"
         android:visibility="invisible"
+        android:layout_weight="1"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:theme="@style/RippleButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

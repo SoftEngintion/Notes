@@ -160,8 +160,8 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
                 }
             }
         });
-        time = parentIntent.getLongExtra("timeLong", 0);
-        lastChangedTime = parentIntent.getLongExtra("lastChangedTime", 0);
+        time = parentIntent.getLongExtra("timeLong", TimeAid.getNowTime());
+        lastChangedTime = parentIntent.getLongExtra("lastChangedTime", TimeAid.getNowTime());
         if (time == lastChangedTime) {
             timeTV.setText(parentIntent.getStringExtra("time"));
         } else {
@@ -184,14 +184,12 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
             }
         } else {
             if (this.content.equals(content) && this.title.equals(title)) {
-                if (MainActivity.getIsDebug()) {
                     Toast.makeText(this, "未改变便签不保存", Toast.LENGTH_SHORT).show();
-                }
             } else {
                 saveOriginalNote(title, content);
             }
             NoteAppWidget.updateWidget(this, time, title, content);
-            MainActivity.getNoteAdapter().refreshAllDataForce();
+            CalendarActivity.getNoteAdapter().refreshAllDataForce();
         }
         finish();
         super.onBackPressed();
@@ -243,15 +241,13 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
                     }
                 } else {
                     if (this.content.equals(content) && this.title.equals(title)) {
-                        if (MainActivity.getIsDebug()) {
-                            Toast.makeText(this, "未改变便签不保存", Toast.LENGTH_SHORT).show();
-                        }
-                        MainActivity.getNoteAdapter().refreshData(pos);
+                        Toast.makeText(this, "未改变便签不保存", Toast.LENGTH_SHORT).show();
+                        CalendarActivity.getNoteAdapter().refreshData(pos);
                     } else {
                         saveOriginalNote(title, content);
-                        MainActivity.getNoteAdapter().refreshAllDataForce();
-                        NoteAppWidget.updateWidget(this, time, title, content);
                     }
+                    NoteAppWidget.updateWidget(this, time, title, content);
+                    CalendarActivity.getNoteAdapter().refreshAllDataForce();
                 }
                 finish();
                 return true;
@@ -292,10 +288,10 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
             }
             @Override
             protected void onPostExecute(Void aVoid) {
+                CalendarActivity.getRecyclerView().scrollToPosition(0);
+                CalendarActivity.getNoteAdapter().addData(dbAid.addSQLNote(CalendarActivity.getDbHelper(), content, title, lastChangedTime, lastChangedTime));
                 progressDialog.cancel();
                 progressDialog.dismiss();
-                MainActivity.getNoteAdapter().addData(dbAid.addSQLNote(MainActivity.getDbHelper(), content, title, lastChangedTime, lastChangedTime));
-                MainActivity.getRecyclerView().scrollToPosition(0);
                 super.onPostExecute(aVoid);
             }
         }.execute();
@@ -303,31 +299,9 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
 
     @SuppressLint("StaticFieldLeak")
     private void saveOriginalNote(final String title, final String content) {
-        final ProgressDialog progressDialog = new ProgressDialog(EditActivity.this);
-        progressDialog.setTitle("保存您的更改");
-        progressDialog.setMessage("正在保存...");
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected void onPreExecute() {
-                progressDialog.show();
-                super.onPreExecute();
-            }
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                lastChangedTime = TimeAid.getNowTime();
-                int pos = parentIntent.getIntExtra("pos", 0);
-                dbAid.updateSQLNote(title, content, time, pos, lastChangedTime);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                progressDialog.cancel();
-                progressDialog.dismiss();
-                super.onPostExecute(aVoid);
-            }
-        }.execute();
+        lastChangedTime = TimeAid.getNowTime();
+        int pos = parentIntent.getIntExtra("pos", 0);
+        dbAid.updateSQLNote(title, content, time, pos, lastChangedTime);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -343,18 +317,18 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         if (dDay > 0) {
             Toast.makeText(this, "你设定了提醒时间 :" + dstStr
                     + "\n将于" + dDay + "天后提醒你", Toast.LENGTH_SHORT).show();
-            AlarmReceiver.setAlarm(this,dbAid.querySQLNote(MainActivity.getDbHelper(),dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
+            AlarmReceiver.setAlarm(this,dbAid.querySQLNote(CalendarActivity.getDbHelper(),dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
             dbAid.newSQLNotice(this, time, dstTime);
         } else if (dHour > 0) {
             Toast.makeText(this, "你设定了提醒时间 :" + dstStr
                     + "\n将于" + dHour + "小时后提醒你", Toast.LENGTH_SHORT).show();
-            AlarmReceiver.setAlarm(this,dbAid.querySQLNote(MainActivity.getDbHelper(),dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
+            AlarmReceiver.setAlarm(this,dbAid.querySQLNote(CalendarActivity.getDbHelper(),dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
             dbAid.newSQLNotice(this, time, dstTime);
         } else if (dMinute > 0) {
             Toast.makeText(this, "你设定了提醒时间 :" + dstStr
                     + "\n将于" + dMinute + "分钟后提醒你", Toast.LENGTH_SHORT).show();
             dbAid.newSQLNotice(this, time, dstTime);
-            AlarmReceiver.setAlarm(this, dbAid.querySQLNote(MainActivity.getDbHelper(),dstTime).getId(),dDay * 60 * 24 + dHour * 60 + dMinute, title);
+            AlarmReceiver.setAlarm(this, dbAid.querySQLNote(CalendarActivity.getDbHelper(),dstTime).getId(),dDay * 60 * 24 + dHour * 60 + dMinute, title);
         }else {
             Toast.makeText(this,R.string.setAlarm_error,Toast.LENGTH_SHORT).show();
         }

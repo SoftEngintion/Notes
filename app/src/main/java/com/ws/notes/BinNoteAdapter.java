@@ -99,7 +99,7 @@ public class BinNoteAdapter extends RecyclerView.Adapter<BinNoteAdapter.ViewHold
             timeTV.setText(TimeAid.stampToDate(time) + " - 最后更改于" + TimeAid.stampToDate(lastChangedTime));
         }
         TextView dstTV = holder.dstTV;
-        long dstTime = dbAid.querySQLNotice(MainActivity.getDbHelper(), time);
+        long dstTime = dbAid.querySQLNotice(CalendarActivity.getDbHelper(), time);
         Log.d(TAG, "onBindViewHolder: dstTime:" + dstTime + " ,diff :" + (dstTime - TimeAid.getNowTime()));
         if (dstTime > 0 && (dstTime - TimeAid.getNowTime()) > 0) {
             dstTV.setVisibility(View.VISIBLE);
@@ -196,16 +196,16 @@ public class BinNoteAdapter extends RecyclerView.Adapter<BinNoteAdapter.ViewHold
 
     public static void setTitleFontSize(int titleFontSize) {
         BinNoteAdapter.titleFontSize = titleFontSize;
-//        MainActivity.getNoteAdapter().refreshAllData();
+//        CalendarActivity.getNoteAdapter().refreshAllData();
     }
 
     public static void setTimeFontSize(int timeFontSize) {
         BinNoteAdapter.timeFontSize = timeFontSize;
-//        MainActivity.getNoteAdapter().refreshAllData();
+//        CalendarActivity.getNoteAdapter().refreshAllData();
     }
 
     public static void setContentFontSize(int contentFontSize) {
         BinNoteAdapter.contentFontSize = contentFontSize;
-//        MainActivity.getNoteAdapter().refreshAllData();
+//        CalendarActivity.getNoteAdapter().refreshAllData();
     }
 }

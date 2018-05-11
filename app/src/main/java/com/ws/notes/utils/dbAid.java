@@ -6,12 +6,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.ws.notes.MainActivity;
+import com.ws.notes.CalendarActivity;
 import com.ws.notes.Note;
 import com.ws.notes.NoteAdapter;
 import com.ws.notes.widget.WidgetInfo;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -86,7 +87,7 @@ public abstract class dbAid {
      * @param lastChangedTime 最后更改的时间戳
      */
     public static void updateSQLNote(String title, String content, long time, int pos, long lastChangedTime) {
-        SQLiteDatabase db = MainActivity.getDbHelper().getWritableDatabase();
+        SQLiteDatabase db = CalendarActivity.getDbHelper().getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("title", title);
         values.put("content", content);
@@ -96,7 +97,7 @@ public abstract class dbAid {
         NoteAdapter.getNotes().get(pos).setTitle(title);
         NoteAdapter.getNotes().get(pos).setContent(content);
         NoteAdapter.getNotes().get(pos).setLastChangedTime(lastChangedTime);
-        MainActivity.getNoteAdapter().refreshData(pos);
+        CalendarActivity.getNoteAdapter().refreshData(pos);
     }
 
     /**
@@ -105,7 +106,7 @@ public abstract class dbAid {
      * @param time 时间戳
      */
     public static void deleteSQLNote(long time) {
-        SQLiteDatabase db = MainActivity.getDbHelper().getWritableDatabase();
+        SQLiteDatabase db = CalendarActivity.getDbHelper().getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("isDeleted", 1);
         db.update("Note", values, "time = ?", new String[]{String.valueOf(time)});
@@ -113,7 +114,7 @@ public abstract class dbAid {
     }
 
     public static void setSQLNote(long time, int isDeleted) {
-        SQLiteDatabase db = MainActivity.getDbHelper().getWritableDatabase();
+        SQLiteDatabase db = CalendarActivity.getDbHelper().getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("isDeleted", isDeleted);
         db.update("Note", values, "time = ?", new String[]{String.valueOf(time)});
@@ -124,7 +125,7 @@ public abstract class dbAid {
      * 清空数据库
      */
     public static void deleteSQLNoteForced() {
-        SQLiteDatabase db = MainActivity.getDbHelper().getWritableDatabase();
+        SQLiteDatabase db = CalendarActivity.getDbHelper().getWritableDatabase();
         db.delete("Note", "time > ?", new String[]{"0"});
         db.close();
     }
@@ -133,11 +134,43 @@ public abstract class dbAid {
      * 根据时间删除
      */
     public static void deleteSQLNoteForced(long time) {
-        SQLiteDatabase db = MainActivity.getDbHelper().getWritableDatabase();
+        SQLiteDatabase db = CalendarActivity.getDbHelper().getWritableDatabase();
         db.delete("Note", "time = ?", new String[]{String.valueOf(time)});
         db.close();
     }
-
+    public static List<Note> querySQLNotes(DatabaseHelper dbHelper, int year ,int month,int day) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String title = null, content = null,logtime=null;
+        int id,isDeleted;
+        long lastChangedTime,time;
+        List<Note>noteList=new ArrayList<>();
+        Calendar calendar=Calendar.getInstance();
+        calendar.set(year,month,day,0,0,0);
+        Log.i("TAG","calendar:"+calendar.getTime().getTime());
+        long before=calendar.getTimeInMillis();
+        calendar.add(Calendar.DATE,day+1);
+        long after=calendar.getTimeInMillis();
+        Log.i(TAG, "querySQLNotes: before:"+before+"after:"+after+"\n");
+        Cursor cursor=db.rawQuery("select * from Note where time>=? and time <?",new String[]{String.valueOf(before),String.valueOf(after)});
+        if (cursor.moveToFirst()) {
+            do {
+                /*获取数据库数据*/
+                id = cursor.getInt(cursor.getColumnIndex("id"));
+                content = cursor.getString(cursor.getColumnIndex("content"));
+                title = cursor.getString(cursor.getColumnIndex("title"));
+                isDeleted = cursor.getInt(cursor.getColumnIndex("isDeleted"));
+                logtime = cursor.getString(cursor.getColumnIndex("logtime"));
+                time = cursor.getLong(cursor.getColumnIndex("time"));
+                lastChangedTime = cursor.getLong(cursor.getColumnIndex("lastChangedTime"));
+                if (isDeleted == 0) {
+                    noteList.add(new Note(id,title, content, logtime, time, lastChangedTime));//数据库按ID顺序倒序排列
+                }
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return noteList;
+    }
     public static List<Note> initNotes(DatabaseHelper dbHelper) {
         List<Note> noteList = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -186,7 +219,7 @@ public abstract class dbAid {
     }
 
     public static Note querySQLNote(DatabaseHelper dbHelper, long time) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
         String title = "", content = "";
         int isDeleted;
         Cursor cursor = db.query("Note", null, "time like ?", new String[]{String.valueOf(time)}, null, null, null);
@@ -200,7 +233,7 @@ public abstract class dbAid {
         cursor.close();
         db.close();
         if (isDeleted == 1) {
-            return new Note("此便签可能以删除,请您手动删除", "", TimeAid.getNowTime());
+            return new Note(title+"此便签可能以删除,请您手动删除", "", TimeAid.getNowTime());
         }
         return new Note(title, content, time);
     }
@@ -290,7 +323,6 @@ public abstract class dbAid {
         int isDone;
         Cursor cursor = db.query("notice", null, "time like ?", new String[]{String.valueOf(time)}, null, null, null);
         if (cursor.moveToLast()) {
-//            time = cursor.getInt(cursor.getColumnIndex("time"));
             isDone = cursor.getInt(cursor.getColumnIndex("isDone"));
             dstTime = cursor.getLong(cursor.getColumnIndex("dstTime"));
         } else {
@@ -321,7 +353,6 @@ public abstract class dbAid {
     }
 
     public static void setSQLNoticeDone(Context context, long time, int done) {
-//        updateSQLNotice(context, time);
         updateSQLNotice(getDbHelper(context), time, done);
     }
 

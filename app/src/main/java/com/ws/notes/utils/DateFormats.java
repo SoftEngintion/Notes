@@ -6,10 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
 
-/**
- * Created by KanModel on 2017/12/26.
- */
-
 public class DateFormats {
     @NonNull
     public static SimpleDateFormat fromSkeleton(@NonNull String skeleton, @NonNull Locale locale) {

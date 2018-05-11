@@ -95,7 +95,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/D:/Android/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/content/ic_add_circle_outline_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/D:/Android/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_alarm_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -105,8 +105,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_add_circle_outline_24dp" />
-                            <entry key="sourceFile" value="C:\Users\王松" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="outputName" value="ic_calendar" />
+                            <entry key="sourceFile" value="E:\Workspaces\Android\Notes\app\src\main\res\drawable\calendar.svg" />
                           </map>
                         </option>
                       </PersistentState>

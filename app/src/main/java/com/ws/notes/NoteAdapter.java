@@ -17,12 +17,11 @@ import android.widget.TextView;
 import com.ws.notes.utils.TimeAid;
 import com.ws.notes.utils.dbAid;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 重写RecyclerView类
- * Created by KanModel on 2017/11/26.
+ * Created by WangSong on 2017/11/26.
  */
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
@@ -46,7 +45,11 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
     private static final String TAG = "ViewHolder";
 
-    private static List<Note> notes = new ArrayList<>();
+    public static void setNotes(List<Note> notes) {
+        NoteAdapter.notes = notes;
+    }
+
+    private static List<Note> notes;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -106,7 +109,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
             timeTV.setText(TimeAid.stampToDate(time) + " - 最后更改于" + TimeAid.stampToDate(lastChangedTime));
         }
         TextView dstTV = holder.dstTV;
-        long dstTime = dbAid.querySQLNotice(MainActivity.getDbHelper(), time);
+        long dstTime = dbAid.querySQLNotice(CalendarActivity.getDbHelper(), time);
         Log.d(TAG, "onBindViewHolder: dstTime:" + dstTime + " ,diff :" + (dstTime - TimeAid.getNowTime()));
         if (dstTime > 0 && (dstTime - TimeAid.getNowTime()) > 0) {
             dstTV.setVisibility(View.VISIBLE);
@@ -119,11 +122,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
                 ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#FFE5ADFF"));
                 RelativeSizeSpan sizeSpan = new RelativeSizeSpan(1.4f);
                 int lengthOfDay = String.valueOf(day).length();
-//                int lengthOfHour = String.valueOf(hour).length();
                 spannableString.setSpan(sizeSpan, 3, 3 + lengthOfDay, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 spannableString.setSpan(colorSpan, 3, 3 + lengthOfDay, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-//                spannableString.setSpan(sizeSpan, 6 + lengthOfDay, 6 + lengthOfDay + lengthOfHour, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-//                spannableString.setSpan(colorSpan, 6 + lengthOfDay, 6 + lengthOfDay + lengthOfHour, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 dstTV.setText(spannableString);
             } else if (hour > 0) {
                 SpannableString spannableString = new SpannableString("剩余 " + hour + " 小时 " + minute + " 分钟");
@@ -171,7 +171,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     void addData(Note note) {
         addData(note, 0);
     }
-
+    void removeNoteList() {
+        if(!notes.isEmpty())notes.clear();
+    }
     void removeData(int position) {
         notes.remove(position);
         notifyItemRemoved(position);
@@ -179,7 +181,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     }
 
     public void refreshData(int position) {
-//        com.ws.notes.get(position).
         notifyItemRangeChanged(position, notes.size());
     }
 
@@ -194,7 +195,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
      * 刷新RecyclerView
      */
     public void refreshAllDataForce() {
-        notes = dbAid.initNotes(dbAid.getDbHelper(MainActivity.getContext()));
+        notes = dbAid.initNotes(dbAid.getDbHelper(CalendarActivity.getContext()));
         refreshAllData();
     }
 
@@ -216,16 +217,13 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
     public static void setTitleFontSize(int titleFontSize) {
         NoteAdapter.titleFontSize = titleFontSize;
-//        MainActivity.getNoteAdapter().refreshAllData();
     }
 
     public static void setTimeFontSize(int timeFontSize) {
         NoteAdapter.timeFontSize = timeFontSize;
-//        MainActivity.getNoteAdapter().refreshAllData();
     }
 
     public static void setContentFontSize(int contentFontSize) {
         NoteAdapter.contentFontSize = contentFontSize;
-//        MainActivity.getNoteAdapter().refreshAllData();
     }
 }

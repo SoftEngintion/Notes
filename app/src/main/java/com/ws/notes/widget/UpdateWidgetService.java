@@ -13,7 +13,7 @@ import android.util.Log;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.ws.notes.MainActivity;
+import com.ws.notes.CalendarActivity;
 import com.ws.notes.NoteAdapter;
 import com.ws.notes.utils.TimeAid;
 
@@ -59,8 +59,8 @@ public class UpdateWidgetService extends Service {
                 Log.d(TAG, "handleMessage: Time :" + TimeAid.getNowTime());
                 NoteAppWidget.updateAllWidget();
                 try {
-                    if (MainActivity.getNoteAdapter() != null) {
-                        NoteAdapter noteAdapter = MainActivity.getNoteAdapter();
+                    if (CalendarActivity.getNoteAdapter() != null) {
+                        NoteAdapter noteAdapter = CalendarActivity.getNoteAdapter();
                         noteAdapter.refreshAllDataForce();
                     }
                 } catch (NullPointerException e) {

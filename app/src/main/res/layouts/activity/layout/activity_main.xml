@@ -1,66 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <com.haibin.calendarview.CalendarLayout
-        android:id="@+id/calendarLayout"
+    android:theme="@style/Theme.Design.NoActionBar"
+    android:background="@drawable/background"
+    tools:context=".MainActivity">
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="#ffffff"
-        app:default_status="shrink"
-        app:calendar_content_view_id="@+id/main_swipe">
-        <com.haibin.calendarview.CalendarView
-            android:id="@+id/calendarView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/background_light"
-            app:month_view="com.ws.notes.ui.MeiZuMonthView"
-            app:week_view="com.ws.notes.ui.MeizuWeekView"
-            app:calendar_height="50dp"
-            app:current_month_text_color="#333333"
-            app:month_view_scrollable="true"
-            app:week_view_scrollable="true"
-            app:scheme_lunar_text_color="@color/rippleColor"
-            app:current_day_lunar_text_color="@android:color/holo_orange_dark"
-            app:current_month_lunar_text_color="@color/colorPrimary"
-            app:min_year="1900"
-            app:other_month_text_color="#e1e1e1"
-            app:other_month_lunar_text_color="@color/colorAccent"
-            app:scheme_text="假"
-            app:scheme_text_color="#333"
-            app:scheme_theme_color="#55e3ff"
-            app:selected_lunar_text_color="#f70d86"
-            app:selected_text_color="#03ff07"
-            app:selected_theme_color="#108cd4"
-            app:week_start_with="mon"
-            app:week_background="#ffffff"
-            app:month_view_show_mode="mode_only_current"
-            app:week_text_color="#f17706"
-            app:year_view_scheme_color="#f17706"/>
-        <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
-            android:layout_width="match_parent"
+        android:layout_height="190dp"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="129dp"
+        tools:ignore="MissingConstraints">
+
+        <ImageButton
+            android:id="@+id/mImageButton_plan"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/calendarView"
-            android:id="@id/main_swipe">
-        <include layout="@layout/content_main"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
-    </com.haibin.calendarview.CalendarLayout>
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="@color/colorGreen"
-        app:rippleColor="@color/rippleColor"
-        app:elevation="@dimen/fab_elevation"
-        app:pressedTranslationZ="@dimen/fab_pressed"
-        app:srcCompat="@android:drawable/ic_input_add"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/ic_plan_black_24dp"
+            android:background="@android:color/transparent"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/mImageButton_notes"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/ic_calendar"
+            android:background="@android:color/transparent"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/mImageButton_calendar"
+        android:layout_width="339dp"
+        android:layout_height="85dp"
+        android:background="@android:color/transparent"
+        tools:layout_editor_absoluteX="36dp"
+        tools:layout_editor_absoluteY="602dp"
+        tools:ignore="MissingConstraints" />
 </android.support.constraint.ConstraintLayout>

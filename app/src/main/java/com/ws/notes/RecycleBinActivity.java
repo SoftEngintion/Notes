@@ -49,12 +49,12 @@ public class RecycleBinActivity extends AppCompatActivity {
     public static SwipeMenuRecyclerView recyclerView;
     private static final String TAG = "RecycleBinActivity";
 
-    private boolean isDebug = MainActivity.getIsDebug();
+    private boolean isDebug = CalendarActivity.getIsDebug();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_main);
+        setContentView(R.layout.content_calendar);
 
         initComponent();
 
@@ -188,7 +188,7 @@ public class RecycleBinActivity extends AppCompatActivity {
                 case 0:
                     if (isDebug) Toast.makeText(RecycleBinActivity.this, "恢复 Pos" + adapterPosition, Toast.LENGTH_SHORT).show();
                     dbAid.setSQLNote(time, 0);
-                    MainActivity.getNoteAdapter().refreshAllDataForce();
+                    CalendarActivity.getNoteAdapter().refreshAllDataForce();
                     break;
                 case 1:
                     if (isDebug) Toast.makeText(RecycleBinActivity.this, "从数据库上删除 Pos" + adapterPosition, Toast.LENGTH_SHORT).show();

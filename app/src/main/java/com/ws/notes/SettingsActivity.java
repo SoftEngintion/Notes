@@ -208,12 +208,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             isDebugSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
-                    if (MainActivity.getIsDebug()) {
+                    if (CalendarActivity.getIsDebug()) {
                         Toast.makeText(getActivity(), "关闭开发者模式", Toast.LENGTH_SHORT).show();
-                        MainActivity.setIsDebug(false);
+                        CalendarActivity.setIsDebug(false);
                     } else {
                         Toast.makeText(getActivity(), "开启开发者Debug模式", Toast.LENGTH_SHORT).show();
-                        MainActivity.setIsDebug(true);
+                        CalendarActivity.setIsDebug(true);
                     }
                     return true;
                 }

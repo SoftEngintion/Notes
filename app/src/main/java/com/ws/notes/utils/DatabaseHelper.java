@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
-import com.ws.notes.MainActivity;
+import com.ws.notes.CalendarActivity;
 
 /**
  * 用于数据库创建
@@ -52,7 +52,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "'isDone' int default 0, " +
                 "'dstTime' integer," +
                 "'time' integer)");
-        if (MainActivity.getIsDebug()) {
+        if (CalendarActivity.getIsDebug()) {
             Toast.makeText(mContext, "创建数据库成功", Toast.LENGTH_SHORT).show();
         }
     }

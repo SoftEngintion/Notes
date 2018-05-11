@@ -23,7 +23,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
-import com.ws.notes.MainActivity;
+import com.ws.notes.CalendarActivity;
 import com.ws.notes.Note;
 import com.ws.notes.NoteAdapter;
 import com.ws.notes.R;
@@ -98,7 +98,7 @@ public class NoteAppWidget extends AppWidgetProvider {
 ////            time = note.getLogTime();
 ////            content = note.getContent();
 ////        } else {
-////            if (MainActivity.getIsDebug()) {
+////            if (CalendarActivity.getIsDebug()) {
 ////                Toast.makeText(context, "开机Debug", Toast.LENGTH_SHORT).show();
 ////            }
 ////            List<Note> noteList = dbAid.initNotes(dbHelper);
@@ -122,7 +122,7 @@ public class NoteAppWidget extends AppWidgetProvider {
 //        views.setTextViewTextSize(R.id.widget_title, TypedValue.COMPLEX_UNIT_SP, NoteAdapter.getTitleFontSize());
 //        views.setTextViewTextSize(R.id.widget_time, TypedValue.COMPLEX_UNIT_SP, NoteAdapter.getTimeFontSize());
 //        views.setTextViewTextSize(R.id.widget_content, TypedValue.COMPLEX_UNIT_SP, NoteAdapter.getContentFontSize());
-//        Intent openAppIntent = new Intent(context, MainActivity.class);
+//        Intent openAppIntent = new Intent(context, CalendarActivity.class);
 //        PendingIntent openAppPendingIntent = PendingIntent.getActivity(context, 0, openAppIntent, 0);
 //        views.setOnClickPendingIntent(R.id.widget_title, openAppPendingIntent);
 
@@ -177,7 +177,7 @@ public class NoteAppWidget extends AppWidgetProvider {
         views.setTextViewTextSize(R.id.widget_title, TypedValue.COMPLEX_UNIT_SP, NoteAdapter.getTitleFontSize());
         views.setTextViewTextSize(R.id.widget_time, TypedValue.COMPLEX_UNIT_SP, NoteAdapter.getTimeFontSize());
         views.setTextViewTextSize(R.id.widget_content, TypedValue.COMPLEX_UNIT_SP, NoteAdapter.getContentFontSize());
-        Intent openAppIntent = new Intent(context, MainActivity.class);
+        Intent openAppIntent = new Intent(context, CalendarActivity.class);
         PendingIntent openAppPendingIntent = PendingIntent.getActivity(context, 0, openAppIntent, 0);
         views.setOnClickPendingIntent(R.id.widget_title, openAppPendingIntent);
 
@@ -224,7 +224,7 @@ public class NoteAppWidget extends AppWidgetProvider {
         NoteAdapter.setContentFontSize(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString("font_content_size", "18")));
         dbHelper = dbAid.getDbHelper(context);//版本需要一致
         boolean isDebug = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("switch_preference_is_debug", false);
-        MainActivity.setIsDebug(isDebug);
+        CalendarActivity.setIsDebug(isDebug);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         updateWidgetInfoList(db);
         Log.d(TAG, "onUpdate: " + isDebug);
@@ -277,7 +277,7 @@ public class NoteAppWidget extends AppWidgetProvider {
 //        for (int appWidgetID : appWidgetIds) {
 //            Toast.makeText(context, "删除的是ID" + appWidgetID, Toast.LENGTH_SHORT).show();
 //        }
-        if (MainActivity.getIsDebug()) {
+        if (CalendarActivity.getIsDebug()) {
             Toast.makeText(context, "删除的是ID" + appWidgetIds[0], Toast.LENGTH_SHORT).show();
         }
         dbHelper = dbAid.getDbHelper(context);//版本需要一致
@@ -295,7 +295,7 @@ public class NoteAppWidget extends AppWidgetProvider {
 
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
-        if (MainActivity.getIsDebug()) {
+        if (CalendarActivity.getIsDebug()) {
             Toast.makeText(context, "改变大小id：" + appWidgetId, Toast.LENGTH_SHORT).show();
         }
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);

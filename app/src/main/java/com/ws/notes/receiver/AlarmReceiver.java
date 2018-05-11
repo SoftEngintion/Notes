@@ -14,7 +14,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.ws.notes.MainActivity;
+import com.ws.notes.CalendarActivity;
 import com.ws.notes.R;
 import com.ws.notes.utils.TimeAid;
 
@@ -35,7 +35,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (Objects.equals(intent.getAction(), "NOTE.NOTIFICATION")) {
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            Intent intent2 = new Intent(context, MainActivity.class);
+            Intent intent2 = new Intent(context, CalendarActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent2, 0);
             Notification notify = new NotificationCompat.Builder(context)
                     .setSmallIcon(R.drawable.appwidget_preview)

@@ -1,11 +1,14 @@
 package com.ws.notes.utils;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by KanModel on 2017/12/29.
@@ -24,10 +27,12 @@ public abstract class TimeAid {
      */
     public static String stampToDate(String time) {
         String res;
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         long lt = Long.valueOf(time);
         Date date = new Date(lt);
         res = simpleDateFormat.format(date);
+        Log.i(TAG, "stampToDate: "+res);
         return res;
     }
 
@@ -53,19 +58,11 @@ public abstract class TimeAid {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-//        res = String.valueOf(ts);
         return ts;
     }
 
     public static long getTimeStamp(int year, int month, int day, int hour, int minute) {
         Calendar cal = Calendar.getInstance();
-//        cal.set(Calendar.YEAR, year);
-//        cal.set(Calendar.MONTH, month);
-//        cal.set(Calendar.DATE, day);
-//        cal.set(Calendar.HOUR, hour);
-//        cal.set(Calendar.MINUTE, minute);
-//        cal.set(Calendar.SECOND, 0);
-//        cal.set(Calendar.MILLISECOND, 0);
         cal.set(year, month, day, hour, minute);
         return cal.getTimeInMillis();
     }
