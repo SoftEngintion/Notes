@@ -20,10 +20,12 @@
             android:id="@+id/mImageButton_plan"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:textAlignment="viewEnd"
             android:scaleType="fitXY"
             app:srcCompat="@drawable/ic_plan_black_24dp"
             android:background="@android:color/transparent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:gravity="end" />
 
         <ImageButton
             android:id="@+id/mImageButton_notes"
