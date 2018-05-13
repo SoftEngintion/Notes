@@ -16,4 +16,7 @@
     <string name="Refresh">刷新已完成！</string>
     <string name="Notes_delete_tip">删除便笺</string>
     <string name="Notes_delete">你确定要删除这条便笺？</string>
+    <string name="Time">时间轴</string>
+    <string name="write_note">写日记</string>
+    <string name="alarm_plan">定计划</string>
 </resources>

@@ -5,19 +5,28 @@
     android:layout_height="match_parent"
     android:background="@drawable/background"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:background="@android:color/transparent"
+            android:layout_height="?attr/actionBarSize" />
+    </android.support.design.widget.AppBarLayout>
     <com.haibin.calendarview.CalendarLayout
         android:id="@+id/calendarLayout"
+        android:layout_marginTop="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#ffffff"
         app:default_status="shrink"
         app:calendar_content_view_id="@+id/main_swipe">
         <com.haibin.calendarview.CalendarView
             android:id="@+id/calendarView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/background_light"
             app:month_view="com.ws.notes.ui.MeiZuMonthView"
             app:week_view="com.ws.notes.ui.MeizuWeekView"
             app:calendar_height="50dp"
@@ -37,9 +46,9 @@
             app:selected_text_color="#03ff07"
             app:selected_theme_color="#108cd4"
             app:week_start_with="mon"
-            app:week_background="#ffffff"
+            app:week_background="@android:color/transparent"
             app:month_view_show_mode="mode_only_current"
-            app:week_text_color="#f17706"
+            app:week_text_color="@color/White"
             app:year_view_scheme_color="#f17706"/>
         <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
             android:layout_width="match_parent"
@@ -49,7 +58,7 @@
             android:id="@id/main_swipe">
         <include layout="@layout/content_calendar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
     </jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
     </com.haibin.calendarview.CalendarLayout>
     <android.support.design.widget.FloatingActionButton

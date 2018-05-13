@@ -2,13 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.ws.notes">
-
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,25 +13,36 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".CalendarActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleInstance"></activity>
+            android:label="@string/Time"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity"
+            tools:targetApi="jelly_bean" >
+            <intent-filter>
+                <action android:name="com.ws.notes.CalendarActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".EditActivity"
             android:label="@string/edit_name"
-            android:parentActivityName=".CalendarActivity"
+            android:parentActivityName=".MainActivity"
+            android:launchMode="singleTop"
             tools:targetApi="jelly_bean">
             <intent-filter>
                 <action android:name="com.ws.notes.EditActivity" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".CalendarActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Theme.AppCompat.Light"
             tools:targetApi="jelly_bean" />
         <activity
             android:name=".ui.IntroActivity"
@@ -42,12 +50,13 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".AppAboutActivity"
-            android:parentActivityName=".CalendarActivity"
+            android:parentActivityName=".MainActivity"
             tools:targetApi="jelly_bean" />
         <activity
             android:name=".RecycleBinActivity"
             android:label="@string/recycle_bin"
-            android:parentActivityName=".CalendarActivity"
+            android:theme="@style/Theme.AppCompat.Light"
+            android:parentActivityName=".MainActivity"
             tools:targetApi="jelly_bean" />
 
         <provider
@@ -79,23 +88,18 @@
             android:name=".widget.UpdateWidgetService"
             android:enabled="true"
             android:exported="true"
-            android:permission=""
             android:persistent="true"
             android:priority="1000" />
 
         <activity
             android:name=".StartActivity"
-            android:parentActivityName=".CalendarActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:parentActivityName=".MainActivity"
+            tools:targetApi="jelly_bean">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"
-            android:launchMode="singleInstance"
-            android:theme="@style/Theme.Design.NoActionBar"/>
     </application>
 
 </manifest>

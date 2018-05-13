@@ -106,8 +106,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_calendar" />
-                            <entry key="sourceFile" value="E:\Workspaces\Android\Notes\app\src\main\res\drawable\calendar.svg" />
+                            <entry key="outputName" value="ic_note" />
+                            <entry key="sourceFile" value="F:\note.svg" />
                           </map>
                         </option>
                       </PersistentState>

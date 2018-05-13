@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,7 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -39,8 +40,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ImageButton mImageButton_plan=findViewById(R.id.mImageButton_plan);
-        mImageButton_plan.setOnClickListener(new View.OnClickListener() {
+        Drawable drawable=getResources().getDrawable(R.drawable.ic_plan_black_24dp);
+        drawable.setBounds(0,0,100,100);
+        Button mButton_plan=findViewById(R.id.mButton_plan);
+        mButton_plan.setCompoundDrawables(null,drawable,null,null);
+        mButton_plan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar calendar= Calendar.getInstance();
@@ -81,15 +85,21 @@ public class MainActivity extends AppCompatActivity {
                 timePickerDialog.show();
             }
         });
-        ImageButton mImageButton_calendar=findViewById(R.id.mImageButton_calendar);
-        mImageButton_calendar.setOnClickListener(new View.OnClickListener() {
+        Button mButton_calendar=findViewById(R.id.mButton_calendar);
+        drawable=getResources().getDrawable(R.drawable.ic_calendar);
+        drawable.setBounds(0,0,64,64);
+        mButton_calendar.setCompoundDrawables(null,drawable,null,null);
+        mButton_calendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this,CalendarActivity.class));
             }
         });
-        ImageButton mImageButton_notes=findViewById(R.id.mImageButton_notes);
-        mImageButton_notes.setOnClickListener(new View.OnClickListener() {
+        Button mButton_notes=findViewById(R.id.mButton_notes);
+        drawable=getResources().getDrawable(R.drawable.ic_note);
+        drawable.setBounds(0,0,90,90);
+        mButton_notes.setCompoundDrawables(null,drawable,null,null);
+        mButton_notes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,EditActivity.class);

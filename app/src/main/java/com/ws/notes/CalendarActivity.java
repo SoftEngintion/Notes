@@ -7,23 +7,18 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +47,6 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import com.yanzhenjie.recyclerview.swipe.touch.OnItemMoveListener;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -100,10 +94,15 @@ public class CalendarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
         context = this;
-
         initComponent();
 
         initRecyclerView();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
     }
 
     private void initComponent() {
@@ -406,128 +405,23 @@ public class CalendarActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        /*指定菜单布局文件*/
-        inflater.inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        if (isDebug) {
-            menu.setGroupVisible(R.id.main_menu_debug, true);
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    /**
-     * 通过反射使图标与文字同时显示
-     */
-    @Override
-    public boolean onMenuOpened(int featureId, Menu menu) {
-        if (menu != null) {
-            if (menu.getClass().getSimpleName().equalsIgnoreCase("MenuBuilder")) {
-                try {
-                    @SuppressLint("PrivateApi") Method method = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
-                    method.setAccessible(true);
-                    method.invoke(menu, true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return super.onMenuOpened(featureId, menu);
-    }
-    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (!isExit) {
-                isExit = true;
-                Toast.makeText(this,R.string.NoExitTip,Toast.LENGTH_SHORT).show();
-                // 利用handler延迟发送更改状态信息
-                mHandler.sendEmptyMessageDelayed(0, 2000);
-            } else {
-                Toast.makeText(this,R.string.ExitTip,Toast.LENGTH_SHORT).show();
-                finish();
-                System.exit(0);
-            }
+            startActivity(new Intent(CalendarActivity.this,MainActivity.class));
             return false;
         }
         return super.onKeyDown(keyCode, event);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        final SQLiteDatabase db = dbHelper.getWritableDatabase();
         switch (item.getItemId()) {
-            case R.id.recycle_bin:
-                startActivity(new Intent(CalendarActivity.this, RecycleBinActivity.class));
+            case android.R.id.home:
+                finish();
                 return true;
-            case R.id.main_menu_add:
-                return true;
-            case R.id.remove_note:
-                /*清空数据库*/
-                AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
-                /*弹窗再次确认*/
-                builder.setTitle("你确定要清空数据库吗？");
-                builder.setMessage("一旦确认将无法撤回（此功能仅用于开发者）");
-                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        int size = NoteAdapter.getNotes().size();
-                        dbAid.deleteSQLNoteForced();
-                        dbAid.initNotes(dbHelper, NoteAdapter.getNotes());
-                        noteAdapter.refreshAllData(size);
-                        checkEmpty();
-                    }
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
-                return true;
-            case R.id.list_database:
-                /*遍历数据库输出到Logcat*/
-                Cursor cursor0 = db.query("Note", null, null, null, null, null, null);
-                if (cursor0.moveToFirst()) {
-                    do {
-                        int id = cursor0.getInt(cursor0.getColumnIndex("id"));
-                        String content = cursor0.getString(cursor0.getColumnIndex("content"));
-                        String title = cursor0.getString(cursor0.getColumnIndex("title"));
-                        int isDeleted = cursor0.getInt(cursor0.getColumnIndex("isDeleted"));
-                        String logtime = cursor0.getString(cursor0.getColumnIndex("logtime"));
-                        long time = cursor0.getLong(cursor0.getColumnIndex("time"));
-
-                        Log.d(TAG, "onOptionsItemSelected: id:" + id + "\ntitle:" + title + "\ncontent:"
-                                + content + "\nlogtime:" + logtime + "\ntime:" + time + "\nisDeleted:" + isDeleted);
-                    } while (cursor0.moveToNext());
-                }
-                cursor0.close();
-                return true;
-            case R.id.note_clear:
-                /*删除所有便签，清空列表*/
-                int size = NoteAdapter.getNotes().size();
-                for (Note note: NoteAdapter.getNotes()){
-                    dbAid.deleteSQLNote(note.getTime());
-                }
-                NoteAdapter.getNotes().clear();
-                noteAdapter.refreshAllData(size);
-                checkEmpty();
-                return true;
-            case R.id.main_menu_setting:
-                startActivity(new Intent(CalendarActivity.this, SettingsActivity.class));
-                return true;
-            case R.id.main_menu_exit:finish();return true;
-            case R.id.main_menu_about:
-                /*启动关于应用*/
-                startActivity(new Intent(CalendarActivity.this,AppAboutActivity.class));
-                return true;
-            default:if(db.isOpen())db.close();return super.onOptionsItemSelected(item);
+            default:return super.onOptionsItemSelected(item);
         }
     }
+
 
     /**
      * @return 数据库操作类

@@ -55,7 +55,6 @@ public class RecycleBinActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_calendar);
-
         initComponent();
 
         initBinRecyclerView();
@@ -64,6 +63,12 @@ public class RecycleBinActivity extends AppCompatActivity {
     private void initComponent() {
         /*组件初始化*/
         actionBar = getActionBar();
+        if(actionBar!=null) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }else {
+            Log.e(TAG, "initComponent: actionBar=null");
+        }
         emptyView = findViewById(R.id.empty_view);
         emptyTV = findViewById(R.id.empty_view_text);
         emptyTV.setText(getResources().getString(R.string.fa_recycle));

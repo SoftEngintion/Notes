@@ -26,11 +26,6 @@
             app:showAsAction="withText" />
     </group>
     <item
-        android:id="@+id/note_clear"
-        android:icon="@android:drawable/ic_menu_close_clear_cancel"
-        android:title="清空列表"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/main_menu_setting"
         android:icon="@android:drawable/ic_menu_manage"
         android:title="@string/main_menu_setting"

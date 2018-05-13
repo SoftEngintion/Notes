@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="com.ws.notes.EditActivity">
     <android.support.design.widget.TextInputLayout
@@ -75,17 +74,19 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:clickable="false"
+            android:textColor="@color/White"
             android:gravity="center_vertical"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:typeface="monospace"
-            android:layout_weight="6"
-            android:text="@string/add_to_desktop"/>
+            android:layout_weight="3"
+            android:text="@string/add_to_desktop"
+            tools:ignore="NestedWeights" />
         <com.suke.widget.SwitchButton
             android:layout_weight="1"
             android:id="@+id/SwitchButton_add_to_desktop"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"/>
     </LinearLayout>
     <LinearLayout
@@ -97,25 +98,26 @@
         android:visibility="invisible">
         <TextView
             android:layout_width="0dp"
+            android:layout_weight="3"
             android:layout_height="match_parent"
             android:clickable="false"
+            android:textColor="@color/White"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:gravity="center_vertical"
             android:typeface="monospace"
-            android:layout_weight="6"
-            android:text="@string/add_time"/>
+            android:text="@string/add_time"
+            tools:ignore="NestedWeights" />
         <com.suke.widget.SwitchButton
             android:layout_weight="1"
             android:id="@+id/SwitchButton_add_time"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"/>
     </LinearLayout>
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/mButton_yes"
         android:text="@string/mButton_yes"
-        android:visibility="invisible"
         android:layout_weight="1"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="16dp"

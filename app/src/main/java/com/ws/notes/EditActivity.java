@@ -61,15 +61,16 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         final LinearLayout mLinearLayout_add_time=findViewById(R.id.mLinearLayout_add_time);
         final SwitchButton switch_add_to_desktop=findViewById(R.id.SwitchButton_add_to_desktop);
         final SwitchButton switch_add_time=findViewById(R.id.SwitchButton_add_time);
+        final AppCompatButton appCompatButton=findViewById(R.id.mButton_yes);
         TextView timeTV = findViewById(R.id.editor_time);
         contentET = findViewById(R.id.editor_content);
         parentIntent = getIntent();
         title = parentIntent.getStringExtra("title");
         content = parentIntent.getStringExtra("content");
         pos = parentIntent.getIntExtra("pos", 0);
+        isNew = parentIntent.getBooleanExtra("isNew", false);
         titleET.setText(title);
         contentET.setText(content);
-        final AppCompatButton appCompatButton=findViewById(R.id.mButton_yes);
         titleET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -78,7 +79,7 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
                         &&mLinearLayout_add_time.getVisibility()==View.INVISIBLE){
                     mLinearLayout_add_desktop.setVisibility(View.VISIBLE);
                     mLinearLayout_add_time.setVisibility(View.VISIBLE);
-                    if(isNew&&appCompatButton.getVisibility()==View.INVISIBLE)appCompatButton.setVisibility(View.VISIBLE);
+                    if(!isNew&&appCompatButton.getVisibility()==View.INVISIBLE)appCompatButton.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -94,7 +95,6 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
                         &&mLinearLayout_add_time.getVisibility()==View.INVISIBLE){
                     mLinearLayout_add_desktop.setVisibility(View.VISIBLE);
                     mLinearLayout_add_time.setVisibility(View.VISIBLE);
-                    if(isNew&&appCompatButton.getVisibility()==View.INVISIBLE)appCompatButton.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -106,7 +106,7 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
                         &&mLinearLayout_add_time.getVisibility()==View.INVISIBLE){
                     mLinearLayout_add_desktop.setVisibility(View.VISIBLE);
                     mLinearLayout_add_time.setVisibility(View.VISIBLE);
-                    if(isNew&&appCompatButton.getVisibility()==View.INVISIBLE)appCompatButton.setVisibility(View.VISIBLE);
+//                    if(!isNew&&appCompatButton.getVisibility()==View.INVISIBLE)appCompatButton.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -122,7 +122,6 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
                         &&mLinearLayout_add_time.getVisibility()==View.INVISIBLE){
                     mLinearLayout_add_desktop.setVisibility(View.VISIBLE);
                     mLinearLayout_add_time.setVisibility(View.VISIBLE);
-                    if(isNew&&appCompatButton.getVisibility()==View.INVISIBLE)appCompatButton.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -156,8 +155,18 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
                     if(content.isEmpty())content=contentET.getText().toString();
                     saveNewNote(title, content);
                     Toast.makeText(EditActivity.this,R.string.save_success,Toast.LENGTH_SHORT).show();
-                    finish();
+                }else {
+                    String title = titleET.getText().toString();
+                    String content = contentET.getText().toString();
+                    if (EditActivity.this.content.equals(content) && EditActivity.this.title.equals(title)) {
+                        Toast.makeText(EditActivity.this, "未改变便签不保存", Toast.LENGTH_SHORT).show();
+                    } else {
+                        saveOriginalNote(title, content);
+                    }
+                    NoteAppWidget.updateWidget(EditActivity.this, time, title, content);
+                    CalendarActivity.getNoteAdapter().refreshAllDataForce();
                 }
+                finish();
             }
         });
         time = parentIntent.getLongExtra("timeLong", TimeAid.getNowTime());
@@ -167,8 +176,6 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         } else {
             timeTV.setText(TimeAid.stampToDate(time) + getResources().getString(R.string.lastUpdate)+ TimeAid.stampToDate(lastChangedTime));
         }
-
-        isNew = parentIntent.getBooleanExtra("isNew", false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
