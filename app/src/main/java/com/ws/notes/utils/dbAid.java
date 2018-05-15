@@ -86,13 +86,13 @@ public abstract class dbAid {
      * @param pos             在RecyclerView中的位置
      * @param lastChangedTime 最后更改的时间戳
      */
-    public static void updateSQLNote(String title, String content, long time, int pos, long lastChangedTime) {
-        SQLiteDatabase db = CalendarActivity.getDbHelper().getWritableDatabase();
+    public static void updateSQLNote(Context context,String title, String content, long time, int pos, long lastChangedTime) {
+        SQLiteDatabase db = getDbHelper(context).getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("title", title);
         values.put("content", content);
         values.put("lastChangedTime", lastChangedTime);
-        db.update("Note", values, "time = ?", new String[]{String.valueOf(time)});
+        db.update("Note", values, "id = ?", new String[]{String.valueOf(pos)});
         db.close();
         NoteAdapter.getNotes().get(pos).setTitle(title);
         NoteAdapter.getNotes().get(pos).setContent(content);
@@ -105,16 +105,16 @@ public abstract class dbAid {
      *
      * @param time 时间戳
      */
-    public static void deleteSQLNote(long time) {
-        SQLiteDatabase db = CalendarActivity.getDbHelper().getWritableDatabase();
+    public static void deleteSQLNote(Context context,long time) {
+        SQLiteDatabase db = getDbHelper(context).getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("isDeleted", 1);
         db.update("Note", values, "time = ?", new String[]{String.valueOf(time)});
         db.close();
     }
 
-    public static void setSQLNote(long time, int isDeleted) {
-        SQLiteDatabase db = CalendarActivity.getDbHelper().getWritableDatabase();
+    public static void setSQLNote(Context context,long time, int isDeleted) {
+        SQLiteDatabase db = getDbHelper(context).getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("isDeleted", isDeleted);
         db.update("Note", values, "time = ?", new String[]{String.valueOf(time)});
@@ -124,8 +124,8 @@ public abstract class dbAid {
     /**
      * 清空数据库
      */
-    public static void deleteSQLNoteForced() {
-        SQLiteDatabase db = CalendarActivity.getDbHelper().getWritableDatabase();
+    public static void deleteSQLNoteForced(Context context) {
+        SQLiteDatabase db = getDbHelper(context).getWritableDatabase();
         db.delete("Note", "time > ?", new String[]{"0"});
         db.close();
     }
@@ -133,8 +133,8 @@ public abstract class dbAid {
     /**
      * 根据时间删除
      */
-    public static void deleteSQLNoteForced(long time) {
-        SQLiteDatabase db = CalendarActivity.getDbHelper().getWritableDatabase();
+    public static void deleteSQLNoteForced(Context context,long time) {
+        SQLiteDatabase db = getDbHelper(context).getWritableDatabase();
         db.delete("Note", "time = ?", new String[]{String.valueOf(time)});
         db.close();
     }
@@ -241,7 +241,7 @@ public abstract class dbAid {
 
     /*Widget相关*/
     public static WidgetInfo querySQLWidget(DatabaseHelper dbHelper, long time) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
         int widgetID, isDeleted;
         Cursor cursor = db.query("widget", null, "time like ?", new String[]{String.valueOf(time)}, null, null, null);
         if (cursor.moveToLast()) {
@@ -318,7 +318,7 @@ public abstract class dbAid {
     }
 
     public static long querySQLNotice(DatabaseHelper dbHelper, long time) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
         long dstTime;
         int isDone;
         Cursor cursor = db.query("notice", null, "time like ?", new String[]{String.valueOf(time)}, null, null, null);

@@ -86,7 +86,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Note note = notes.get(position);
-        if (note.getTitle().equals("")) {
+        if (note.getTitle().isEmpty()) {
             holder.titleET.setVisibility(View.GONE);
         } else {
             holder.titleET.setText(note.getTitle());
@@ -109,7 +109,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
             timeTV.setText(TimeAid.stampToDate(time) + " - 最后更改于" + TimeAid.stampToDate(lastChangedTime));
         }
         TextView dstTV = holder.dstTV;
-        long dstTime = dbAid.querySQLNotice(CalendarActivity.getDbHelper(), time);
+        long dstTime = dbAid.querySQLNotice(dbAid.getDbHelper(holder.dstTV.getContext()), time);
         Log.d(TAG, "onBindViewHolder: dstTime:" + dstTime + " ,diff :" + (dstTime - TimeAid.getNowTime()));
         if (dstTime > 0 && (dstTime - TimeAid.getNowTime()) > 0) {
             dstTV.setVisibility(View.VISIBLE);

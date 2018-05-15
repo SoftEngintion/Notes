@@ -1,9 +1,7 @@
 package com.ws.notes;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -106,7 +104,6 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
                         &&mLinearLayout_add_time.getVisibility()==View.INVISIBLE){
                     mLinearLayout_add_desktop.setVisibility(View.VISIBLE);
                     mLinearLayout_add_time.setVisibility(View.VISIBLE);
-//                    if(!isNew&&appCompatButton.getVisibility()==View.INVISIBLE)appCompatButton.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -150,20 +147,21 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         appCompatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isNew) {
-                    if(title.isEmpty())title=titleET.getText().toString();
-                    if(content.isEmpty())content=contentET.getText().toString();
-                    saveNewNote(title, content);
-                    Toast.makeText(EditActivity.this,R.string.save_success,Toast.LENGTH_SHORT).show();
+                String title_temp = titleET.getText().toString();
+                String content_temp = contentET.getText().toString();
+                if(title_temp.isEmpty()||content_temp.isEmpty()){
+                    Toast.makeText(EditActivity.this,R.string.empty_note_no_save,Toast.LENGTH_LONG).show();
+                }else if(isNew) {
+                    saveNewNote(title_temp, content_temp);
+                    Toast.makeText(EditActivity.this, R.string.save_success, Toast.LENGTH_SHORT).show();
                 }else {
-                    String title = titleET.getText().toString();
-                    String content = contentET.getText().toString();
-                    if (EditActivity.this.content.equals(content) && EditActivity.this.title.equals(title)) {
+                    if (content.equals(content_temp) && title.equals(title_temp)) {
                         Toast.makeText(EditActivity.this, "未改变便签不保存", Toast.LENGTH_SHORT).show();
                     } else {
-                        saveOriginalNote(title, content);
+                        saveOriginalNote(title_temp, content_temp);
                     }
-                    NoteAppWidget.updateWidget(EditActivity.this, time, title, content);
+                    Toast.makeText(EditActivity.this,"title_temp:"+title_temp+"content_temp:"+content_temp,Toast.LENGTH_LONG).show();
+                    NoteAppWidget.updateWidget(EditActivity.this, time, title_temp, content_temp);
                     CalendarActivity.getNoteAdapter().refreshAllDataForce();
                 }
                 finish();
@@ -181,21 +179,20 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onBackPressed() {
-        String title = titleET.getText().toString();
-        String content = contentET.getText().toString();
-        if (isNew) {
-            if (content.equals("") && title.equals("")) {
-                Toast.makeText(this, "空便签不会被保存", Toast.LENGTH_SHORT).show();
+        String title_temp = titleET.getText().toString();
+        String content_temp = contentET.getText().toString();
+        if(title_temp.isEmpty()||content_temp.isEmpty()){
+            Toast.makeText(EditActivity.this,R.string.empty_note_no_save,Toast.LENGTH_LONG).show();
+        }else if(isNew) {
+            saveNewNote(title_temp, content_temp);
+            Toast.makeText(EditActivity.this, R.string.save_success, Toast.LENGTH_SHORT).show();
+        }else {
+            if (content.equals(content_temp) && title.equals(title_temp)) {
+                Toast.makeText(EditActivity.this, "未改变便签不保存", Toast.LENGTH_SHORT).show();
             } else {
-                saveNewNote(title, content);
+                saveOriginalNote(title_temp, content_temp);
             }
-        } else {
-            if (this.content.equals(content) && this.title.equals(title)) {
-                    Toast.makeText(this, "未改变便签不保存", Toast.LENGTH_SHORT).show();
-            } else {
-                saveOriginalNote(title, content);
-            }
-            NoteAppWidget.updateWidget(this, time, title, content);
+            NoteAppWidget.updateWidget(EditActivity.this, time, title_temp, content_temp);
             CalendarActivity.getNoteAdapter().refreshAllDataForce();
         }
         finish();
@@ -238,22 +235,21 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
             /*返回按钮*/
             case android.R.id.home:
                 Log.d(TAG, "onOptionsItemSelected: home");
-                String title = titleET.getText().toString();
-                String content = contentET.getText().toString();
+                String title_temp = titleET.getText().toString();
+                String content_temp = contentET.getText().toString();
                 if (isNew) {
-                    if (content.equals("") && title.equals("")) {
+                    if (content_temp.equals("") && title_temp.equals("")) {
                         Toast.makeText(this, "空便签不会被保存", Toast.LENGTH_SHORT).show();
                     } else {
-                        saveNewNote(title, content);
+                        saveNewNote(title_temp, content_temp);
                     }
                 } else {
-                    if (this.content.equals(content) && this.title.equals(title)) {
+                    if (this.content.equals(content_temp) && this.title.equals(title_temp)) {
                         Toast.makeText(this, "未改变便签不保存", Toast.LENGTH_SHORT).show();
-                        CalendarActivity.getNoteAdapter().refreshData(pos);
                     } else {
-                        saveOriginalNote(title, content);
+                        saveOriginalNote(title_temp, content_temp);
                     }
-                    NoteAppWidget.updateWidget(this, time, title, content);
+                    NoteAppWidget.updateWidget(this, time, title_temp, content_temp);
                     CalendarActivity.getNoteAdapter().refreshAllDataForce();
                 }
                 finish();
@@ -276,39 +272,16 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressLint("StaticFieldLeak")
     private void saveNewNote(final String title, final String content) {
-        final ProgressDialog progressDialog = new ProgressDialog(EditActivity.this);
-        progressDialog.setTitle("保存您的便笺");
-        progressDialog.setMessage("正在保存...");
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected void onPreExecute() {
-                progressDialog.show();
-                super.onPreExecute();
-            }
-            @Override
-            protected Void doInBackground(Void... voids) {
-                lastChangedTime = TimeAid.getNowTime();
-                return null;
-            }
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                CalendarActivity.getRecyclerView().scrollToPosition(0);
-                CalendarActivity.getNoteAdapter().addData(dbAid.addSQLNote(CalendarActivity.getDbHelper(), content, title, lastChangedTime, lastChangedTime));
-                progressDialog.cancel();
-                progressDialog.dismiss();
-                super.onPostExecute(aVoid);
-            }
-        }.execute();
+        lastChangedTime = TimeAid.getNowTime();
+        CalendarActivity.getNoteAdapter().addData(dbAid.addSQLNote(dbAid.getDbHelper(this), content, title, lastChangedTime, lastChangedTime));
+        CalendarActivity.getRecyclerView().scrollToPosition(0);
     }
 
-    @SuppressLint("StaticFieldLeak")
     private void saveOriginalNote(final String title, final String content) {
         lastChangedTime = TimeAid.getNowTime();
-        int pos = parentIntent.getIntExtra("pos", 0);
-        dbAid.updateSQLNote(title, content, time, pos, lastChangedTime);
+        int pos = parentIntent.getIntExtra("id", 0);
+        dbAid.updateSQLNote(this,title, content, time, pos, lastChangedTime);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -324,18 +297,18 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         if (dDay > 0) {
             Toast.makeText(this, "你设定了提醒时间 :" + dstStr
                     + "\n将于" + dDay + "天后提醒你", Toast.LENGTH_SHORT).show();
-            AlarmReceiver.setAlarm(this,dbAid.querySQLNote(CalendarActivity.getDbHelper(),dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
+            AlarmReceiver.setAlarm(this,dbAid.querySQLNote(dbAid.getDbHelper(this),dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
             dbAid.newSQLNotice(this, time, dstTime);
         } else if (dHour > 0) {
             Toast.makeText(this, "你设定了提醒时间 :" + dstStr
                     + "\n将于" + dHour + "小时后提醒你", Toast.LENGTH_SHORT).show();
-            AlarmReceiver.setAlarm(this,dbAid.querySQLNote(CalendarActivity.getDbHelper(),dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
+            AlarmReceiver.setAlarm(this,dbAid.querySQLNote(dbAid.getDbHelper(this),dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
             dbAid.newSQLNotice(this, time, dstTime);
         } else if (dMinute > 0) {
             Toast.makeText(this, "你设定了提醒时间 :" + dstStr
                     + "\n将于" + dMinute + "分钟后提醒你", Toast.LENGTH_SHORT).show();
             dbAid.newSQLNotice(this, time, dstTime);
-            AlarmReceiver.setAlarm(this, dbAid.querySQLNote(CalendarActivity.getDbHelper(),dstTime).getId(),dDay * 60 * 24 + dHour * 60 + dMinute, title);
+            AlarmReceiver.setAlarm(this, dbAid.querySQLNote(dbAid.getDbHelper(this),dstTime).getId(),dDay * 60 * 24 + dHour * 60 + dMinute, title);
         }else {
             Toast.makeText(this,R.string.setAlarm_error,Toast.LENGTH_SHORT).show();
         }

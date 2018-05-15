@@ -126,21 +126,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
     @Override
     public void onHeaderClick(Header header, int position) {
-        Log.d(TAG, "onHeaderClick id: " + header.id+":"+position);
-        switch (position) {
-            case 0:
-                Log.i(TAG, "onHeaderClick: "+header.fragment);
-                break;
-            case 1:
-                Log.i(TAG, "onHeaderClick: "+header.fragment);
-                break;
-            case 2:
-                if(header.id==R.id.header_backup) {
-                    Log.d(TAG, "onHeaderClick id headerBackup: " + header.id);
-                    FileUtils.showSendFileScreen(this);
-                    Log.d(TAG, "onHeaderClick: Success");
-                }
-            break;
+        Log.d(TAG, "onHeaderClick id: " + header.id);
+        if (header.id == R.id.header_backup) {
+            Log.d(TAG, "onHeaderClick id headerBackup: " + header.id);
+            FileUtils.showSendFileScreen(this);
         }
         super.onHeaderClick(header, position);
     }
@@ -159,8 +148,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         if (actionBar != null) {
             // Show the Up button in the action bar.
             actionBar.setDisplayHomeAsUpEnabled(true);
-        }else {
-            Toast.makeText(this,"action",Toast.LENGTH_LONG).show();
         }
     }
 
@@ -207,7 +194,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class GeneralPreferenceFragment extends PreferenceFragment {
-        private static final String TAG = "GeneralPreferenceFragment";
+        private static final String TAG = "GeneralPreferenceFragme";
 
         @Override
         public void onCreate(Bundle savedInstanceState) {

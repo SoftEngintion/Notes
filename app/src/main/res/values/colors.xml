@@ -7,4 +7,5 @@
     <color name="White">#FFFFFF</color>
     <color name="colorGreen">#ff87ffeb</color>
     <color name="rippleColor">#c3f2d70c</color>
+    <color name="ic_launcher_background">#0896FF</color>
 </resources>

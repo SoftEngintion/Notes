@@ -140,7 +140,7 @@ public class RecycleBinActivity extends AppCompatActivity {
             int adapterPosition = srcHolder.getAdapterPosition();
             // Item被侧滑删除时，删除数据，并更新adapter。
             long time = BinNoteAdapter.getNotes().get(adapterPosition).getTime();
-            dbAid.setSQLNote(time, 0);
+            dbAid.setSQLNote(RecycleBinActivity.this,time, 0);
             binNoteAdapter.removeData(adapterPosition);
         }
     };
@@ -192,12 +192,12 @@ public class RecycleBinActivity extends AppCompatActivity {
             switch (menuPosition) {
                 case 0:
                     if (isDebug) Toast.makeText(RecycleBinActivity.this, "恢复 Pos" + adapterPosition, Toast.LENGTH_SHORT).show();
-                    dbAid.setSQLNote(time, 0);
+                    dbAid.setSQLNote(RecycleBinActivity.this,time, 0);
                     CalendarActivity.getNoteAdapter().refreshAllDataForce();
                     break;
                 case 1:
                     if (isDebug) Toast.makeText(RecycleBinActivity.this, "从数据库上删除 Pos" + adapterPosition, Toast.LENGTH_SHORT).show();
-                    dbAid.deleteSQLNoteForced(time);
+                    dbAid.deleteSQLNoteForced(RecycleBinActivity.this,time);
                     dbAid.setSQLNoticeDone(getApplicationContext(), time, 1);
                     break;
             }

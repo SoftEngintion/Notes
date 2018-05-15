@@ -60,8 +60,7 @@ import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 public class CalendarActivity extends AppCompatActivity {
     private static final String TAG = "CalendarActivity";
     public static SwipeMenuRecyclerView recyclerView;
-
-    private static DatabaseHelper dbHelper;
+    private DatabaseHelper dbHelper=dbAid.getDbHelper(this);
     private List<Note> noteList = new ArrayList<>();
     private static NoteAdapter noteAdapter;
     private PreferenceManager preferences;
@@ -71,7 +70,6 @@ public class CalendarActivity extends AppCompatActivity {
     private FloatingActionButton mFloatingActionButton;
     private CalendarLayout calendarLayout;
     static boolean isDebug = false;
-
     public android.app.ActionBar actionBar;
     private static boolean isExit = false;
     private WaveSwipeRefreshLayout mWaveSwipeRefreshLayout;
@@ -95,7 +93,6 @@ public class CalendarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_calendar);
         context = this;
         initComponent();
-
         initRecyclerView();
     }
 
@@ -225,7 +222,6 @@ public class CalendarActivity extends AppCompatActivity {
 
         /*sql数据库初始化*/
         if(!noteList.isEmpty())noteList.clear();
-        dbHelper = dbAid.getDbHelper(this);
         noteList=dbAid.initNotes(dbHelper);
         /*RecyclerView初始化*/
         recyclerView = findViewById(R.id.recycler_view);
@@ -314,6 +310,7 @@ public class CalendarActivity extends AppCompatActivity {
                             note.getTitle() + "\nTime:" + note.getLogTime() + "\n" +
                             "\nTimeLong:" + note.getTime() + "\n"+"Pos:" + position);
                     Intent intent = new Intent(CalendarActivity.this,EditActivity.class);
+                    intent.putExtra("id",note.getId());
                     intent.putExtra("pos", position);
                     intent.putExtra("title", note.getTitle());
                     intent.putExtra("content", note.getContent());
@@ -342,7 +339,7 @@ public class CalendarActivity extends AppCompatActivity {
                     @Override
                     public void onBtnClick() {
                         long time = NoteAdapter.getNotes().get(position).getTime();
-                        dbAid.deleteSQLNote(time);
+                        dbAid.deleteSQLNote(CalendarActivity.this,time);
                         noteAdapter.removeData(position);
                         normalDialog.cancel();
                         normalDialog.dismiss();
@@ -424,13 +421,6 @@ public class CalendarActivity extends AppCompatActivity {
 
 
     /**
-     * @return 数据库操作类
-     */
-    public static DatabaseHelper getDbHelper() {
-        return dbHelper;
-    }
-
-    /**
      * @return NoteAdapter
      */
     public static NoteAdapter getNoteAdapter() {
@@ -495,7 +485,7 @@ public class CalendarActivity extends AppCompatActivity {
             int adapterPosition = srcHolder.getAdapterPosition();
             // Item被侧滑删除时，删除数据，并更新adapter。
             long time = NoteAdapter.getNotes().get(adapterPosition).getTime();
-            dbAid.deleteSQLNote(time);
+            dbAid.deleteSQLNote(CalendarActivity.this,time);
             Toast.makeText(CalendarActivity.this, "你删除了一条便笺，你可以在回收站中彻底删除或恢复", Toast.LENGTH_SHORT).show();
             noteAdapter.removeData(adapterPosition);
             Log.d(TAG, "onItemDismiss: pos : " + adapterPosition);
@@ -513,7 +503,7 @@ public class CalendarActivity extends AppCompatActivity {
             int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
             Toast.makeText(CalendarActivity.this, "删除POS" + adapterPosition, Toast.LENGTH_SHORT).show();
             long time = NoteAdapter.getNotes().get(adapterPosition).getTime();
-            dbAid.deleteSQLNote(time);
+            dbAid.deleteSQLNote(CalendarActivity.this,time);
             noteAdapter.removeData(adapterPosition);
         }
     };

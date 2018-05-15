@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,8 +24,6 @@ import com.ws.notes.utils.TimeAid;
 import java.lang.reflect.Method;
 import java.util.Calendar;
 
-import static com.ws.notes.CalendarActivity.isDebug;
-
 public class MainActivity extends AppCompatActivity {
     private static boolean isExit = false;
     @SuppressLint("HandlerLeak")
@@ -35,11 +34,11 @@ public class MainActivity extends AppCompatActivity {
             isExit = false;
         }
     };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         Drawable drawable=getResources().getDrawable(R.drawable.ic_plan_black_24dp);
         drawable.setBounds(0,0,100,100);
         Button mButton_plan=findViewById(R.id.mButton_plan);
@@ -124,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (isDebug) {
+        if (CalendarActivity.getIsDebug()) {
             menu.setGroupVisible(R.id.main_menu_debug, true);
         }
         return super.onPrepareOptionsMenu(menu);
@@ -183,4 +182,5 @@ public class MainActivity extends AppCompatActivity {
             default:return super.onOptionsItemSelected(item);
         }
     }
+
 }

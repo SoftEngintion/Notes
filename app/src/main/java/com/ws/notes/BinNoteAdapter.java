@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.ws.notes.utils.TimeAid;
 import com.ws.notes.utils.dbAid;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 重写RecyclerView类
@@ -99,7 +99,7 @@ public class BinNoteAdapter extends RecyclerView.Adapter<BinNoteAdapter.ViewHold
             timeTV.setText(TimeAid.stampToDate(time) + " - 最后更改于" + TimeAid.stampToDate(lastChangedTime));
         }
         TextView dstTV = holder.dstTV;
-        long dstTime = dbAid.querySQLNotice(CalendarActivity.getDbHelper(), time);
+        long dstTime = dbAid.querySQLNotice(dbAid.getDbHelper(timeTV.getContext()), time);
         Log.d(TAG, "onBindViewHolder: dstTime:" + dstTime + " ,diff :" + (dstTime - TimeAid.getNowTime()));
         if (dstTime > 0 && (dstTime - TimeAid.getNowTime()) > 0) {
             dstTV.setVisibility(View.VISIBLE);
