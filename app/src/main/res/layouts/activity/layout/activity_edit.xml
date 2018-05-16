@@ -7,6 +7,7 @@
     android:orientation="vertical"
     tools:context="com.ws.notes.EditActivity">
     <android.support.design.widget.TextInputLayout
+        android:layout_marginTop="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -117,12 +118,13 @@
     </LinearLayout>
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/mButton_yes"
-        android:text="@string/mButton_yes"
+        android:text="@string/mButton_save"
         android:layout_weight="1"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:background="@drawable/button_save"
         android:theme="@style/RippleButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

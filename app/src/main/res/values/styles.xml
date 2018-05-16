@@ -1,14 +1,22 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Base.Theme.AppCompat.Light">
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="windowActionBarOverlay">true</item>
         <item name="android:listDivider">@drawable/divider</item>
-        <item name="actionBarStyle">@style/actionBarStyle</item>
+    </style>
+    <style name="CustomApp" parent="Theme.AppCompat.Light">
+        <item name="windowActionBarOverlay">true</item>
+        <item name="actionBarStyle">@style/actionbar_style</item>
+    </style>
+    <style name="actionbar_style" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <!-- 设置actionbar 背景色 透明 -->
+        <item name="android:background">#33000000</item>
+        <item name="android:backgroundStacked">#346c36</item>
+        <item name="android:backgroundSplit">#33000000</item>
     </style>
 
 </resources>

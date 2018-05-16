@@ -2,7 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- These settings headers are only used on tablets. -->
-
+    <!--
     <header
         android:fragment="com.ws.notes.SettingsActivity$GeneralPreferenceFragment"
         android:icon="@drawable/ic_info_black_24dp"
@@ -14,7 +14,7 @@
         android:icon="@drawable/ic_font_black_24dp"
         android:title="@string/pref_header_font"
         android:summary="@string/pref_header_font_summary"/>
-
+-->
     <header
         android:id="@+id/header_backup"
         android:icon="@drawable/ic_backup_black_24dp"

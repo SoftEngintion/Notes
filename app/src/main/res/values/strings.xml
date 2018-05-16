@@ -50,9 +50,10 @@
     <string name="saving_backup">正在保存.........</string>
     <string name="NullPointerException">对象不存在！</string>
     <string name="lastUpdate">- 最后更改于</string>
+    <string name="mButton_save">保存</string>
     <string name="mButton_yes">确定</string>
     <string name="mButton_no">取消</string>
-    <string name="edit_time_time">添加定制提醒</string>
+    <string name="edit_time_time">添加您的指定提醒时间</string>
     <string name="setAlarm_error">您的操作有误，请重试！</string>
     <string name="textview">TextView</string>
     <string name="switch_on">打开</string>
