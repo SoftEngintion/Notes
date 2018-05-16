@@ -392,9 +392,7 @@ public class CalendarActivity extends AppCompatActivity {
         } else {
             setTitle(getResources().getString(R.string.app_name));
         }
-//        noteAdapter.notifyDataSetChanged();
         checkEmpty();
-//        noteAdapter.refreshAllDataForce();
         for (Note note : NoteAdapter.getNotes()) {
             Log.d(TAG, "onResume: note " + note.getTitle());
         }

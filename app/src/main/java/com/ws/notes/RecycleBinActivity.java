@@ -193,7 +193,7 @@ public class RecycleBinActivity extends AppCompatActivity {
                 case 0:
                     if (isDebug) Toast.makeText(RecycleBinActivity.this, "恢复 Pos" + adapterPosition, Toast.LENGTH_SHORT).show();
                     dbAid.setSQLNote(RecycleBinActivity.this,time, 0);
-                    CalendarActivity.getNoteAdapter().refreshAllDataForce();
+                    if(CalendarActivity.getNoteAdapter()!=null)CalendarActivity.getNoteAdapter().refreshAllDataForce();
                     break;
                 case 1:
                     if (isDebug) Toast.makeText(RecycleBinActivity.this, "从数据库上删除 Pos" + adapterPosition, Toast.LENGTH_SHORT).show();

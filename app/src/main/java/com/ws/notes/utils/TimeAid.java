@@ -10,14 +10,8 @@ import java.util.Date;
 
 import static android.content.ContentValues.TAG;
 
-/**
- * Created by KanModel on 2017/12/29.
- * 时间相关方法
- */
-
 public abstract class TimeAid {
     public static long getNowTime() {
-//        return new Date().getTime();
         return System.currentTimeMillis();
     }
 
@@ -86,7 +80,6 @@ public abstract class TimeAid {
     }
 
     public static long getDiffMinutes(long dstTime, long nowTime) {
-//        (diff - days * (1000 * 60 * 60 * 24) - hours * (1000 * 60 * 60)) / (1000 * 60)
         return (getDiff(dstTime, nowTime) - getDiffDay(dstTime, nowTime) * (1000 * 60 * 60 * 24)
                 - getDiffHour(dstTime, nowTime) * (1000 * 60 * 60)) / (1000 * 60);
     }

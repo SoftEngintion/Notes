@@ -12,14 +12,14 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TimePicker;
 
+import com.ws.notes.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ws.notes.R;
-
 /**
  * 日期时间选择器
- * Created by KanModel on 2017/12/29.
+ *
  */
 
 public class TimeAndDatePickerDialog {

@@ -11,7 +11,7 @@ import android.view.View;
 
 /**
  * RecyclerView分割线
- * Created by KanModel on 2017/11/28.
+ *
  */
 
 public class NoteDecoration extends RecyclerView.ItemDecoration {

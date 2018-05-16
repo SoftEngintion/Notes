@@ -5,10 +5,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.util.Log;
 
-/**
- *
- * Created by KanModel on 2017/12/29.
- */
 
 public class Utils {
     private static final String TAG = "Utils";

@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 
 /**
  * 用于解决RecyclerView底层BUG用于处理异常
- * Created by KanModel on 2017/11/28.
+ * Created by WangSong on 2017/11/28.
  */
 
 public class WrapContentLinearLayoutManager extends LinearLayoutManager {

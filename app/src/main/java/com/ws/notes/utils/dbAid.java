@@ -86,13 +86,13 @@ public abstract class dbAid {
      * @param pos             在RecyclerView中的位置
      * @param lastChangedTime 最后更改的时间戳
      */
-    public static void updateSQLNote(Context context,String title, String content, long time, int pos, long lastChangedTime) {
+    public static void updateSQLNote(Context context,int id,String title, String content, long time, int pos, long lastChangedTime) {
         SQLiteDatabase db = getDbHelper(context).getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("title", title);
         values.put("content", content);
         values.put("lastChangedTime", lastChangedTime);
-        db.update("Note", values, "id = ?", new String[]{String.valueOf(pos)});
+        db.update("Note", values, "id = ?", new String[]{String.valueOf(id)});
         db.close();
         NoteAdapter.getNotes().get(pos).setTitle(title);
         NoteAdapter.getNotes().get(pos).setContent(content);
@@ -148,7 +148,7 @@ public abstract class dbAid {
         calendar.set(year,month,day,0,0,0);
         Log.i("TAG","calendar:"+calendar.getTime().getTime());
         long before=calendar.getTimeInMillis();
-        calendar.add(Calendar.DATE,day+1);
+        calendar.add(Calendar.DAY_OF_YEAR,1);
         long after=calendar.getTimeInMillis();
         Log.i(TAG, "querySQLNotes: before:"+before+"after:"+after+"\n");
         Cursor cursor=db.rawQuery("select * from Note where time>=? and time <?",new String[]{String.valueOf(before),String.valueOf(after)});

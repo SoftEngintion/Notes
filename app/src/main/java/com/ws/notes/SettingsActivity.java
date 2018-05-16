@@ -126,9 +126,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
     @Override
     public void onHeaderClick(Header header, int position) {
-        Log.d(TAG, "onHeaderClick id: " + header.id);
+        Log.d(TAG, "onHeaderClick fragment: " + header.fragment);
         if (header.id == R.id.header_backup) {
-            Log.d(TAG, "onHeaderClick id headerBackup: " + header.id);
             FileUtils.showSendFileScreen(this);
         }
         super.onHeaderClick(header, position);
@@ -200,6 +199,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
+            Log.i(TAG, "onCreate: ");
             setHasOptionsMenu(true);
             SwitchPreference isDebugSwitch = (SwitchPreference) findPreference("switch_preference_is_debug");
             isDebugSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -239,6 +239,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_font);
             setHasOptionsMenu(true);
+            Log.i(TAG, "onCreate: ");
             final EditTextPreference fontTitleSize = (EditTextPreference) findPreference("font_title_size");
             final EditTextPreference fontTimeSize = (EditTextPreference) findPreference("font_time_size");
             final EditTextPreference fontContentSize = (EditTextPreference) findPreference("font_content_size");

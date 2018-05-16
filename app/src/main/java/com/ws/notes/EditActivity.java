@@ -160,7 +160,6 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
                     } else {
                         saveOriginalNote(title_temp, content_temp);
                     }
-                    Toast.makeText(EditActivity.this,"title_temp:"+title_temp+"content_temp:"+content_temp,Toast.LENGTH_LONG).show();
                     NoteAppWidget.updateWidget(EditActivity.this, time, title_temp, content_temp);
                     CalendarActivity.getNoteAdapter().refreshAllDataForce();
                 }
@@ -280,8 +279,8 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
 
     private void saveOriginalNote(final String title, final String content) {
         lastChangedTime = TimeAid.getNowTime();
-        int pos = parentIntent.getIntExtra("id", 0);
-        dbAid.updateSQLNote(this,title, content, time, pos, lastChangedTime);
+        int pos = parentIntent.getIntExtra("pos", 0);
+        dbAid.updateSQLNote(this,parentIntent.getIntExtra("id",0),title, content, time, pos, lastChangedTime);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

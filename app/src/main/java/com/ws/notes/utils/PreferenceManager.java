@@ -6,18 +6,13 @@ import android.content.SharedPreferences;
 
 import com.ws.notes.R;
 
-/**
- *
- * Created by KanModel on 2017/12/27.
- */
-
 public class PreferenceManager {
     private SharedPreferences appSharedPrefs;
     private SharedPreferences.Editor prefsEditor;
 
     private Context context;
 
-    private static final String APP_SHARED_PREFS="com.ws.com.ws.notes";
+    private static final String APP_SHARED_PREFS="com.ws.notes";
     private static final String FIRST_LAUNCH = "first_launch";
 
     public PreferenceManager(Context context) {
