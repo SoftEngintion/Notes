@@ -18,5 +18,8 @@
         <item name="android:backgroundStacked">#346c36</item>
         <item name="android:backgroundSplit">#33000000</item>
     </style>
-
+    <style name="RippleButton">
+        <item name="colorControlHighlight">@color/colorAccent</item>
+        <item name="colorButtonNormal">@color/colorPrimaryDark</item>
+    </style>
 </resources>
