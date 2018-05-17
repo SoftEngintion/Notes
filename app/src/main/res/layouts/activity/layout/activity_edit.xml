@@ -43,7 +43,7 @@
         android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/add_time"
+        android:text="@string/add_alarm"
         android:visibility="invisible"/>
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
@@ -108,7 +108,7 @@
             android:layout_marginTop="8dp"
             android:gravity="center_vertical"
             android:typeface="monospace"
-            android:text="@string/add_time"
+            android:text="@string/add_alarm"
             tools:ignore="NestedWeights" />
         <com.suke.widget.SwitchButton
             android:layout_weight="1"

@@ -139,7 +139,7 @@ public class TimeAndDatePickerDialog {
         mTag = 2;
         View view = initDateAndTimePicker();
         mAlertDialog = new AlertDialog.Builder(mContext);
-        mAlertDialog.setTitle("选择时间");
+        mAlertDialog.setTitle(R.string.settings_date_time);
         initDialog(view);
         mAlertDialog.show();
     }

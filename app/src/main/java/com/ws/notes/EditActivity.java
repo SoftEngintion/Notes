@@ -1,6 +1,7 @@
 package com.ws.notes;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,16 +28,12 @@ import com.ws.notes.utils.Utils;
 import com.ws.notes.utils.dbAid;
 import com.ws.notes.widget.NoteAppWidget;
 
-import java.util.Locale;
-
 /**
  * 编辑便签的Activity
  */
 
 public class EditActivity extends AppCompatActivity implements TimeAndDatePickerDialog.TimePickerDialogInterface {
     private static final String TAG = "EditActivity";
-
-    private TimeAndDatePickerDialog dialog;
 
     private EditText titleET;
     private EditText contentET;
@@ -123,11 +120,32 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
             }
         });
         switch_add_time.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+            @TargetApi(Build.VERSION_CODES.KITKAT)
             @Override
             public void onCheckedChanged(SwitchButton view, boolean isChecked) {
                 if(isChecked){
-                    dialog = new TimeAndDatePickerDialog(EditActivity.this);
-                    dialog.showDateAndTimePickerDialog();
+                    String dstStr = parentIntent.getStringExtra("dstStr");
+                    long dstTime = TimeAid.dateToStamp(dstStr);
+                    long nowTime = TimeAid.getNowTime();
+                    long dDay = TimeAid.getDiffDay(dstTime, nowTime);
+                    long dHour = TimeAid.getDiffHour(dstTime, nowTime);
+                    long dMinute = TimeAid.getDiffMinutes(dstTime, nowTime);
+                    title = titleET.getText().toString();
+                    if (dDay > 0) {
+                        Toast.makeText(EditActivity.this, "你设定了提醒时间 :" + dstStr + "\n将于" + dDay + "天后提醒你", Toast.LENGTH_SHORT).show();
+                        AlarmReceiver.setAlarm(EditActivity.this,dbAid.querySQLNote(dbAid.getDbHelper(EditActivity.this),dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
+                        dbAid.newSQLNotice(EditActivity.this, time, dstTime);
+                    } else if (dHour > 0) {
+                        Toast.makeText(EditActivity.this, "你设定了提醒时间 :" + dstStr + "\n将于" + dHour + "小时后提醒你", Toast.LENGTH_SHORT).show();
+                        AlarmReceiver.setAlarm(EditActivity.this,dbAid.querySQLNote(dbAid.getDbHelper(EditActivity.this),dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
+                        dbAid.newSQLNotice(EditActivity.this, time, dstTime);
+                    } else if (dMinute > 0) {
+                        Toast.makeText(EditActivity.this, "你设定了提醒时间 :" + dstStr + "\n将于" + dMinute + "分钟后提醒你", Toast.LENGTH_SHORT).show();
+                        dbAid.newSQLNotice(EditActivity.this, time, dstTime);
+                        AlarmReceiver.setAlarm(EditActivity.this, dbAid.querySQLNote(dbAid.getDbHelper(EditActivity.this),dstTime).getId(),dDay * 60 * 24 + dHour * 60 + dMinute, title);
+                    }else {
+                        Toast.makeText(EditActivity.this,R.string.setAlarm_error,Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -262,8 +280,8 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
                 startActivity(home);
                 return true;
             case R.id.add_time:
-                dialog = new TimeAndDatePickerDialog(this);
-                dialog.showDateAndTimePickerDialog();
+//                dialog = new TimeAndDatePickerDialog(this);
+//                dialog.showDateAndTimePickerDialog();
                 return true;
             default:
                 break;
@@ -273,8 +291,8 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
 
     private void saveNewNote(final String title, final String content) {
         lastChangedTime = TimeAid.getNowTime();
-        CalendarActivity.getNoteAdapter().addData(dbAid.addSQLNote(dbAid.getDbHelper(this), content, title, lastChangedTime, lastChangedTime));
-        CalendarActivity.getRecyclerView().scrollToPosition(0);
+        if(CalendarActivity.getNoteAdapter()!=null)CalendarActivity.getNoteAdapter().addData(dbAid.addSQLNote(dbAid.getDbHelper(this), content, title, lastChangedTime, lastChangedTime));
+        if(CalendarActivity.getRecyclerView()!=null)CalendarActivity.getRecyclerView().scrollToPosition(0);
     }
 
     private void saveOriginalNote(final String title, final String content) {
@@ -286,31 +304,31 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void positiveListener() {
-        String dstStr = String.format(Locale.CHINA, "%d-%d-%d %d:%d:00", dialog.getYear(), dialog.getMonth(), dialog.getDay(), dialog.getHour(), dialog.getMinute());
-        long dstTime = TimeAid.dateToStamp(dstStr);
-        long nowTime = TimeAid.getNowTime();
-        long dDay = TimeAid.getDiffDay(dstTime, nowTime);
-        long dHour = TimeAid.getDiffHour(dstTime, nowTime);
-        long dMinute = TimeAid.getDiffMinutes(dstTime, nowTime);
-        title = titleET.getText().toString();
-        if (dDay > 0) {
-            Toast.makeText(this, "你设定了提醒时间 :" + dstStr
-                    + "\n将于" + dDay + "天后提醒你", Toast.LENGTH_SHORT).show();
-            AlarmReceiver.setAlarm(this,dbAid.querySQLNote(dbAid.getDbHelper(this),dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
-            dbAid.newSQLNotice(this, time, dstTime);
-        } else if (dHour > 0) {
-            Toast.makeText(this, "你设定了提醒时间 :" + dstStr
-                    + "\n将于" + dHour + "小时后提醒你", Toast.LENGTH_SHORT).show();
-            AlarmReceiver.setAlarm(this,dbAid.querySQLNote(dbAid.getDbHelper(this),dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
-            dbAid.newSQLNotice(this, time, dstTime);
-        } else if (dMinute > 0) {
-            Toast.makeText(this, "你设定了提醒时间 :" + dstStr
-                    + "\n将于" + dMinute + "分钟后提醒你", Toast.LENGTH_SHORT).show();
-            dbAid.newSQLNotice(this, time, dstTime);
-            AlarmReceiver.setAlarm(this, dbAid.querySQLNote(dbAid.getDbHelper(this),dstTime).getId(),dDay * 60 * 24 + dHour * 60 + dMinute, title);
-        }else {
-            Toast.makeText(this,R.string.setAlarm_error,Toast.LENGTH_SHORT).show();
-        }
+//        String dstStr = String.format(Locale.CHINA, "%d-%d-%d %d:%d:00", dialog.getYear(), dialog.getMonth(), dialog.getDay(), dialog.getHour(), dialog.getMinute());
+//        long dstTime = TimeAid.dateToStamp(dstStr);
+//        long nowTime = TimeAid.getNowTime();
+//        long dDay = TimeAid.getDiffDay(dstTime, nowTime);
+//        long dHour = TimeAid.getDiffHour(dstTime, nowTime);
+//        long dMinute = TimeAid.getDiffMinutes(dstTime, nowTime);
+//        title = titleET.getText().toString();
+//        if (dDay > 0) {
+//            Toast.makeText(this, "你设定了提醒时间 :" + dstStr
+//                    + "\n将于" + dDay + "天后提醒你", Toast.LENGTH_SHORT).show();
+//            AlarmReceiver.setAlarm(this,dbAid.querySQLNote(dbAid.getDbHelper(this),dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
+//            dbAid.newSQLNotice(this, time, dstTime);
+//        } else if (dHour > 0) {
+//            Toast.makeText(this, "你设定了提醒时间 :" + dstStr
+//                    + "\n将于" + dHour + "小时后提醒你", Toast.LENGTH_SHORT).show();
+//            AlarmReceiver.setAlarm(this,dbAid.querySQLNote(dbAid.getDbHelper(this),dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
+//            dbAid.newSQLNotice(this, time, dstTime);
+//        } else if (dMinute > 0) {
+//            Toast.makeText(this, "你设定了提醒时间 :" + dstStr
+//                    + "\n将于" + dMinute + "分钟后提醒你", Toast.LENGTH_SHORT).show();
+//            dbAid.newSQLNotice(this, time, dstTime);
+//            AlarmReceiver.setAlarm(this, dbAid.querySQLNote(dbAid.getDbHelper(this),dstTime).getId(),dDay * 60 * 24 + dHour * 60 + dMinute, title);
+//        }else {
+//            Toast.makeText(this,R.string.setAlarm_error,Toast.LENGTH_SHORT).show();
+//        }
     }
 
     @Override

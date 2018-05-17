@@ -127,6 +127,19 @@ public abstract class FileUtils {
             activity.startActivity(chooser);
         }
     }
+    protected static void drawMultiLineText(String str, float x, float y, Paint paint, Canvas canvas) {
+        String[] lines = str.split("\n");
+        float txtSize = -paint.ascent() + paint.descent();
+
+        if (paint.getStyle() == Paint.Style.FILL_AND_STROKE
+                || paint.getStyle() == Paint.Style.STROKE) {
+            txtSize += paint.getStrokeWidth(); // add stroke width to the text
+        }
+        float lineSpace = txtSize * 0.1f; // default line spacing
+        for (int i = 0; i < lines.length; ++i) {
+            canvas.drawText(lines[i], x, y + (txtSize + lineSpace) * i, paint);
+        }
+    }
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static void backup_tables(Context context, File file) {// 利用模板生成pdf
         PrintAttributes attributes=new PrintAttributes.Builder().setMediaSize(PrintAttributes.MediaSize.ISO_A4)
@@ -135,37 +148,32 @@ public abstract class FileUtils {
                     .build();
         PrintedPdfDocument pdfDocument=new PrintedPdfDocument(context,attributes);
         PrintedPdfDocument.Page page=pdfDocument.startPage(0);
+        String str ="";
         Canvas canvas=page.getCanvas();
-        int titleBaseLine=72;
-        int LeftMargin=54;
         Paint paint=new Paint();
         paint.setColor(Color.BLACK);
         paint.setTextSize(12);
         paint.setAntiAlias(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            paint.setLetterSpacing(2);
-        }
         paint.setTextAlign(Paint.Align.LEFT);
         Cursor cursor = dbAid.getDbHelper(context).getReadableDatabase().
                     query("Note", null, null, null, null, null, null);
+        /*
+         * 打印表头*/
+        for(int i = 0, size = cursor.getColumnCount(); i<size; ++i) {
+            str+=cursor.getColumnName(i)+" ";
+        }
+        str+="\n";
         if (cursor.moveToFirst()) {
             /*
-            * 打印表头*/
-            for(int i = 0, size = cursor.getColumnCount(), x = titleBaseLine; i<size; ++i) {
-                canvas.drawText(cursor.getColumnName(i)+"   |", x,LeftMargin,paint);
-                x+=cursor.getColumnName(i).length()+paint.getFontMetrics().ascent;
-            }
-            /*
             * 打印表信息*/
-            int x=LeftMargin,y=titleBaseLine;
             do {
                 for(int i=0,size=cursor.getColumnCount();i<size;++i){
-                    canvas.drawText(cursor.getString(i),x,y,paint);
-                    x+=cursor.getString(i).length()*(paint.getFontMetrics().descent-paint.getFontMetrics().ascent);
+                    str+=cursor.getString(i)+" ";
                 }
-                y+=paint.getFontMetrics().bottom-paint.getFontMetrics().top;
+                str+="\n";
             } while (cursor.moveToNext());
         }
+        drawMultiLineText(str,25,25,paint,canvas);
         if(!cursor.isClosed())cursor.close();
         pdfDocument.finishPage(page);//结束页
         FileOutputStream outputStream=null;

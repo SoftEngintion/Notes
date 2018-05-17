@@ -1,10 +1,10 @@
 package com.ws.notes;
 
 import android.annotation.SuppressLint;
-import android.app.TimePickerDialog;
-import android.content.DialogInterface;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,16 +16,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.ws.notes.ui.TimeAndDatePickerDialog;
 import com.ws.notes.utils.TimeAid;
 
 import java.lang.reflect.Method;
-import java.util.Calendar;
+import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TimeAndDatePickerDialog.TimePickerDialogInterface{
     private static boolean isExit = false;
+    private TimeAndDatePickerDialog dialog;
     @SuppressLint("HandlerLeak")
     private static final Handler mHandler=new Handler(){
         @Override
@@ -46,42 +47,44 @@ public class MainActivity extends AppCompatActivity {
         mButton_plan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Calendar calendar= Calendar.getInstance();
-                final int[] HourOfDay = new int[]{calendar.get(java.util.Calendar.HOUR_OF_DAY)};
-                final int[] Minute = new int[]{calendar.get(java.util.Calendar.MINUTE)};
-                TimePickerDialog timePickerDialog=new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        HourOfDay[0] =hourOfDay;
-                        Minute[0] =minute;
-                    }
-                }, HourOfDay[0],Minute[0],true);
-                timePickerDialog.setCancelable(true);
-                timePickerDialog.setTitle(R.string.edit_time_time);
-                DialogInterface.OnClickListener onClickListener= new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
-                            case DialogInterface.BUTTON_POSITIVE:
-                                Intent intent = new Intent(MainActivity.this,EditActivity.class);
-                                intent.putExtra("title", "");
-                                intent.putExtra("content", "");
-                                long timeStamp =TimeAid.getTimeStamp(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH),HourOfDay[0],Minute[0]);
-                                intent.putExtra("time", TimeAid.stampToDate(timeStamp));
-                                intent.putExtra("timeLong", timeStamp);
-                                intent.putExtra("isNew", true);
-                                intent.putExtra("lastChangedTime", timeStamp);
-                                startActivity(intent);
-                            case DialogInterface.BUTTON_NEGATIVE:
-                            default:
-                                dialog.cancel();
-                                dialog.dismiss();
-                        }
-                    }
-                };
-                timePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getString(R.string.mButton_yes),onClickListener);
-                timePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getString(R.string.mButton_no),onClickListener);
-                timePickerDialog.show();
+//                final Calendar calendar= Calendar.getInstance();
+//                final int[] HourOfDay = new int[]{calendar.get(java.util.Calendar.HOUR_OF_DAY)};
+//                final int[] Minute = new int[]{calendar.get(java.util.Calendar.MINUTE)};
+//                TimePickerDialog timePickerDialog=new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+//                    @Override
+//                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+//                        HourOfDay[0] =hourOfDay;
+//                        Minute[0] =minute;
+//                    }
+//                }, HourOfDay[0],Minute[0],true);
+//                timePickerDialog.setCancelable(true);
+//                timePickerDialog.setTitle(R.string.edit_time_time);
+//                DialogInterface.OnClickListener onClickListener= new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        switch (which){
+//                            case DialogInterface.BUTTON_POSITIVE:
+//                                Intent intent = new Intent(MainActivity.this,EditActivity.class);
+//                                intent.putExtra("title", "");
+//                                intent.putExtra("content", "");
+//                                long timeStamp =TimeAid.getTimeStamp(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH),HourOfDay[0],Minute[0]);
+//                                intent.putExtra("time", TimeAid.stampToDate(timeStamp));
+//                                intent.putExtra("timeLong", timeStamp);
+//                                intent.putExtra("isNew", true);
+//                                intent.putExtra("lastChangedTime", timeStamp);
+//                                startActivity(intent);
+//                            case DialogInterface.BUTTON_NEGATIVE:
+//                            default:
+//                                dialog.cancel();
+//                                dialog.dismiss();
+//                        }
+//                    }
+//                };
+//                timePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getString(R.string.mButton_yes),onClickListener);
+//                timePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getString(R.string.mButton_no),onClickListener);
+//                timePickerDialog.show();
+                dialog = new TimeAndDatePickerDialog(MainActivity.this);
+                dialog.showDateAndTimePickerDialog();
             }
         });
         Button mButton_calendar=findViewById(R.id.mButton_calendar);
@@ -183,4 +186,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    @Override
+    public void positiveListener() {
+        String dstStr = String.format(Locale.CHINA, "%d-%d-%d %d:%d:00", dialog.getYear(), dialog.getMonth(), dialog.getDay(), dialog.getHour(), dialog.getMinute());
+        long timeStamp = TimeAid.dateToStamp(dstStr);
+        Intent intent = new Intent(MainActivity.this,EditActivity.class);
+        intent.putExtra("title", "");
+        intent.putExtra("content", "");
+        intent.putExtra("time", TimeAid.stampToDate(timeStamp));
+        intent.putExtra("timeLong", timeStamp);
+        intent.putExtra("isNew", true);
+        intent.putExtra("lastChangedTime", timeStamp);
+        intent.putExtra("dstStr",dstStr);
+        startActivity(intent);
+    }
+
+    @Override
+    public void negativeListener() {
+    }
 }
