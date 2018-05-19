@@ -35,13 +35,11 @@ public class CustomSlideBigText extends Fragment {
         return sampleSlide;
     }
 
-    public void setTitle (String title)
-    {
+    public void setTitle(String title) {
         mTitle = title;
     }
 
-    public void showButton (String buttonText, View.OnClickListener buttonListener)
-    {
+    public void showButton(String buttonText, View.OnClickListener buttonListener) {
         mButtonText = buttonText;
         mButtonListener = buttonListener;
     }
@@ -60,10 +58,9 @@ public class CustomSlideBigText extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(layoutResId, container, false);
-        ((TextView)view.findViewById(R.id.custom_slide_big_text)).setText(mTitle);
+        ((TextView) view.findViewById(R.id.custom_slide_big_text)).setText(mTitle);
 
-        if (mButtonText != null)
-        {
+        if (mButtonText != null) {
             Button button = view.findViewById(R.id.custom_slide_button);
             button.setVisibility(View.VISIBLE);
             button.setText(mButtonText);

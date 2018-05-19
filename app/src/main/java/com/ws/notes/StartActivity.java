@@ -18,21 +18,21 @@ public class StartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        ActionBar actionBar=getActionBar();
+        ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowHomeEnabled(false);
         }
         preferences = new PreferenceManager(this.getApplicationContext());
         if (preferences.isFirstLaunch()) {
             startActivityForResult(new Intent(this, IntroActivity.class), REQUEST_CODE_INTRO);
-        }else {
+        } else {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                startActivity(new Intent(StartActivity.this,MainActivity.class));
-                finish();
+                    startActivity(new Intent(StartActivity.this, MainActivity.class));
+                    finish();
                 }
-                }, 1000);
+            }, 1000);
         }
     }
 
@@ -40,7 +40,7 @@ public class StartActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_INTRO) {
             preferences.setFirstLaunch(false);
-            startActivity(new Intent(this,MainActivity.class));
+            startActivity(new Intent(this, MainActivity.class));
             finish();
         }
         super.onActivityResult(requestCode, resultCode, data);

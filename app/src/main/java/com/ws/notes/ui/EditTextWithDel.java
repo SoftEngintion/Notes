@@ -16,6 +16,7 @@ public class EditTextWithDel extends android.support.v7.widget.AppCompatEditText
     private Drawable imgInable;
     private Drawable imgAble;
     private Context mContext;
+
     public EditTextWithDel(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
@@ -27,9 +28,10 @@ public class EditTextWithDel extends android.support.v7.widget.AppCompatEditText
         mContext = context;
         init();
     }
+
     public EditTextWithDel(Context context) {
         super(context);
-        mContext=context;
+        mContext = context;
         init();
     }
 
@@ -39,6 +41,7 @@ public class EditTextWithDel extends android.support.v7.widget.AppCompatEditText
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -58,6 +61,7 @@ public class EditTextWithDel extends android.support.v7.widget.AppCompatEditText
         else
             setCompoundDrawablesWithIntrinsicBounds(null, null, imgInable, null);
     }
+
     // 处理删除事件
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -73,6 +77,7 @@ public class EditTextWithDel extends android.support.v7.widget.AppCompatEditText
         }
         return super.onTouchEvent(event);
     }
+
     @Override
     protected void finalize() throws Throwable {
         super.finalize();

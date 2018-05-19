@@ -26,7 +26,7 @@ public abstract class TimeAid {
         long lt = Long.valueOf(time);
         Date date = new Date(lt);
         res = simpleDateFormat.format(date);
-        Log.i(TAG, "stampToDate: "+res);
+        Log.i(TAG, "stampToDate: " + res);
         return res;
     }
 
@@ -41,7 +41,7 @@ public abstract class TimeAid {
     /**
      * 将时间转换为时间戳
      */
-    public static long dateToStamp(String s){
+    public static long dateToStamp(String s) {
         String res;
         @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = null;

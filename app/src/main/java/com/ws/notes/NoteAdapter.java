@@ -171,9 +171,11 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     void addData(Note note) {
         addData(note, 0);
     }
+
     void removeNoteList() {
-        if(!notes.isEmpty())notes.clear();
+        if (!notes.isEmpty()) notes.clear();
     }
+
     void removeData(int position) {
         notes.remove(position);
         notifyItemRemoved(position);
@@ -204,7 +206,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
      *
      * @param size Note集合长度
      */
-     void refreshAllData(int size) {
+    void refreshAllData(int size) {
         notifyItemRangeChanged(0, size);
     }
 

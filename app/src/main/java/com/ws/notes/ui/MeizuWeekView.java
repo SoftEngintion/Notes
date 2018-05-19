@@ -35,7 +35,6 @@ public class MeizuWeekView extends WeekView {
     }
 
     /**
-     *
      * @param canvas    canvas
      * @param calendar  日历日历calendar
      * @param x         日历Card x起点坐标

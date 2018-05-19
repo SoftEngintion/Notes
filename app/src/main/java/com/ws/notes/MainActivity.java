@@ -24,26 +24,27 @@ import com.ws.notes.utils.TimeAid;
 import java.lang.reflect.Method;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements TimeAndDatePickerDialog.TimePickerDialogInterface{
+public class MainActivity extends AppCompatActivity implements TimeAndDatePickerDialog.TimePickerDialogInterface {
     private static boolean isExit = false;
     private TimeAndDatePickerDialog dialog;
     @SuppressLint("HandlerLeak")
-    private static final Handler mHandler=new Handler(){
+    private static final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             isExit = false;
         }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-        Drawable drawable=getResources().getDrawable(R.drawable.ic_plan_black_24dp);
-        drawable.setBounds(0,0,100,100);
-        Button mButton_plan=findViewById(R.id.mButton_plan);
-        mButton_plan.setCompoundDrawables(null,drawable,null,null);
+        Drawable drawable = getResources().getDrawable(R.drawable.ic_plan_black_24dp);
+        drawable.setBounds(0, 0, 100, 100);
+        Button mButton_plan = findViewById(R.id.mButton_plan);
+        mButton_plan.setCompoundDrawables(null, drawable, null, null);
         mButton_plan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,24 +88,24 @@ public class MainActivity extends AppCompatActivity implements TimeAndDatePicker
                 dialog.showDateAndTimePickerDialog();
             }
         });
-        Button mButton_calendar=findViewById(R.id.mButton_calendar);
-        drawable=getResources().getDrawable(R.drawable.ic_calendar);
-        drawable.setBounds(0,0,64,64);
-        mButton_calendar.setCompoundDrawables(null,drawable,null,null);
+        Button mButton_calendar = findViewById(R.id.mButton_calendar);
+        drawable = getResources().getDrawable(R.drawable.ic_calendar);
+        drawable.setBounds(0, 0, 64, 64);
+        mButton_calendar.setCompoundDrawables(null, drawable, null, null);
         mButton_calendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this,CalendarActivity.class));
+                startActivity(new Intent(MainActivity.this, CalendarActivity.class));
             }
         });
-        Button mButton_notes=findViewById(R.id.mButton_notes);
-        drawable=getResources().getDrawable(R.drawable.ic_note);
-        drawable.setBounds(0,0,90,90);
-        mButton_notes.setCompoundDrawables(null,drawable,null,null);
+        Button mButton_notes = findViewById(R.id.mButton_notes);
+        drawable = getResources().getDrawable(R.drawable.ic_note);
+        drawable.setBounds(0, 0, 90, 90);
+        mButton_notes.setCompoundDrawables(null, drawable, null, null);
         mButton_notes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,EditActivity.class);
+                Intent intent = new Intent(MainActivity.this, EditActivity.class);
                 intent.putExtra("title", "");
                 intent.putExtra("content", "");
                 long timeStamp = TimeAid.getNowTime();
@@ -116,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements TimeAndDatePicker
             }
         });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -150,16 +152,17 @@ public class MainActivity extends AppCompatActivity implements TimeAndDatePicker
         }
         return super.onMenuOpened(featureId, menu);
     }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (!isExit) {
                 isExit = true;
-                Toast.makeText(this,R.string.NoExitTip,Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.NoExitTip, Toast.LENGTH_SHORT).show();
                 // 利用handler延迟发送更改状态信息
                 mHandler.sendEmptyMessageDelayed(0, 2000);
             } else {
-                Toast.makeText(this,R.string.ExitTip,Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.ExitTip, Toast.LENGTH_SHORT).show();
                 finish();
                 System.exit(0);
             }
@@ -167,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements TimeAndDatePicker
         }
         return super.onKeyDown(keyCode, event);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -177,12 +181,15 @@ public class MainActivity extends AppCompatActivity implements TimeAndDatePicker
             case R.id.main_menu_setting:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 return true;
-            case R.id.main_menu_exit:finish();return true;
+            case R.id.main_menu_exit:
+                finish();
+                return true;
             case R.id.main_menu_about:
                 /*启动关于应用*/
-                startActivity(new Intent(MainActivity.this,AppAboutActivity.class));
+                startActivity(new Intent(MainActivity.this, AppAboutActivity.class));
                 return true;
-            default:return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -191,14 +198,14 @@ public class MainActivity extends AppCompatActivity implements TimeAndDatePicker
     public void positiveListener() {
         String dstStr = String.format(Locale.CHINA, "%d-%d-%d %d:%d:00", dialog.getYear(), dialog.getMonth(), dialog.getDay(), dialog.getHour(), dialog.getMinute());
         long timeStamp = TimeAid.dateToStamp(dstStr);
-        Intent intent = new Intent(MainActivity.this,EditActivity.class);
+        Intent intent = new Intent(MainActivity.this, EditActivity.class);
         intent.putExtra("title", "");
         intent.putExtra("content", "");
         intent.putExtra("time", TimeAid.stampToDate(timeStamp));
         intent.putExtra("timeLong", timeStamp);
         intent.putExtra("isNew", true);
         intent.putExtra("lastChangedTime", timeStamp);
-        intent.putExtra("dstStr",dstStr);
+        intent.putExtra("dstStr", dstStr);
         startActivity(intent);
     }
 

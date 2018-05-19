@@ -19,7 +19,6 @@ import java.util.List;
 
 /**
  * 日期时间选择器
- *
  */
 
 public class TimeAndDatePickerDialog {
@@ -155,6 +154,7 @@ public class TimeAndDatePickerDialog {
 
     /**
      * 调整FrameLayout大小
+     *
      * @param tp
      */
     private void resizePikcer(FrameLayout tp) {
@@ -232,6 +232,7 @@ public class TimeAndDatePickerDialog {
 
     public interface TimePickerDialogInterface {
         void positiveListener();
+
         void negativeListener();
     }
 }

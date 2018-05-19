@@ -35,7 +35,7 @@
     <string name="empty_note_text">点击右下角添加按钮添加你的便笺吧</string>
     <string name="empty_bin_note_text">回收站空空如也~</string>
     <string name="app_about">
-        APP简介:\n   多功能选择的便签\n   精美的画面设计\n   独特的设计理念\n   便捷的手势操作\n开发团队:\n   软件工程团队68组\n
+        APP简介:\n   多功能选择的记事本\n   精美的画面设计\n   简约的设计理念\n   便捷的操作方式\n开发团队:\n   软件工程团队68组\n
     </string>
     <string name="add_to_desktop">添加到桌面</string>
     <string name="add_alarm">添加提醒</string>
@@ -66,5 +66,5 @@
     <string name="write_note">写日记</string>
     <string name="alarm_plan">定计划</string>
     <string name="empty_note_no_save">空便签不会被保存！</string>
-    <string name="settings_date_time">设置日期与时间</string>
+    <string name="settings_date_time">设置指定提醒日期与时间</string>
 </resources>

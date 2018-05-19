@@ -39,7 +39,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent2, 0);
             Notification notify = new NotificationCompat.Builder(context)
                     .setSmallIcon(R.drawable.appwidget_preview)
-                    .setContentTitle(context.getString(R.string.app_name)+"提醒")
+                    .setContentTitle(context.getString(R.string.app_name) + "提醒")
                     .setSound(Uri.fromFile(new File("/system/media/audio/alarms/wr.ogg")))
                     .setVibrate(new long[]{0, 1000, 1000, 1000})
                     .setLights(Color.GREEN, 1000, 1000)
@@ -47,23 +47,25 @@ public class AlarmReceiver extends BroadcastReceiver {
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true)
                     .setNumber(1).build();
-            manager.notify(intent.getIntExtra("id",0), notify);
+            manager.notify(intent.getIntExtra("id", 0), notify);
         }
 //        }
     }
-    public static Boolean CancelAlarm(Context context,int notificationID){
-        NotificationManager manager=(NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+    public static Boolean CancelAlarm(Context context, int notificationID) {
+        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (manager != null) {
             manager.cancel(notificationID);
         }
         return true;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static void setAlarm(Context context,int id, long minute, String title) {
+    public static void setAlarm(Context context, int id, long minute, String title) {
         Log.d(TAG, "setAlarm: minute: " + minute);
         Intent intent = new Intent(context, AlarmReceiver.class);
         intent.setAction("NOTE.NOTIFICATION");
-        intent.putExtra("id",id);
+        intent.putExtra("id", id);
         intent.putExtra("title", title);
         intent.putExtra("min", minute);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);

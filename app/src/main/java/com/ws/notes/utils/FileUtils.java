@@ -87,7 +87,7 @@ public abstract class FileUtils {
 
     public static void showSendFileScreen(final SettingsActivity activity) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            if(ContextCompat.checkSelfPermission(activity.getApplication(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            if (ContextCompat.checkSelfPermission(activity.getApplication(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
                 final File foder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/backup");//声明存储位置
                 if (!foder.exists()) {//判断文件夹是否存在，如不存在就重新创建
@@ -118,15 +118,16 @@ public abstract class FileUtils {
                         super.onPostExecute(aVoid);
                     }
                 }.execute(activity);
-            }else {
-                ActivityCompat.requestPermissions(activity,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1 );
+            } else {
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             }
-        }else {
+        } else {
             Intent intent = new Intent(Intent.ACTION_SEND);
             Intent chooser = Intent.createChooser(intent, activity.getResources().getString(R.string.save_backup));
             activity.startActivity(chooser);
         }
     }
+
     protected static void drawMultiLineText(String str, float x, float y, Paint paint, Canvas canvas) {
         String[] lines = str.split("\n");
         float txtSize = -paint.ascent() + paint.descent();
@@ -140,54 +141,55 @@ public abstract class FileUtils {
             canvas.drawText(lines[i], x, y + (txtSize + lineSpace) * i, paint);
         }
     }
+
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static void backup_tables(Context context, File file) {// 利用模板生成pdf
-        PrintAttributes attributes=new PrintAttributes.Builder().setMediaSize(PrintAttributes.MediaSize.ISO_A4)
-                    .setResolution(new PrintAttributes.Resolution("1","print",1200,1200))
-                    .setMinMargins(new PrintAttributes.Margins(0,0,0,0))
-                    .build();
-        PrintedPdfDocument pdfDocument=new PrintedPdfDocument(context,attributes);
-        PrintedPdfDocument.Page page=pdfDocument.startPage(0);
-        String str ="";
-        Canvas canvas=page.getCanvas();
-        Paint paint=new Paint();
+        PrintAttributes attributes = new PrintAttributes.Builder().setMediaSize(PrintAttributes.MediaSize.ISO_A4)
+                .setResolution(new PrintAttributes.Resolution("1", "print", 1200, 1200))
+                .setMinMargins(new PrintAttributes.Margins(0, 0, 0, 0))
+                .build();
+        PrintedPdfDocument pdfDocument = new PrintedPdfDocument(context, attributes);
+        PrintedPdfDocument.Page page = pdfDocument.startPage(0);
+        String str = "";
+        Canvas canvas = page.getCanvas();
+        Paint paint = new Paint();
         paint.setColor(Color.BLACK);
         paint.setTextSize(12);
         paint.setAntiAlias(true);
         paint.setTextAlign(Paint.Align.LEFT);
         Cursor cursor = dbAid.getDbHelper(context).getReadableDatabase().
-                    query("Note", null, null, null, null, null, null);
+                query("Note", null, null, null, null, null, null);
         /*
          * 打印表头*/
-        for(int i = 0, size = cursor.getColumnCount(); i<size; ++i) {
-            str+=cursor.getColumnName(i)+" ";
+        for (int i = 0, size = cursor.getColumnCount(); i < size; ++i) {
+            str += cursor.getColumnName(i) + " ";
         }
-        str+="\n";
+        str += "\n";
         if (cursor.moveToFirst()) {
             /*
-            * 打印表信息*/
+             * 打印表信息*/
             do {
-                for(int i=0,size=cursor.getColumnCount();i<size;++i){
-                    str+=cursor.getString(i)+" ";
+                for (int i = 0, size = cursor.getColumnCount(); i < size; ++i) {
+                    str += cursor.getString(i) + " ";
                 }
-                str+="\n";
+                str += "\n";
             } while (cursor.moveToNext());
         }
-        drawMultiLineText(str,25,25,paint,canvas);
-        if(!cursor.isClosed())cursor.close();
+        drawMultiLineText(str, 25, 25, paint, canvas);
+        if (!cursor.isClosed()) cursor.close();
         pdfDocument.finishPage(page);//结束页
-        FileOutputStream outputStream=null;
+        FileOutputStream outputStream = null;
         try {
-            outputStream=new FileOutputStream(file);
+            outputStream = new FileOutputStream(file);
             pdfDocument.writeTo(outputStream);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             pdfDocument.close();
             try {
-                if(outputStream!=null)outputStream.close();
+                if (outputStream != null) outputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }

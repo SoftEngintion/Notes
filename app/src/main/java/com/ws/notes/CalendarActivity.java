@@ -60,7 +60,7 @@ import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 public class CalendarActivity extends AppCompatActivity {
     private static final String TAG = "CalendarActivity";
     public static SwipeMenuRecyclerView recyclerView;
-    private DatabaseHelper dbHelper=dbAid.getDbHelper(this);
+    private DatabaseHelper dbHelper = dbAid.getDbHelper(this);
     private List<Note> noteList = new ArrayList<>();
     private static NoteAdapter noteAdapter;
     private PreferenceManager preferences;
@@ -74,7 +74,7 @@ public class CalendarActivity extends AppCompatActivity {
     private static boolean isExit = false;
     private WaveSwipeRefreshLayout mWaveSwipeRefreshLayout;
     @SuppressLint("HandlerLeak")
-    private static final Handler mHandler=new Handler(){
+    private static final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -109,11 +109,11 @@ public class CalendarActivity extends AppCompatActivity {
         emptyView = findViewById(R.id.empty_view);
         emptyTV = findViewById(R.id.empty_view_text);
         emptyTV.setTypeface(Utils.getFontAwesome(getApplicationContext()));
-        mFloatingActionButton=findViewById(R.id.fab);
+        mFloatingActionButton = findViewById(R.id.fab);
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CalendarActivity.this,EditActivity.class);
+                Intent intent = new Intent(CalendarActivity.this, EditActivity.class);
                 intent.putExtra("title", "");
                 intent.putExtra("content", "");
                 long timeStamp = TimeAid.getNowTime();
@@ -124,41 +124,41 @@ public class CalendarActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        calendarLayout=findViewById(R.id.calendarLayout);
+        calendarLayout = findViewById(R.id.calendarLayout);
         calendarLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(calendarLayout.isExpand())
+                if (calendarLayout.isExpand())
                     calendarLayout.shrink();
                 else calendarLayout.expand();
             }
         });
-        CalendarView calendarView=findViewById(R.id.calendarView);
+        CalendarView calendarView = findViewById(R.id.calendarView);
         calendarView.setOnDateLongClickListener(new CalendarView.OnDateLongClickListener() {
             @Override
             public void onDateLongClick(final Calendar calendar) {
-                Toast.makeText(CalendarActivity.this,calendar.getYear()+"yue"+calendar.getMonth(),Toast.LENGTH_LONG).show();
-                java.util.Calendar calendar1= java.util.Calendar.getInstance();
+//                Toast.makeText(CalendarActivity.this, calendar.getYear() + "yue" + calendar.getMonth(), Toast.LENGTH_LONG).show();
+                java.util.Calendar calendar1 = java.util.Calendar.getInstance();
                 final int[] HourOfDay = new int[]{calendar1.get(java.util.Calendar.HOUR_OF_DAY)};
                 final int[] Minute = new int[]{calendar1.get(java.util.Calendar.MINUTE)};
-                TimePickerDialog timePickerDialog=new TimePickerDialog(CalendarActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(CalendarActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        HourOfDay[0] =hourOfDay;
-                        Minute[0] =minute;
+                        HourOfDay[0] = hourOfDay;
+                        Minute[0] = minute;
                     }
-                }, HourOfDay[0],Minute[0],true);
+                }, HourOfDay[0], Minute[0], true);
                 timePickerDialog.setCancelable(true);
                 timePickerDialog.setTitle(R.string.edit_time_time);
-                DialogInterface.OnClickListener onClickListener= new DialogInterface.OnClickListener() {
+                DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
+                        switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
-                                Intent intent = new Intent(CalendarActivity.this,EditActivity.class);
+                                Intent intent = new Intent(CalendarActivity.this, EditActivity.class);
                                 intent.putExtra("title", "");
                                 intent.putExtra("content", "");
-                                long timeStamp =TimeAid.getTimeStamp(calendar.getYear(),calendar.getMonth()-1,calendar.getDay(),HourOfDay[0],Minute[0]);
+                                long timeStamp = TimeAid.getTimeStamp(calendar.getYear(), calendar.getMonth() - 1, calendar.getDay(), HourOfDay[0], Minute[0]);
                                 intent.putExtra("time", TimeAid.stampToDate(timeStamp));
                                 intent.putExtra("timeLong", timeStamp);
                                 intent.putExtra("isNew", true);
@@ -171,19 +171,19 @@ public class CalendarActivity extends AppCompatActivity {
                         }
                     }
                 };
-                timePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getString(R.string.mButton_yes),onClickListener);
-                timePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getString(R.string.mButton_no),onClickListener);
+                timePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getString(R.string.mButton_yes), onClickListener);
+                timePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getString(R.string.mButton_no), onClickListener);
                 timePickerDialog.show();
             }
         });
         calendarView.setOnDateSelectedListener(new CalendarView.OnDateSelectedListener() {
             @Override
             public void onDateSelected(final Calendar calendar, boolean isClick) {
-                if(isClick) {
-                    if(!noteList.isEmpty())noteList.clear();
-                    Log.i(TAG, "onDateSelected: year"+calendar.getYear()+"Month:"+calendar.getMonth()+"day:"+calendar.getDay());
-                    noteList=dbAid.querySQLNotes(dbAid.getDbHelper(CalendarActivity.this),calendar.getYear(),calendar.getMonth()-1,calendar.getDay());
-                    Log.d(TAG, "onDateSelected: "+noteList.size()+"date:");
+                if (isClick) {
+                    if (!noteList.isEmpty()) noteList.clear();
+                    Log.i(TAG, "onDateSelected: year" + calendar.getYear() + "Month:" + calendar.getMonth() + "day:" + calendar.getDay());
+                    noteList = dbAid.querySQLNotes(dbAid.getDbHelper(CalendarActivity.this), calendar.getYear(), calendar.getMonth() - 1, calendar.getDay());
+                    Log.d(TAG, "onDateSelected: " + noteList.size() + "date:");
                     noteAdapter.removeNoteList();
                     noteAdapter.setNotes(noteList);
                     noteAdapter.notifyDataSetChanged();
@@ -193,10 +193,11 @@ public class CalendarActivity extends AppCompatActivity {
         });
         mWaveSwipeRefreshLayout = findViewById(R.id.main_swipe);
         mWaveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
-            @Override public void onRefresh() {
-                if(noteAdapter.getItemCount()!=0)recyclerView.scrollToPosition(0);
-                if (mFloatingActionButton != null  && mFloatingActionButton.getVisibility() == View.GONE) {
-                    Animator animator =  ObjectAnimator.ofFloat(mFloatingActionButton,"translationY",100f,0f);
+            @Override
+            public void onRefresh() {
+                if (noteAdapter.getItemCount() != 0) recyclerView.scrollToPosition(0);
+                if (mFloatingActionButton != null && mFloatingActionButton.getVisibility() == View.GONE) {
+                    Animator animator = ObjectAnimator.ofFloat(mFloatingActionButton, "translationY", 100f, 0f);
                     animator.setDuration(500);
                     mFloatingActionButton.setVisibility(View.VISIBLE);
                     animator.start();
@@ -221,8 +222,8 @@ public class CalendarActivity extends AppCompatActivity {
     private void initRecyclerView() {
 
         /*sql数据库初始化*/
-        if(!noteList.isEmpty())noteList.clear();
-        noteList=dbAid.initNotes(dbHelper);
+        if (!noteList.isEmpty()) noteList.clear();
+        noteList = dbAid.initNotes(dbHelper);
         /*RecyclerView初始化*/
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new WrapContentLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -240,9 +241,10 @@ public class CalendarActivity extends AppCompatActivity {
         recyclerView.setOnItemMoveListener(mItemMoveListener);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             private boolean isFabAnimg;
+
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0 ){
+                if (dy > 0) {
                     if (!isFabAnimg && mFloatingActionButton != null && mFloatingActionButton.getVisibility() == View.VISIBLE) {
                         Animator animator = ObjectAnimator.ofFloat(mFloatingActionButton, "translationY", 0f, 100f);
                         animator.setDuration(500);
@@ -251,6 +253,7 @@ public class CalendarActivity extends AppCompatActivity {
                             public void onAnimationStart(Animator animation) {
                                 isFabAnimg = true;
                             }
+
                             @Override
                             public void onAnimationEnd(Animator animation) {
                                 isFabAnimg = false;
@@ -269,9 +272,9 @@ public class CalendarActivity extends AppCompatActivity {
                         });
                         animator.start();
                     }
-                }else{
+                } else {
                     if (mFloatingActionButton != null && !isFabAnimg && mFloatingActionButton.getVisibility() == View.GONE) {
-                        Animator animator =  ObjectAnimator.ofFloat(mFloatingActionButton,"translationY",100f,0f);
+                        Animator animator = ObjectAnimator.ofFloat(mFloatingActionButton, "translationY", 100f, 0f);
                         animator.setDuration(500);
                         animator.addListener(new Animator.AnimatorListener() {
                             @Override
@@ -308,9 +311,9 @@ public class CalendarActivity extends AppCompatActivity {
                     Note note = NoteAdapter.getNotes().get(position);
                     Log.d(TAG, "onClick: Content:" + note.getContent() + "\nTitle:" +
                             note.getTitle() + "\nTime:" + note.getLogTime() + "\n" +
-                            "\nTimeLong:" + note.getTime() + "\n"+"Pos:" + position);
-                    Intent intent = new Intent(CalendarActivity.this,EditActivity.class);
-                    intent.putExtra("id",note.getId());
+                            "\nTimeLong:" + note.getTime() + "\n" + "Pos:" + position);
+                    Intent intent = new Intent(CalendarActivity.this, EditActivity.class);
+                    intent.putExtra("id", note.getId());
                     intent.putExtra("pos", position);
                     intent.putExtra("title", note.getTitle());
                     intent.putExtra("content", note.getContent());
@@ -325,7 +328,7 @@ public class CalendarActivity extends AppCompatActivity {
 
             @Override
             public void onItemLongClick(View view, final int position) {
-                final NormalDialog normalDialog=new NormalDialog(CalendarActivity.this);
+                final NormalDialog normalDialog = new NormalDialog(CalendarActivity.this);
                 normalDialog.style(NormalDialog.STYLE_TWO);
                 normalDialog.title(getString(R.string.Notes_delete_tip));
                 normalDialog.content(getString(R.string.Notes_delete));
@@ -339,7 +342,7 @@ public class CalendarActivity extends AppCompatActivity {
                     @Override
                     public void onBtnClick() {
                         long time = NoteAdapter.getNotes().get(position).getTime();
-                        dbAid.deleteSQLNote(CalendarActivity.this,time);
+                        dbAid.deleteSQLNote(CalendarActivity.this, time);
                         noteAdapter.removeData(position);
                         normalDialog.cancel();
                         normalDialog.dismiss();
@@ -350,6 +353,7 @@ public class CalendarActivity extends AppCompatActivity {
         }));
         checkEmpty();
     }
+
     @SuppressLint("StaticFieldLeak")
     private class Task extends AsyncTask<Void, Void, String[]> {
 
@@ -358,15 +362,16 @@ public class CalendarActivity extends AppCompatActivity {
             return new String[0];
         }
 
-        @Override protected void onPostExecute(String[] result) {
+        @Override
+        protected void onPostExecute(String[] result) {
             // Call setRefreshing(false) when the list has been refreshed.
             mWaveSwipeRefreshLayout.setRefreshing(false);
-            Toast.makeText(CalendarActivity.this,R.string.Refresh,Toast.LENGTH_SHORT).show();
+            Toast.makeText(CalendarActivity.this, R.string.Refresh, Toast.LENGTH_SHORT).show();
             super.onPostExecute(result);
         }
     }
 
-    public static void checkEmpty(){
+    public static void checkEmpty() {
         if (noteAdapter.getItemCount() == 0) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
@@ -378,9 +383,11 @@ public class CalendarActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (resultCode){
-            case 1:break;
-            default:super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode) {
+            case 1:
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -402,18 +409,20 @@ public class CalendarActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            startActivity(new Intent(CalendarActivity.this,MainActivity.class));
+            startActivity(new Intent(CalendarActivity.this, MainActivity.class));
             return false;
         }
         return super.onKeyDown(keyCode, event);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
-            default:return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -471,7 +480,7 @@ public class CalendarActivity extends AppCompatActivity {
         public boolean onItemMove(RecyclerView.ViewHolder srcHolder, RecyclerView.ViewHolder targetHolder) {
             int fromPosition = srcHolder.getAdapterPosition();
             int toPosition = targetHolder.getAdapterPosition();
-            if(fromPosition>=0&&toPosition>=0&&fromPosition<noteList.size()&&toPosition<noteList.size()) {
+            if (fromPosition >= 0 && toPosition >= 0 && fromPosition < noteList.size() && toPosition < noteList.size()) {
                 Collections.swap(noteList, fromPosition, toPosition);
                 noteAdapter.notifyItemMoved(fromPosition, toPosition);
             }
@@ -483,7 +492,7 @@ public class CalendarActivity extends AppCompatActivity {
             int adapterPosition = srcHolder.getAdapterPosition();
             // Item被侧滑删除时，删除数据，并更新adapter。
             long time = NoteAdapter.getNotes().get(adapterPosition).getTime();
-            dbAid.deleteSQLNote(CalendarActivity.this,time);
+            dbAid.deleteSQLNote(CalendarActivity.this, time);
             Toast.makeText(CalendarActivity.this, "你删除了一条便笺，你可以在回收站中彻底删除或恢复", Toast.LENGTH_SHORT).show();
             noteAdapter.removeData(adapterPosition);
             Log.d(TAG, "onItemDismiss: pos : " + adapterPosition);
@@ -501,7 +510,7 @@ public class CalendarActivity extends AppCompatActivity {
             int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
             Toast.makeText(CalendarActivity.this, "删除POS" + adapterPosition, Toast.LENGTH_SHORT).show();
             long time = NoteAdapter.getNotes().get(adapterPosition).getTime();
-            dbAid.deleteSQLNote(CalendarActivity.this,time);
+            dbAid.deleteSQLNote(CalendarActivity.this, time);
             noteAdapter.removeData(adapterPosition);
         }
     };

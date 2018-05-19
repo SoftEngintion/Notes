@@ -12,7 +12,7 @@ public class PreferenceManager {
 
     private Context context;
 
-    private static final String APP_SHARED_PREFS="com.ws.notes";
+    private static final String APP_SHARED_PREFS = "com.ws.notes";
     private static final String FIRST_LAUNCH = "first_launch";
 
     public PreferenceManager(Context context) {
@@ -30,19 +30,21 @@ public class PreferenceManager {
         prefsEditor.commit();
     }
 
-    public boolean getDebug(){
+    public boolean getDebug() {
         return android.preference.PreferenceManager.getDefaultSharedPreferences(context).getBoolean("switch_preference_is_debug", false);
     }
 
-    public int getFontContextSize(){
+    public int getFontContextSize() {
         return Integer.parseInt(android.preference.PreferenceManager.getDefaultSharedPreferences(context)
                 .getString("font_content_size", String.valueOf(context.getResources().getInteger(R.integer.font_content_size_default))));
     }
-    public int getFontTimeSize(){
+
+    public int getFontTimeSize() {
         return Integer.parseInt(android.preference.PreferenceManager.getDefaultSharedPreferences(context)
                 .getString("font_time_size", String.valueOf(context.getResources().getInteger(R.integer.font_time_size_default))));
     }
-    public int getFontTitleSize(){
+
+    public int getFontTitleSize() {
         return Integer.parseInt(android.preference.PreferenceManager.getDefaultSharedPreferences(context)
                 .getString("font_title_size", String.valueOf(context.getResources().getInteger(R.integer.font_title_size_default))));
     }

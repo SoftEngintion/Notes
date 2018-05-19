@@ -34,12 +34,11 @@ import com.ws.notes.widget.NoteAppWidget;
 
 public class EditActivity extends AppCompatActivity implements TimeAndDatePickerDialog.TimePickerDialogInterface {
     private static final String TAG = "EditActivity";
-
+    boolean isNew;
     private EditText titleET;
     private EditText contentET;
     private long time;
     private long lastChangedTime;
-    boolean isNew;
     private Intent parentIntent;
     private String title;
     private String content;
@@ -52,11 +51,11 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         setContentView(R.layout.activity_edit);
         Log.d(TAG, "onCreate: start " + Utils.getVersionName(this));
         titleET = findViewById(R.id.editor_title);
-        final LinearLayout mLinearLayout_add_desktop=findViewById(R.id.mLinearLayout_add_desktop);
-        final LinearLayout mLinearLayout_add_time=findViewById(R.id.mLinearLayout_add_time);
-        final SwitchButton switch_add_to_desktop=findViewById(R.id.SwitchButton_add_to_desktop);
-        final SwitchButton switch_add_time=findViewById(R.id.SwitchButton_add_time);
-        final AppCompatButton appCompatButton=findViewById(R.id.mButton_yes);
+        final LinearLayout mLinearLayout_add_desktop = findViewById(R.id.mLinearLayout_add_desktop);
+        final LinearLayout mLinearLayout_add_time = findViewById(R.id.mLinearLayout_add_time);
+        final SwitchButton switch_add_to_desktop = findViewById(R.id.SwitchButton_add_to_desktop);
+        final SwitchButton switch_add_time = findViewById(R.id.SwitchButton_add_time);
+        final AppCompatButton appCompatButton = findViewById(R.id.mButton_yes);
         TextView timeTV = findViewById(R.id.editor_time);
         contentET = findViewById(R.id.editor_content);
         parentIntent = getIntent();
@@ -69,12 +68,13 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         titleET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if(!contentET.getText().toString().isEmpty()&&!titleET.getText().toString().isEmpty()
-                        &&mLinearLayout_add_desktop.getVisibility()==View.INVISIBLE
-                        &&mLinearLayout_add_time.getVisibility()==View.INVISIBLE){
+                if (!contentET.getText().toString().isEmpty() && !titleET.getText().toString().isEmpty()
+                        && mLinearLayout_add_desktop.getVisibility() == View.INVISIBLE
+                        && mLinearLayout_add_time.getVisibility() == View.INVISIBLE) {
                     mLinearLayout_add_desktop.setVisibility(View.VISIBLE);
                     mLinearLayout_add_time.setVisibility(View.VISIBLE);
-                    if(!isNew&&appCompatButton.getVisibility()==View.INVISIBLE)appCompatButton.setVisibility(View.VISIBLE);
+                    if (!isNew && appCompatButton.getVisibility() == View.INVISIBLE)
+                        appCompatButton.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -85,9 +85,9 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(!contentET.getText().toString().isEmpty()&&!titleET.getText().toString().isEmpty()
-                        &&mLinearLayout_add_desktop.getVisibility()==View.INVISIBLE
-                        &&mLinearLayout_add_time.getVisibility()==View.INVISIBLE){
+                if (!contentET.getText().toString().isEmpty() && !titleET.getText().toString().isEmpty()
+                        && mLinearLayout_add_desktop.getVisibility() == View.INVISIBLE
+                        && mLinearLayout_add_time.getVisibility() == View.INVISIBLE) {
                     mLinearLayout_add_desktop.setVisibility(View.VISIBLE);
                     mLinearLayout_add_time.setVisibility(View.VISIBLE);
                 }
@@ -96,9 +96,9 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         contentET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if(!contentET.getText().toString().isEmpty()&&!titleET.getText().toString().isEmpty()
-                        &&mLinearLayout_add_desktop.getVisibility()==View.INVISIBLE
-                        &&mLinearLayout_add_time.getVisibility()==View.INVISIBLE){
+                if (!contentET.getText().toString().isEmpty() && !titleET.getText().toString().isEmpty()
+                        && mLinearLayout_add_desktop.getVisibility() == View.INVISIBLE
+                        && mLinearLayout_add_time.getVisibility() == View.INVISIBLE) {
                     mLinearLayout_add_desktop.setVisibility(View.VISIBLE);
                     mLinearLayout_add_time.setVisibility(View.VISIBLE);
                 }
@@ -111,9 +111,9 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(!contentET.getText().toString().isEmpty()&&!titleET.getText().toString().isEmpty()
-                        &&mLinearLayout_add_desktop.getVisibility()==View.INVISIBLE
-                        &&mLinearLayout_add_time.getVisibility()==View.INVISIBLE){
+                if (!contentET.getText().toString().isEmpty() && !titleET.getText().toString().isEmpty()
+                        && mLinearLayout_add_desktop.getVisibility() == View.INVISIBLE
+                        && mLinearLayout_add_time.getVisibility() == View.INVISIBLE) {
                     mLinearLayout_add_desktop.setVisibility(View.VISIBLE);
                     mLinearLayout_add_time.setVisibility(View.VISIBLE);
                 }
@@ -123,7 +123,7 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
             @TargetApi(Build.VERSION_CODES.KITKAT)
             @Override
             public void onCheckedChanged(SwitchButton view, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     String dstStr = parentIntent.getStringExtra("dstStr");
                     long dstTime = TimeAid.dateToStamp(dstStr);
                     long nowTime = TimeAid.getNowTime();
@@ -133,18 +133,18 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
                     title = titleET.getText().toString();
                     if (dDay > 0) {
                         Toast.makeText(EditActivity.this, "你设定了提醒时间 :" + dstStr + "\n将于" + dDay + "天后提醒你", Toast.LENGTH_SHORT).show();
-                        AlarmReceiver.setAlarm(EditActivity.this,dbAid.querySQLNote(dbAid.getDbHelper(EditActivity.this),dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
+                        AlarmReceiver.setAlarm(EditActivity.this, dbAid.querySQLNote(dbAid.getDbHelper(EditActivity.this), dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
                         dbAid.newSQLNotice(EditActivity.this, time, dstTime);
                     } else if (dHour > 0) {
                         Toast.makeText(EditActivity.this, "你设定了提醒时间 :" + dstStr + "\n将于" + dHour + "小时后提醒你", Toast.LENGTH_SHORT).show();
-                        AlarmReceiver.setAlarm(EditActivity.this,dbAid.querySQLNote(dbAid.getDbHelper(EditActivity.this),dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
+                        AlarmReceiver.setAlarm(EditActivity.this, dbAid.querySQLNote(dbAid.getDbHelper(EditActivity.this), dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
                         dbAid.newSQLNotice(EditActivity.this, time, dstTime);
                     } else if (dMinute > 0) {
                         Toast.makeText(EditActivity.this, "你设定了提醒时间 :" + dstStr + "\n将于" + dMinute + "分钟后提醒你", Toast.LENGTH_SHORT).show();
                         dbAid.newSQLNotice(EditActivity.this, time, dstTime);
-                        AlarmReceiver.setAlarm(EditActivity.this, dbAid.querySQLNote(dbAid.getDbHelper(EditActivity.this),dstTime).getId(),dDay * 60 * 24 + dHour * 60 + dMinute, title);
-                    }else {
-                        Toast.makeText(EditActivity.this,R.string.setAlarm_error,Toast.LENGTH_SHORT).show();
+                        AlarmReceiver.setAlarm(EditActivity.this, dbAid.querySQLNote(dbAid.getDbHelper(EditActivity.this), dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
+                    } else {
+                        Toast.makeText(EditActivity.this, R.string.setAlarm_error, Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -152,7 +152,7 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         switch_add_to_desktop.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(SwitchButton view, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     dbAid.pos = pos;
                     Toast.makeText(EditActivity.this, "添加本便签到桌面\n长按桌面选择本应用挂件拖出即可", Toast.LENGTH_SHORT).show();
                     Intent home = new Intent(Intent.ACTION_MAIN);
@@ -167,12 +167,12 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
             public void onClick(View v) {
                 String title_temp = titleET.getText().toString();
                 String content_temp = contentET.getText().toString();
-                if(title_temp.isEmpty()||content_temp.isEmpty()){
-                    Toast.makeText(EditActivity.this,R.string.empty_note_no_save,Toast.LENGTH_LONG).show();
-                }else if(isNew) {
-                    saveNewNote(title_temp, content_temp);
+                if (title_temp.isEmpty() || content_temp.isEmpty()) {
+                    Toast.makeText(EditActivity.this, R.string.empty_note_no_save, Toast.LENGTH_LONG).show();
+                } else if (isNew) {
+                    saveNewNote(title_temp, content_temp,time);
                     Toast.makeText(EditActivity.this, R.string.save_success, Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     if (content.equals(content_temp) && title.equals(title_temp)) {
                         Toast.makeText(EditActivity.this, "未改变便签不保存", Toast.LENGTH_SHORT).show();
                     } else {
@@ -189,7 +189,7 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         if (time == lastChangedTime) {
             timeTV.setText(parentIntent.getStringExtra("time"));
         } else {
-            timeTV.setText(TimeAid.stampToDate(time) + getResources().getString(R.string.lastUpdate)+ TimeAid.stampToDate(lastChangedTime));
+            timeTV.setText(TimeAid.stampToDate(time) + getResources().getString(R.string.lastUpdate) + TimeAid.stampToDate(lastChangedTime));
         }
     }
 
@@ -198,12 +198,12 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
     public void onBackPressed() {
         String title_temp = titleET.getText().toString();
         String content_temp = contentET.getText().toString();
-        if(title_temp.isEmpty()||content_temp.isEmpty()){
-            Toast.makeText(EditActivity.this,R.string.empty_note_no_save,Toast.LENGTH_LONG).show();
-        }else if(isNew) {
-            saveNewNote(title_temp, content_temp);
+        if (title_temp.isEmpty() || content_temp.isEmpty()) {
+            Toast.makeText(EditActivity.this, R.string.empty_note_no_save, Toast.LENGTH_LONG).show();
+        } else if (isNew) {
+            saveNewNote(title_temp, content_temp,time);
             Toast.makeText(EditActivity.this, R.string.save_success, Toast.LENGTH_SHORT).show();
-        }else {
+        } else {
             if (content.equals(content_temp) && title.equals(title_temp)) {
                 Toast.makeText(EditActivity.this, "未改变便签不保存", Toast.LENGTH_SHORT).show();
             } else {
@@ -239,9 +239,9 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
 
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
-        if(titleET.getText().toString().isEmpty()&&contentET.getText().toString().isEmpty())
-            Toast.makeText(this,R.string.edit_title_hint,Toast.LENGTH_SHORT).show();
-        else if(menu!=null)menu.setGroupVisible(R.id.edit_new_group,true);
+        if (titleET.getText().toString().isEmpty() && contentET.getText().toString().isEmpty())
+            Toast.makeText(this, R.string.edit_title_hint, Toast.LENGTH_SHORT).show();
+        else if (menu != null) menu.setGroupVisible(R.id.edit_new_group, true);
         return super.onMenuOpened(featureId, menu);
     }
 
@@ -258,7 +258,7 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
                     if (content_temp.equals("") && title_temp.equals("")) {
                         Toast.makeText(this, "空便签不会被保存", Toast.LENGTH_SHORT).show();
                     } else {
-                        saveNewNote(title_temp, content_temp);
+                        saveNewNote(title_temp, content_temp,time);
                     }
                 } else {
                     if (this.content.equals(content_temp) && this.title.equals(title_temp)) {
@@ -289,16 +289,18 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         return super.onOptionsItemSelected(item);
     }
 
-    private void saveNewNote(final String title, final String content) {
-        lastChangedTime = TimeAid.getNowTime();
-        if(CalendarActivity.getNoteAdapter()!=null)CalendarActivity.getNoteAdapter().addData(dbAid.addSQLNote(dbAid.getDbHelper(this), content, title, lastChangedTime, lastChangedTime));
-        if(CalendarActivity.getRecyclerView()!=null)CalendarActivity.getRecyclerView().scrollToPosition(0);
+    private void saveNewNote(final String title, final String content,long time) {
+        lastChangedTime = time;
+        if (CalendarActivity.getNoteAdapter() != null)
+            CalendarActivity.getNoteAdapter().addData(dbAid.addSQLNote(dbAid.getDbHelper(this), content, title, time, lastChangedTime));
+        if (CalendarActivity.getRecyclerView() != null)
+            CalendarActivity.getRecyclerView().scrollToPosition(0);
     }
 
     private void saveOriginalNote(final String title, final String content) {
         lastChangedTime = TimeAid.getNowTime();
         int pos = parentIntent.getIntExtra("pos", 0);
-        dbAid.updateSQLNote(this,parentIntent.getIntExtra("id",0),title, content, time, pos, lastChangedTime);
+        dbAid.updateSQLNote(this, parentIntent.getIntExtra("id", 0), title, content, time, pos, lastChangedTime);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

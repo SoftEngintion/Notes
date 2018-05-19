@@ -63,10 +63,10 @@ public class RecycleBinActivity extends AppCompatActivity {
     private void initComponent() {
         /*组件初始化*/
         actionBar = getActionBar();
-        if(actionBar!=null) {
+        if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
-        }else {
+        } else {
             Log.e(TAG, "initComponent: actionBar=null");
         }
         emptyView = findViewById(R.id.empty_view);
@@ -140,7 +140,7 @@ public class RecycleBinActivity extends AppCompatActivity {
             int adapterPosition = srcHolder.getAdapterPosition();
             // Item被侧滑删除时，删除数据，并更新adapter。
             long time = BinNoteAdapter.getNotes().get(adapterPosition).getTime();
-            dbAid.setSQLNote(RecycleBinActivity.this,time, 0);
+            dbAid.setSQLNote(RecycleBinActivity.this, time, 0);
             binNoteAdapter.removeData(adapterPosition);
         }
     };
@@ -191,13 +191,16 @@ public class RecycleBinActivity extends AppCompatActivity {
             Log.d(TAG, "onItemClick: menuPosition :" + menuPosition);
             switch (menuPosition) {
                 case 0:
-                    if (isDebug) Toast.makeText(RecycleBinActivity.this, "恢复 Pos" + adapterPosition, Toast.LENGTH_SHORT).show();
-                    dbAid.setSQLNote(RecycleBinActivity.this,time, 0);
-                    if(CalendarActivity.getNoteAdapter()!=null)CalendarActivity.getNoteAdapter().refreshAllDataForce();
+                    if (isDebug)
+                        Toast.makeText(RecycleBinActivity.this, "恢复 Pos" + adapterPosition, Toast.LENGTH_SHORT).show();
+                    dbAid.setSQLNote(RecycleBinActivity.this, time, 0);
+                    if (CalendarActivity.getNoteAdapter() != null)
+                        CalendarActivity.getNoteAdapter().refreshAllDataForce();
                     break;
                 case 1:
-                    if (isDebug) Toast.makeText(RecycleBinActivity.this, "从数据库上删除 Pos" + adapterPosition, Toast.LENGTH_SHORT).show();
-                    dbAid.deleteSQLNoteForced(RecycleBinActivity.this,time);
+                    if (isDebug)
+                        Toast.makeText(RecycleBinActivity.this, "从数据库上删除 Pos" + adapterPosition, Toast.LENGTH_SHORT).show();
+                    dbAid.deleteSQLNoteForced(RecycleBinActivity.this, time);
                     dbAid.setSQLNoticeDone(getApplicationContext(), time, 1);
                     break;
             }
@@ -224,7 +227,7 @@ public class RecycleBinActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    public void checkEmpty(){
+    public void checkEmpty() {
         if (binNoteAdapter.getItemCount() == 0) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);

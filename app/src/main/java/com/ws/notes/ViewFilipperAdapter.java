@@ -32,13 +32,13 @@ public class ViewFilipperAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ImageView imageView=null;
-        if(convertView==null) {
-            imageView=new ImageView(mContext);
+        ImageView imageView = null;
+        if (convertView == null) {
+            imageView = new ImageView(mContext);
             imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            convertView=imageView;
-        }else {
-            imageView=(ImageView) convertView;
+            convertView = imageView;
+        } else {
+            imageView = (ImageView) convertView;
         }
         imageView.setImageResource(mData[position]);
         return imageView;

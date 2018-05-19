@@ -28,7 +28,7 @@ public class IntroActivity extends AppIntro {
 //        CustomSlideBigText cs1 = CustomSlideBigText.newInstance(R.layout.custom_slide_big_text);
 //        cs1.setTitle(getString(R.string.intro2_title));
 //        addSlide(cs1);
-        SliderPage sliderPage=new SliderPage();
+        SliderPage sliderPage = new SliderPage();
         sliderPage.setImageDrawable(R.drawable.start1);
         sliderPage.setBgColor(getResources().getColor(R.color.colorPrimaryDark));
         addSlide(AppIntroFragment.newInstance(sliderPage));

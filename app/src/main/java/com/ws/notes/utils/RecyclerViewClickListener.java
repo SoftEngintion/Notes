@@ -8,7 +8,6 @@ import android.view.ViewConfiguration;
 
 /**
  * 点击事件
- *
  */
 
 public class RecyclerViewClickListener implements RecyclerView.OnItemTouchListener {

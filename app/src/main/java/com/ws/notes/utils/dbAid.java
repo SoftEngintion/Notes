@@ -86,7 +86,7 @@ public abstract class dbAid {
      * @param pos             在RecyclerView中的位置
      * @param lastChangedTime 最后更改的时间戳
      */
-    public static void updateSQLNote(Context context,int id,String title, String content, long time, int pos, long lastChangedTime) {
+    public static void updateSQLNote(Context context, int id, String title, String content, long time, int pos, long lastChangedTime) {
         SQLiteDatabase db = getDbHelper(context).getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("title", title);
@@ -105,7 +105,7 @@ public abstract class dbAid {
      *
      * @param time 时间戳
      */
-    public static void deleteSQLNote(Context context,long time) {
+    public static void deleteSQLNote(Context context, long time) {
         SQLiteDatabase db = getDbHelper(context).getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("isDeleted", 1);
@@ -113,7 +113,7 @@ public abstract class dbAid {
         db.close();
     }
 
-    public static void setSQLNote(Context context,long time, int isDeleted) {
+    public static void setSQLNote(Context context, long time, int isDeleted) {
         SQLiteDatabase db = getDbHelper(context).getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("isDeleted", isDeleted);
@@ -133,25 +133,26 @@ public abstract class dbAid {
     /**
      * 根据时间删除
      */
-    public static void deleteSQLNoteForced(Context context,long time) {
+    public static void deleteSQLNoteForced(Context context, long time) {
         SQLiteDatabase db = getDbHelper(context).getWritableDatabase();
         db.delete("Note", "time = ?", new String[]{String.valueOf(time)});
         db.close();
     }
-    public static List<Note> querySQLNotes(DatabaseHelper dbHelper, int year ,int month,int day) {
+
+    public static List<Note> querySQLNotes(DatabaseHelper dbHelper, int year, int month, int day) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String title = null, content = null,logtime=null;
-        int id,isDeleted;
-        long lastChangedTime,time;
-        List<Note>noteList=new ArrayList<>();
-        Calendar calendar=Calendar.getInstance();
-        calendar.set(year,month,day,0,0,0);
-        Log.i("TAG","calendar:"+calendar.getTime().getTime());
-        long before=calendar.getTimeInMillis();
-        calendar.add(Calendar.DAY_OF_YEAR,1);
-        long after=calendar.getTimeInMillis();
-        Log.i(TAG, "querySQLNotes: before:"+before+"after:"+after+"\n");
-        Cursor cursor=db.rawQuery("select * from Note where time>=? and time <?",new String[]{String.valueOf(before),String.valueOf(after)});
+        String title = null, content = null, logtime = null;
+        int id, isDeleted;
+        long lastChangedTime, time;
+        List<Note> noteList = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day, 0, 0, 0);
+        Log.i("TAG", "calendar:" + calendar.getTime().getTime());
+        long before = calendar.getTimeInMillis();
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        long after = calendar.getTimeInMillis();
+        Log.i(TAG, "querySQLNotes: before:" + before + "after:" + after + "\n");
+        Cursor cursor = db.rawQuery("select * from Note where time>=? and time <?", new String[]{String.valueOf(before), String.valueOf(after)});
         if (cursor.moveToFirst()) {
             do {
                 /*获取数据库数据*/
@@ -163,14 +164,15 @@ public abstract class dbAid {
                 time = cursor.getLong(cursor.getColumnIndex("time"));
                 lastChangedTime = cursor.getLong(cursor.getColumnIndex("lastChangedTime"));
                 if (isDeleted == 0) {
-                    noteList.add(new Note(id,title, content, logtime, time, lastChangedTime));//数据库按ID顺序倒序排列
+                    noteList.add(new Note(id, title, content, logtime, time, lastChangedTime));//数据库按ID顺序倒序排列
                 }
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
         cursor.close();
         db.close();
         return noteList;
     }
+
     public static List<Note> initNotes(DatabaseHelper dbHelper) {
         List<Note> noteList = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -186,7 +188,7 @@ public abstract class dbAid {
                 long time = cursor.getLong(cursor.getColumnIndex("time"));
                 long lastChangedTime = cursor.getLong(cursor.getColumnIndex("lastChangedTime"));
                 if (isDeleted == 0) {
-                    noteList.add(0, new Note(id,title, content, logtime, time, lastChangedTime));//数据库按ID顺序倒序排列
+                    noteList.add(0, new Note(id, title, content, logtime, time, lastChangedTime));//数据库按ID顺序倒序排列
                 }
             } while (cursor.moveToNext());
         }
@@ -210,7 +212,7 @@ public abstract class dbAid {
                 long time = cursor.getLong(cursor.getColumnIndex("time"));
                 long lastChangedTime = cursor.getLong(cursor.getColumnIndex("lastChangedTime"));
                 if (isDeleted == 0) {
-                    noteList.add(0, new Note(id,title, content, logtime, time, lastChangedTime));//数据库按ID顺序倒序排列
+                    noteList.add(0, new Note(id, title, content, logtime, time, lastChangedTime));//数据库按ID顺序倒序排列
                 }
             } while (cursor.moveToNext());
         }
@@ -233,7 +235,7 @@ public abstract class dbAid {
         cursor.close();
         db.close();
         if (isDeleted == 1) {
-            return new Note(title+"此便签可能以删除,请您手动删除", "", TimeAid.getNowTime());
+            return new Note(title + "此便签可能以删除,请您手动删除", "", TimeAid.getNowTime());
         }
         return new Note(title, content, time);
     }

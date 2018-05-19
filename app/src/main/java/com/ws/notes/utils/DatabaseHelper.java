@@ -18,8 +18,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * 构造方法
+     *
      * @param context Context类
-     * @param name 数据库文件名字
+     * @param name    数据库文件名字
      * @param factory 不知道
      * @param version 数据库，增加自动调用onUpgrade更新数据库
      */
@@ -30,6 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * 创建表调用该方法
+     *
      * @param sqLiteDatabase sql类
      */
     @Override
@@ -59,9 +61,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * 更新数据库用方法
+     *
      * @param sqLiteDatabase sql类
-     * @param i 未知
-     * @param i1 未知
+     * @param i              未知
+     * @param i1             未知
      */
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
