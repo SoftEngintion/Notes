@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements TimeAndDatePicker
                 intent.putExtra("title", "");
                 intent.putExtra("content", "");
                 long timeStamp = TimeAid.getNowTime();
+                intent.putExtra("dstStr",TimeAid.stampToDate(timeStamp));
                 intent.putExtra("time", TimeAid.stampToDate(timeStamp));
                 intent.putExtra("timeLong", timeStamp);
                 intent.putExtra("isNew", true);
@@ -187,6 +188,9 @@ public class MainActivity extends AppCompatActivity implements TimeAndDatePicker
             case R.id.main_menu_about:
                 /*启动关于应用*/
                 startActivity(new Intent(MainActivity.this, AppAboutActivity.class));
+                return true;
+            case R.id.main_menu_help:
+                startActivity(new Intent(this,HelpActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -28,12 +28,12 @@ public class IntroActivity extends AppIntro {
 //        CustomSlideBigText cs1 = CustomSlideBigText.newInstance(R.layout.custom_slide_big_text);
 //        cs1.setTitle(getString(R.string.intro2_title));
 //        addSlide(cs1);
-        SliderPage sliderPage = new SliderPage();
-        sliderPage.setImageDrawable(R.drawable.start1);
-        sliderPage.setBgColor(getResources().getColor(R.color.colorPrimaryDark));
-        addSlide(AppIntroFragment.newInstance(sliderPage));
-        addSlide(AppIntroFragment.newInstance(getString(R.string.intro3_title), getString(R.string.intro3_desc),
-                R.drawable.start2, getResources().getColor(R.color.colorPrimaryDark)));
+//        SliderPage sliderPage = new SliderPage();
+//        sliderPage.setImageDrawable(R.drawable.start1);
+//        sliderPage.setBgColor(getResources().getColor(R.color.colorPrimaryDark));
+//        addSlide(AppIntroFragment.newInstance(sliderPage));
+//        addSlide(AppIntroFragment.newInstance(getString(R.string.intro3_title), getString(R.string.intro3_desc),
+//                R.drawable.start2, getResources().getColor(R.color.colorPrimaryDark)));
         addSlide(AppIntroFragment.newInstance(getString(R.string.intro3_title), getString(R.string.intro3_desc),
                 R.drawable.start3, getResources().getColor(R.color.colorPrimaryDark)));
         setDoneText(getString(R.string.intro_done));

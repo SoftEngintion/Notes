@@ -18,8 +18,12 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="foregroundImage" value="F:\王松\Pictures\Screenshots\ic_launcher.png" />
-                                      <entry key="previewDensity" value="MEDIUM" />
+                                      <entry key="backgroundAssetType" value="COLOR" />
+                                      <entry key="backgroundColor" value="f8fcf8" />
+                                      <entry key="foregroundImage" value="E:\王松\Tencent Files\2434569785\FileRecv\101.png" />
+                                      <entry key="foregroundLayerName" value="start" />
+                                      <entry key="previewDensity" value="HIGH" />
+                                      <entry key="webIconShape" value="NONE" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -30,24 +34,12 @@
                                 <PersistentState>
                                   <option name="children">
                                     <map>
-                                      <entry key="clipArt">
+                                      <entry key="image">
                                         <value>
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="color" value="5e665f" />
-                                                <entry key="paddingPercent" value="-5" />
-                                              </map>
-                                            </option>
-                                          </PersistentState>
-                                        </value>
-                                      </entry>
-                                      <entry key="clipartAsset">
-                                        <value>
-                                          <PersistentState>
-                                            <option name="values">
-                                              <map>
-                                                <entry key="url" value="jar:file:/D:/Android/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_delete_forever_black_24dp.xml" />
+                                                <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -57,9 +49,10 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="cropped" value="true" />
-                                      <entry key="iconShape" value="CIRCLE" />
-                                      <entry key="outputName" value="ic_delete" />
+                                      <entry key="assetType" value="IMAGE" />
+                                      <entry key="iconShape" value="NONE" />
+                                      <entry key="imageAsset" value="E:\王松\Tencent Files\2434569785\FileRecv\101.png" />
+                                      <entry key="outputName" value="start" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -88,29 +81,11 @@
                   <entry key="vectorAssetStep">
                     <value>
                       <PersistentState>
-                        <option name="children">
-                          <map>
-                            <entry key="clipartAsset">
-                              <value>
-                                <PersistentState>
-                                  <option name="values">
-                                    <map>
-                                      <entry key="url" value="jar:file:/D:/Android/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_alarm_black_24dp.xml" />
-                                    </map>
-                                  </option>
-                                </PersistentState>
-                              </value>
-                            </entry>
-                          </map>
-                        </option>
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="height" value="1024" />
-                            <entry key="outputName" value="ic_backup_black_24dp" />
-                            <entry key="overrideSize" value="true" />
-                            <entry key="sourceFile" value="F:\备份.svg" />
-                            <entry key="width" value="1024" />
+                            <entry key="outputName" value="ic_help" />
+                            <entry key="sourceFile" value="F:\王松\help.svg" />
                           </map>
                         </option>
                       </PersistentState>

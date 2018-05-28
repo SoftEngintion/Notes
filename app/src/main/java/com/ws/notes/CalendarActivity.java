@@ -117,6 +117,7 @@ public class CalendarActivity extends AppCompatActivity {
                 intent.putExtra("title", "");
                 intent.putExtra("content", "");
                 long timeStamp = TimeAid.getNowTime();
+                intent.putExtra("dstStr",TimeAid.stampToDate(timeStamp));
                 intent.putExtra("time", TimeAid.stampToDate(timeStamp));
                 intent.putExtra("timeLong", timeStamp);
                 intent.putExtra("isNew", true);
@@ -188,6 +189,7 @@ public class CalendarActivity extends AppCompatActivity {
                     noteAdapter.setNotes(noteList);
                     noteAdapter.notifyDataSetChanged();
                     noteAdapter.refreshAllData();
+                    checkEmpty();
                 }
             }
         });
@@ -366,6 +368,7 @@ public class CalendarActivity extends AppCompatActivity {
         protected void onPostExecute(String[] result) {
             // Call setRefreshing(false) when the list has been refreshed.
             mWaveSwipeRefreshLayout.setRefreshing(false);
+            checkEmpty();
             Toast.makeText(CalendarActivity.this, R.string.Refresh, Toast.LENGTH_SHORT).show();
             super.onPostExecute(result);
         }

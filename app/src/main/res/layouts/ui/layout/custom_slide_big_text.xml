@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="@color/colorPrimaryDark"
-    >
+    android:background="@color/colorPrimaryDark">
 
     <TextView
         android:id="@+id/custom_slide_big_text"
