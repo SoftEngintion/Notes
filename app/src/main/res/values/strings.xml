@@ -38,7 +38,7 @@
         APP简介:\n   多功能选择的记事本\n   精美的画面设计\n   简约的设计理念\n   便捷的操作方式\n开发团队:\n   软件工程团队68组\n
     </string>
     <string name="TextView_help">回收站：删除的日记和计划可放入回收站。通过点击右上角的菜单，可进入回收站。在回收站里，你可以恢复删除的项目，也可以将它彻底删除。\n
-        备份和导出：你可以在设置里以PDF导出文本的方式把日记保存到你的手机里，通过保存路径查看文件的保存位置。 \n
+        备份和导出：你可以在设置里以PDF导出文本的方式把日记保存到你的手机里，通过保存路径查看文件的保存位置。\n
         添加到桌面：把一些重要的日记直接放到桌面上，可通过点击添加到桌面选项实现此功能。</string>
     <string name="add_to_desktop">添加到桌面</string>
     <string name="add_alarm">添加提醒</string>
@@ -58,7 +58,7 @@
     <string name="mButton_yes">确定</string>
     <string name="mButton_no">取消</string>
     <string name="edit_time_time">添加您的指定提醒时间</string>
-    <string name="setAlarm_error">您的操作有误，请重试！</string>
+    <string name="setAlarm_error">您所设置的提醒时间已过时，请重试！</string>
     <string name="textview">TextView</string>
     <string name="switch_on">打开</string>
     <string name="switch_off">关闭</string>

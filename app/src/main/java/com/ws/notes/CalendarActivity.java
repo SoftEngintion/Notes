@@ -319,6 +319,7 @@ public class CalendarActivity extends AppCompatActivity {
                     intent.putExtra("pos", position);
                     intent.putExtra("title", note.getTitle());
                     intent.putExtra("content", note.getContent());
+                    intent.putExtra("dstStr",TimeAid.stampToDate(note.getTime()));
                     intent.putExtra("time", TimeAid.stampToDate(note.getTime()));
                     intent.putExtra("timeLong", TimeAid.stampToDate(note.getTime()));
                     intent.putExtra("lastChangedTime", note.getLastChangedTime());

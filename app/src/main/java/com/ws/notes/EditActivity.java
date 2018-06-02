@@ -43,6 +43,8 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
     private String title;
     private String content;
     private int pos;
+    private boolean is_add_time;
+    private boolean is_add_desktop;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -63,6 +65,8 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         content = parentIntent.getStringExtra("content");
         pos = parentIntent.getIntExtra("pos", 0);
         isNew = parentIntent.getBooleanExtra("isNew", false);
+        is_add_desktop=parentIntent.getBooleanExtra("is_add_desktop",false);
+        is_add_time=parentIntent.getBooleanExtra("is_add_time",false);
         titleET.setText(title);
         contentET.setText(content);
         titleET.addTextChangedListener(new TextWatcher() {
@@ -124,62 +128,74 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
             @Override
             public void onCheckedChanged(SwitchButton view, boolean isChecked) {
                 if (isChecked) {
+                    is_add_time=true;
                     String dstStr = parentIntent.getStringExtra("dstStr");
                     long dstTime = TimeAid.dateToStamp(dstStr);
                     long nowTime = TimeAid.getNowTime();
                     long dDay = TimeAid.getDiffDay(dstTime, nowTime);
                     long dHour = TimeAid.getDiffHour(dstTime, nowTime);
                     long dMinute = TimeAid.getDiffMinutes(dstTime, nowTime);
-                    title = titleET.getText().toString();
                     if (dDay > 0) {
                         Toast.makeText(EditActivity.this, "你设定了提醒时间 :" + dstStr + "\n将于" + dDay + "天后提醒你", Toast.LENGTH_SHORT).show();
-                        AlarmReceiver.setAlarm(EditActivity.this, dbAid.querySQLNote(dbAid.getDbHelper(EditActivity.this), dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
-                        dbAid.newSQLNotice(EditActivity.this, time, dstTime);
                     } else if (dHour > 0) {
                         Toast.makeText(EditActivity.this, "你设定了提醒时间 :" + dstStr + "\n将于" + dHour + "小时后提醒你", Toast.LENGTH_SHORT).show();
-                        AlarmReceiver.setAlarm(EditActivity.this, dbAid.querySQLNote(dbAid.getDbHelper(EditActivity.this), dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
-                        dbAid.newSQLNotice(EditActivity.this, time, dstTime);
                     } else if (dMinute > 0) {
                         Toast.makeText(EditActivity.this, "你设定了提醒时间 :" + dstStr + "\n将于" + dMinute + "分钟后提醒你", Toast.LENGTH_SHORT).show();
-                        dbAid.newSQLNotice(EditActivity.this, time, dstTime);
-                        AlarmReceiver.setAlarm(EditActivity.this, dbAid.querySQLNote(dbAid.getDbHelper(EditActivity.this), dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
                     } else {
+                        is_add_time=false;
                         Toast.makeText(EditActivity.this, R.string.setAlarm_error, Toast.LENGTH_SHORT).show();
                     }
+                }else {
+                    is_add_time=false;
                 }
             }
         });
         switch_add_to_desktop.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(SwitchButton view, boolean isChecked) {
-                if (isChecked) {
-                    dbAid.pos = pos;
-                    Toast.makeText(EditActivity.this, "添加本便签到桌面\n长按桌面选择本应用挂件拖出即可", Toast.LENGTH_SHORT).show();
-                    Intent home = new Intent(Intent.ACTION_MAIN);
-                    home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    home.addCategory(Intent.CATEGORY_HOME);
-                    startActivity(home);
-                }
+                is_add_desktop = isChecked;
             }
         });
         appCompatButton.setOnClickListener(new View.OnClickListener() {
+            @TargetApi(Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View v) {
                 String title_temp = titleET.getText().toString();
                 String content_temp = contentET.getText().toString();
                 if (title_temp.isEmpty() || content_temp.isEmpty()) {
                     Toast.makeText(EditActivity.this, R.string.empty_note_no_save, Toast.LENGTH_LONG).show();
-                } else if (isNew) {
-                    saveNewNote(title_temp, content_temp,time);
-                    Toast.makeText(EditActivity.this, R.string.save_success, Toast.LENGTH_SHORT).show();
                 } else {
-                    if (content.equals(content_temp) && title.equals(title_temp)) {
-                        Toast.makeText(EditActivity.this, "未改变便签不保存", Toast.LENGTH_SHORT).show();
+                    if (isNew) {
+                        saveNewNote(title_temp, content_temp,time);
+                        Toast.makeText(EditActivity.this, R.string.save_success, Toast.LENGTH_SHORT).show();
                     } else {
-                        saveOriginalNote(title_temp, content_temp);
+                        if (content.equals(content_temp) && title.equals(title_temp)) {
+                            Toast.makeText(EditActivity.this, "未改变便签不保存", Toast.LENGTH_SHORT).show();
+                        } else {
+                            saveOriginalNote(title_temp, content_temp);
+                        }
+                        NoteAppWidget.updateWidget(EditActivity.this, time, title_temp, content_temp);
+                        CalendarActivity.getNoteAdapter().refreshAllDataForce();
                     }
-                    NoteAppWidget.updateWidget(EditActivity.this, time, title_temp, content_temp);
-                    CalendarActivity.getNoteAdapter().refreshAllDataForce();
+                    if(is_add_time){
+                        String dstStr = parentIntent.getStringExtra("dstStr");
+                        title = titleET.getText().toString();
+                        long dstTime = TimeAid.dateToStamp(dstStr);
+                        long nowTime = TimeAid.getNowTime();
+                        long dDay = TimeAid.getDiffDay(dstTime, nowTime);
+                        long dHour = TimeAid.getDiffHour(dstTime, nowTime);
+                        long dMinute = TimeAid.getDiffMinutes(dstTime, nowTime);
+                        AlarmReceiver.setAlarm(EditActivity.this, dbAid.querySQLNote(dbAid.getDbHelper(EditActivity.this), dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
+                        dbAid.newSQLNotice(EditActivity.this, time, dstTime);
+                    }
+                    if(is_add_desktop){
+                        dbAid.pos = pos;
+                        Toast.makeText(EditActivity.this, "添加本便签到桌面\n长按桌面选择本应用挂件拖出即可", Toast.LENGTH_SHORT).show();
+                        Intent home = new Intent(Intent.ACTION_MAIN);
+                        home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        home.addCategory(Intent.CATEGORY_HOME);
+                        startActivity(home);
+                    }
                 }
                 finish();
             }
@@ -193,6 +209,7 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onBackPressed() {
@@ -200,17 +217,38 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         String content_temp = contentET.getText().toString();
         if (title_temp.isEmpty() || content_temp.isEmpty()) {
             Toast.makeText(EditActivity.this, R.string.empty_note_no_save, Toast.LENGTH_LONG).show();
-        } else if (isNew) {
-            saveNewNote(title_temp, content_temp,time);
-            Toast.makeText(EditActivity.this, R.string.save_success, Toast.LENGTH_SHORT).show();
         } else {
-            if (content.equals(content_temp) && title.equals(title_temp)) {
-                Toast.makeText(EditActivity.this, "未改变便签不保存", Toast.LENGTH_SHORT).show();
+            if (isNew) {
+                saveNewNote(title_temp, content_temp,time);
+                Toast.makeText(EditActivity.this, R.string.save_success, Toast.LENGTH_SHORT).show();
             } else {
-                saveOriginalNote(title_temp, content_temp);
+                if (content.equals(content_temp) && title.equals(title_temp)) {
+                    Toast.makeText(EditActivity.this, "未改变便签不保存", Toast.LENGTH_SHORT).show();
+                } else {
+                    saveOriginalNote(title_temp, content_temp);
+                }
+                NoteAppWidget.updateWidget(EditActivity.this, time, title_temp, content_temp);
+                CalendarActivity.getNoteAdapter().refreshAllDataForce();
             }
-            NoteAppWidget.updateWidget(EditActivity.this, time, title_temp, content_temp);
-            CalendarActivity.getNoteAdapter().refreshAllDataForce();
+            if(is_add_time){
+                String dstStr = parentIntent.getStringExtra("dstStr");
+                title = titleET.getText().toString();
+                long dstTime = TimeAid.dateToStamp(dstStr);
+                long nowTime = TimeAid.getNowTime();
+                long dDay = TimeAid.getDiffDay(dstTime, nowTime);
+                long dHour = TimeAid.getDiffHour(dstTime, nowTime);
+                long dMinute = TimeAid.getDiffMinutes(dstTime, nowTime);
+                AlarmReceiver.setAlarm(EditActivity.this, dbAid.querySQLNote(dbAid.getDbHelper(EditActivity.this), dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
+                dbAid.newSQLNotice(EditActivity.this, time, dstTime);
+            }
+            if(is_add_desktop){
+                dbAid.pos = pos;
+                Toast.makeText(EditActivity.this, "添加本便签到桌面\n长按桌面选择本应用挂件拖出即可", Toast.LENGTH_SHORT).show();
+                Intent home = new Intent(Intent.ACTION_MAIN);
+                home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                home.addCategory(Intent.CATEGORY_HOME);
+                startActivity(home);
+            }
         }
         finish();
         super.onBackPressed();
@@ -245,6 +283,7 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
         return super.onMenuOpened(featureId, menu);
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -254,20 +293,40 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
                 Log.d(TAG, "onOptionsItemSelected: home");
                 String title_temp = titleET.getText().toString();
                 String content_temp = contentET.getText().toString();
-                if (isNew) {
-                    if (content_temp.equals("") && title_temp.equals("")) {
-                        Toast.makeText(this, "空便签不会被保存", Toast.LENGTH_SHORT).show();
-                    } else {
-                        saveNewNote(title_temp, content_temp,time);
-                    }
+                if (title_temp.isEmpty() || content_temp.isEmpty()) {
+                    Toast.makeText(EditActivity.this, R.string.empty_note_no_save, Toast.LENGTH_LONG).show();
                 } else {
-                    if (this.content.equals(content_temp) && this.title.equals(title_temp)) {
-                        Toast.makeText(this, "未改变便签不保存", Toast.LENGTH_SHORT).show();
+                    if (isNew) {
+                        saveNewNote(title_temp, content_temp,time);
+                        Toast.makeText(EditActivity.this, R.string.save_success, Toast.LENGTH_SHORT).show();
                     } else {
-                        saveOriginalNote(title_temp, content_temp);
+                        if (content.equals(content_temp) && title.equals(title_temp)) {
+                            Toast.makeText(EditActivity.this, "未改变便签不保存", Toast.LENGTH_SHORT).show();
+                        } else {
+                            saveOriginalNote(title_temp, content_temp);
+                        }
+                        NoteAppWidget.updateWidget(EditActivity.this, time, title_temp, content_temp);
+                        CalendarActivity.getNoteAdapter().refreshAllDataForce();
                     }
-                    NoteAppWidget.updateWidget(this, time, title_temp, content_temp);
-                    CalendarActivity.getNoteAdapter().refreshAllDataForce();
+                    if(is_add_time){
+                        String dstStr = parentIntent.getStringExtra("dstStr");
+                        title = titleET.getText().toString();
+                        long dstTime = TimeAid.dateToStamp(dstStr);
+                        long nowTime = TimeAid.getNowTime();
+                        long dDay = TimeAid.getDiffDay(dstTime, nowTime);
+                        long dHour = TimeAid.getDiffHour(dstTime, nowTime);
+                        long dMinute = TimeAid.getDiffMinutes(dstTime, nowTime);
+                        AlarmReceiver.setAlarm(EditActivity.this, dbAid.querySQLNote(dbAid.getDbHelper(EditActivity.this), dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
+                        dbAid.newSQLNotice(EditActivity.this, time, dstTime);
+                    }
+                    if(is_add_desktop){
+                        dbAid.pos = pos;
+                        Toast.makeText(EditActivity.this, "添加本便签到桌面\n长按桌面选择本应用挂件拖出即可", Toast.LENGTH_SHORT).show();
+                        Intent home = new Intent(Intent.ACTION_MAIN);
+                        home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        home.addCategory(Intent.CATEGORY_HOME);
+                        startActivity(home);
+                    }
                 }
                 finish();
                 return true;
@@ -280,8 +339,6 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
                 startActivity(home);
                 return true;
             case R.id.add_time:
-//                dialog = new TimeAndDatePickerDialog(this);
-//                dialog.showDateAndTimePickerDialog();
                 return true;
             default:
                 break;
@@ -306,31 +363,6 @@ public class EditActivity extends AppCompatActivity implements TimeAndDatePicker
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void positiveListener() {
-//        String dstStr = String.format(Locale.CHINA, "%d-%d-%d %d:%d:00", dialog.getYear(), dialog.getMonth(), dialog.getDay(), dialog.getHour(), dialog.getMinute());
-//        long dstTime = TimeAid.dateToStamp(dstStr);
-//        long nowTime = TimeAid.getNowTime();
-//        long dDay = TimeAid.getDiffDay(dstTime, nowTime);
-//        long dHour = TimeAid.getDiffHour(dstTime, nowTime);
-//        long dMinute = TimeAid.getDiffMinutes(dstTime, nowTime);
-//        title = titleET.getText().toString();
-//        if (dDay > 0) {
-//            Toast.makeText(this, "你设定了提醒时间 :" + dstStr
-//                    + "\n将于" + dDay + "天后提醒你", Toast.LENGTH_SHORT).show();
-//            AlarmReceiver.setAlarm(this,dbAid.querySQLNote(dbAid.getDbHelper(this),dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
-//            dbAid.newSQLNotice(this, time, dstTime);
-//        } else if (dHour > 0) {
-//            Toast.makeText(this, "你设定了提醒时间 :" + dstStr
-//                    + "\n将于" + dHour + "小时后提醒你", Toast.LENGTH_SHORT).show();
-//            AlarmReceiver.setAlarm(this,dbAid.querySQLNote(dbAid.getDbHelper(this),dstTime).getId(), dDay * 60 * 24 + dHour * 60 + dMinute, title);
-//            dbAid.newSQLNotice(this, time, dstTime);
-//        } else if (dMinute > 0) {
-//            Toast.makeText(this, "你设定了提醒时间 :" + dstStr
-//                    + "\n将于" + dMinute + "分钟后提醒你", Toast.LENGTH_SHORT).show();
-//            dbAid.newSQLNotice(this, time, dstTime);
-//            AlarmReceiver.setAlarm(this, dbAid.querySQLNote(dbAid.getDbHelper(this),dstTime).getId(),dDay * 60 * 24 + dHour * 60 + dMinute, title);
-//        }else {
-//            Toast.makeText(this,R.string.setAlarm_error,Toast.LENGTH_SHORT).show();
-//        }
     }
 
     @Override
